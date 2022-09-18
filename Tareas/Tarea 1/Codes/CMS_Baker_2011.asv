@@ -1,5 +1,5 @@
 function [median_CMS,sigma_CMS] = CMS_Baker_2011(Ti,Tast,SaTast,M,R,Vs30,mec_focal,region,z1)
-% EJECUTAR FUNCIÓN CON ARCHIVO "run_CMS_Baker_2011.m"
+% EJECUTAR CON ARCHIVO "run_CMS_Baker_2011.m"
 % CMS de Baker 2011 (Conditional Mean Spectru: Tool for Ground Motion Selection)
 
 % GMPE utilizada Boore et al (2014) (Archivo: BSSA_2014_nga.m)
