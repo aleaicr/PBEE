@@ -61,7 +61,7 @@ epsilon_Tast = (lnSa_Tast - mu_Tast)/sigma_Tast;
 rho = zeros(Ti_length,1);
 mu_eTi_eTast = zeros(Ti_length,1);
 mu_lnSaTi_lnSaTast = zeros(Ti_length,1);
-sigma_CMS = zeros(Ti_length,1);
+sigma_lnSaTi_lnSaTast = zeros(Ti_length,1);
 
 for Ti_pos = 1:Ti_length
     Ti_val = Ti(Ti_pos);
@@ -76,7 +76,8 @@ for Ti_pos = 1:Ti_length
     % Resolviendo Eq.1 para lnSa(T) reproduce la siguiente eq para cada Ti
     % dado lnSa(T*)
     mu_lnSaTi_lnSaTast(Ti_pos) = mu_lnSa(Ti_pos) + rho(Ti_pos)*epsilon_Tast*sigma_lnSa(Ti_pos);
-    sigma_CMS(Ti_pos) = sigma_lnSa(Ti_pos)*sqrt(1-(rho(Ti_pos))^2);
+    sigma_lnSaTi_lnSaTast(Ti_pos) = sigma_lnSa(Ti_pos)*sqrt(1-(rho(Ti_pos))^2);
 end
 median_CMS = mu_lnSaTi_lnSaTast;
+sigma_CMS = sigma_lnSaTi_lnSaTast;
 end

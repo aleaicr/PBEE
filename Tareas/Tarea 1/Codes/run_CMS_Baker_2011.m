@@ -23,7 +23,7 @@ region = 1; % region de función BSSA_2014_nga.m (California)
 z1 = 999; % Basin depth (km) de función BSSA_2014_nga.m (Unspecified)
 
 %% RUN
-[median_CMS,sigma_CMS] = CMS_Baker_2011(Ti,Tast,Sa_Tast,M,R,Vs30,mec_focal,region,z1);
+[median_CMS,sigma_CMS] = test_CMS_Baker_2011(Ti,Tast,Sa_Tast,M,R,Vs30,mec_focal,region,z1);
 
 %% Graficamos
 figure
@@ -38,4 +38,11 @@ plot(Ti, sigma_CMS)
 xlabel('Periodo (T) [sec]')
 ylabel('\sigma_{lnSa(Ti)|lnSa(T*)}')
 title('\sigma CMS Baker 2011')
+grid on
+
+figure
+plot(Ti, median_CMS+)
+xlabel('Periodo (T) [sec]')
+ylabel('\mu_{lnSa(Ti)|lnSa(T*)}')
+title('\mu CMS Baker 2011')
 grid on
