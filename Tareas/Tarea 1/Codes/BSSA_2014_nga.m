@@ -55,7 +55,7 @@ if length (T) == 1 && T == 1000; % Compute median and sigma with pre-defined per
     sigma=zeros(1,length(period)-2);
     period1=period(3:end);
     for ip=3:length(period)
-        [median(ip-2),sigma(ip-2)]=BSSA_2014_sub(M, ip, Rjb, U, SS, NS, RS, region, z1, Vs30);
+        [median(ip-2),sigma(ip-2)] = BSSA_2014_sub(M, ip, Rjb, U, SS, NS, RS, region, z1, Vs30);
     end
 else                            % Compute median and sigma with user-defined period
     median=zeros(1, length(T));
@@ -150,7 +150,7 @@ F_P= (c1(ip) + c2(ip) * (M - mref)) * log (r / rref) + (c3(ip) + deltac3(ip)) * 
 
 %% FIND PGAr
 if Vs30~=v_ref || ip~=2;
-    [PGA_r,sigma_r] =BSSA_2014_sub(M, 2, Rjb, U, SS, NS, RS, region, z1, v_ref);
+    [PGA_r,sigma_r] = BSSA_2014_sub(M, 2, Rjb, U, SS, NS, RS, region, z1, v_ref);
 
 %% The site function:
 % Linear component

@@ -1,4 +1,4 @@
-function [rho_val] = rho_Baker2011(Ti,T_ast)
+function [rho_val] = rho_Baker_2011(Ti,T_ast)
 % Determina rho(Tmin,Tmax) del Step 3 de Baker (2011)
 
 % Determinamos cual es Tmin y Tmax
