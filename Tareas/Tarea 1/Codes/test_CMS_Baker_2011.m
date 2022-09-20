@@ -1,4 +1,4 @@
-function [median_CMS,sigma_CMS] = test_CMS_Baker_2011(Ti,Tast,Sa_Tast,M,R,Vs30,mec_focal,region,z1)
+function [median_CMS,sigma_CMS,mu_lnSa,sigma_lnSa,epsilon_Tast] = test_CMS_Baker_2011(Ti,Tast,Sa_Tast,M,R,Vs30,mec_focal,region,z1)
 % EJECUTAR FUNCIÓN CON ARCHIVO "run_CMS_Baker_2011.m"
 % CMS de Baker 2011 (Conditional Mean Spectru: Tool for Ground Motion Selection)
 
@@ -48,7 +48,6 @@ for i = 1:Ti_length
     mu_lnSa(i) = log(median_BSSA);
     sigma_lnSa(i) = log(sigma_BSSA);
     if Ti(i) == Tast
-        disp('lol xd')
         mu_Tast = log(median_BSSA);
         sigma_Tast = log(sigma_BSSA);
     end

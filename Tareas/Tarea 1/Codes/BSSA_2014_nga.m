@@ -85,7 +85,7 @@ else                            % Compute median and sigma with user-defined per
 end
 
 
-function [median, sigma]=BSSA_2014_sub (M, ip, Rjb, U, SS, NS, RS, region, z1, Vs30)
+function [median, sigma] = BSSA_2014_sub (M, ip, Rjb, U, SS, NS, RS, region, z1, Vs30)
 
 %% Coefficients
 mref=4.5;

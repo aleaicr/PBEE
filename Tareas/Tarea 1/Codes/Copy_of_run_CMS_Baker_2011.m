@@ -68,10 +68,9 @@ sigma_lnSa = zeros(Ti_length,1);
 % Media y Sigma para todos los periodos de análisis
 for i = 1:Ti_length
     [median_BSSA, sigma_BSSA, ~] = BSSA_2014_nga(M, Ti(i), Rjb, Fault_Type, region, z1, Vs30);    % No nos importa period1
-    mu_lnSa(i) = median_BSSA;
-    sigma_lnSa(i) = sigma_BSSA;
+    mu_lnSa(i) = log(median_BSSA);
+    sigma_lnSa(i) = log(sigma_BSSA);
     if Ti(i) == Tast
-        disp('lol xd')
         mu_Tast = median_BSSA;
         sigma_Tast = sigma_BSSA;
     end
@@ -84,7 +83,7 @@ epsilon_Tast = (lnSa_Tast - mu_Tast)/sigma_Tast;
 rho = zeros(Ti_length,1);
 mu_eTi_eTast = zeros(Ti_length,1);
 mu_lnSaTi_lnSaTast = zeros(Ti_length,1);
-sigma_CMS = zeros(Ti_length,1);
+sigma_lnSaTi_lnSaTast= zeros(Ti_length,1);
 
 for Ti_pos = 1:Ti_length
     Ti_val = Ti(Ti_pos);
@@ -99,20 +98,36 @@ for Ti_pos = 1:Ti_length
     % Resolviendo Eq.1 para lnSa(T) reproduce la siguiente eq para cada Ti
     % dado lnSa(T*)
     mu_lnSaTi_lnSaTast(Ti_pos) = mu_lnSa(Ti_pos) + rho(Ti_pos)*epsilon_Tast*sigma_lnSa(Ti_pos);
-    sigma_CMS(Ti_pos) = sigma_lnSa(Ti_pos)*sqrt(1-(rho(Ti_pos))^2);
+    sigma_lnSaTi_lnSaTast(Ti_pos) = sigma_lnSa(Ti_pos)*sqrt(1-(rho(Ti_pos))^2);
 end
 median_CMS = mu_lnSaTi_lnSaTast;
+sigma_CMS = sigma_lnSaTi_lnSaTast;
 
 %% Graficamos
 figure
 plot(Ti, median_CMS)
 xlabel('Periodo (T) [sec]')
-ylabel('\mu_{lnSa(Ti)|lnSa(T*)')
+ylabel('\mu_{lnSa(Ti)|lnSa(T*)}')
 title('\mu CMS Baker 2011')
 grid on
 
 figure
 plot(Ti, sigma_CMS)
 xlabel('Periodo (T) [sec]')
-ylabel('\sigma_{lnSa(Ti)|lnSa(T*)')
+ylabel('\sigma_{lnSa(Ti)|lnSa(T*)}')
 title('\sigma CMS Baker 2011')
+grid on
+
+figure
+plot(Ti, mu_lnSa)
+hold on
+plot(Ti, median_CMS)
+plot(Ti, median_CMS+0.16*sigma_CMS)
+plot(Ti, median_CMS+0.84*sigma_CMS)
+hold off
+xlabel('Periodo (T) [sec]')
+ylabel('lnSa_{CMS}')
+title('CMS Baker 2011')
+legend('median','median_{CMS}','median_{CMS}+0.16sigma_{CMS}','median_{CMS}+0.84sigma_{CMS}')
+grid on
+
