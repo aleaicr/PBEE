@@ -1,6 +1,7 @@
 %% Run CMS_baker_2011
 % Script de prueba/ejemplo para ejecutar función CMS_Baker_2011.m
 % (Parte I.3.5 Tarea 1 - Sísmica Avanzada)
+% Contreras - Sanguinetti
 
 %% Inicializar
 clear variables

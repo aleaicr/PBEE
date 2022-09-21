@@ -22,7 +22,6 @@ region = 1; % region de función BSSA_2014_nga.m (California)
 z1 = 999; % Basin depth (km) de función BSSA_2014_nga.m (Unspecified)
 
 %% RUN
-% EJECUTAR FUNCIÓN CON ARCHIVO "run_CMS_Baker_2011.m"
 % CMS de Baker 2011 (Conditional Mean Spectru: Tool for Ground Motion Selection)
 
 % GMPE utilizada Boore et al (2014) (Archivo: BSSA_2014_nga.m)
@@ -68,8 +67,8 @@ sigma_lnSa = zeros(Ti_length,1);
 % Media y Sigma para todos los periodos de análisis
 for i = 1:Ti_length
     [median_BSSA, sigma_BSSA, ~] = BSSA_2014_nga(M, Ti(i), Rjb, Fault_Type, region, z1, Vs30);    % No nos importa period1
-    mu_lnSa(i) = log(median_BSSA);
-    sigma_lnSa(i) = log(sigma_BSSA);
+    mu_lnSa(i) = median_BSSA;
+    sigma_lnSa(i) = sigma_BSSA;
     if Ti(i) == Tast
         mu_Tast = median_BSSA;
         sigma_Tast = sigma_BSSA;
