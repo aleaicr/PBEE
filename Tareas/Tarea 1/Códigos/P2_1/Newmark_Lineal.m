@@ -1,19 +1,3 @@
-function [PSa,taP,Psign] = PSa(Reg,dt,Ti,xi
-% Se obtiene con Método de Newmark
-
-% Inputs
-% Reg   -> El registro de aceleración
-% dt    -> Espaciamiento de tiempo de muestro
-% Ti    -> Vector o lista de periódos para los cuales se calculará el espectro
-% xi    -> Fracción de amortiguamiento a la cual se calculará el espectro de respuesta
-
-% Outputs
-% PSa   -> Valores espectrales de pseudo-aceleración para cada periodo
-% taP   -> Tiempo de peak de respuesta de desplazamiento "Time at Peak" para cada periodo
-% Psign -> Signo de respuesta de desplazamiento para cada periodo
-
-
-
 function [Sd,Sv,Sa,PSv,PSa] = Newmark_Lineal(beta,xi,dt,ui,udi,uddg,Tn)
 % Con Método de Newmark, calcular espectros y pseudo-espectros de un
 % registro de aceleraciones para ciertos periodos
@@ -89,6 +73,5 @@ for j = 1:Tn_length                                                         % j 
     u(:,1) = zeros(size(u,1),1);
     ud(:,1) = zeros(size(ud,1),1);
     udd(:,1) = zeros(size(udd,1),1);
-end
 end
 end
