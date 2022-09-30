@@ -149,7 +149,7 @@ r=sqrt(Rjb^2+h(ip)^2);
 F_P= (c1(ip) + c2(ip) * (M - mref)) * log (r / rref) + (c3(ip) + deltac3(ip)) * (r - rref);
 
 %% FIND PGAr
-if Vs30~=v_ref || ip~=2;
+if Vs30~=v_ref || ip~=2
     [PGA_r,sigma_r] = BSSA_2014_sub(M, 2, Rjb, U, SS, NS, RS, region, z1, v_ref);
 
 %% The site function:
@@ -169,7 +169,8 @@ if Vs30~=v_ref || ip~=2;
     if z1 ~= 999
         if region == 1  % if in California
             mu_z1=exp(-7.15/4*log((Vs30^4+570.94^4)/(1360^4+570.94^4)))/1000;
-        else if region == 2  % if in Japan
+        else 
+            if region == 2  % if in Japan
                 mu_z1=exp(-5.23/2*log((Vs30^2+412.39^2)/(1360^2+412.39^2)))/1000;
             else
                 mu_z1=exp(-7.15/4*log((Vs30^4+570.94^4)/(1360^4+570.94^4)))/1000;
@@ -183,23 +184,24 @@ if Vs30~=v_ref || ip~=2;
     if z1 ~= 999
         if period(ip) <0.65
             F_dz1=0;
-        else if period(ip) >= 0.65 && abs(dz1) <= f7(ip)/f6(ip)
-                F_dz1=f6(ip)*dz1;
+        else 
+            if period(ip) >= 0.65 && abs(dz1) <= f7(ip)/f6(ip)
+                F_dz1 = f6(ip)*dz1;
             else
-                F_dz1=f7(ip);
+                F_dz1 = f7(ip);
             end
         end
     else
-        F_dz1=0;
+        F_dz1 = 0;
     end
     
     F_S=ln_Flin+ln_Fnlin+F_dz1;
     
-    ln_Y=F_E + F_P + F_S;
-    median=exp(ln_Y);
+    ln_Y = F_E + F_P + F_S;
+    median = exp(ln_Y);
 
 else
-    ln_y=F_E + F_P;
+    ln_y = F_E + F_P;
     median = exp(ln_y);    
 end
 
@@ -208,10 +210,12 @@ end
 if M <= 4.5
     tau = tau1(ip);
     phi_M = phi1(ip);
-else if 4.5 < M && M < 5.5
+else 
+    if 4.5 < M && M < 5.5
         tau = tau1(ip)+(tau2(ip)-tau1(ip))*(M-4.5);
         phi_M = phi1(ip)+(phi2(ip)-phi1(ip))*(M-4.5);
-    else if M >= 5.5
+    else 
+        if M >= 5.5
             tau = tau2(ip);
             phi_M = phi2(ip);
         end
@@ -220,9 +224,11 @@ end
 
 if Rjb <= R1(ip)
     phi_MR = phi_M;
-else if R1(ip) < Rjb && Rjb <= R2(ip)
+else 
+    if R1(ip) < Rjb && Rjb <= R2(ip)
         phi_MR = phi_M + dphiR(ip)*(log(Rjb/R1(ip))/log(R2(ip)/R1(ip)));
-    else if Rjb > R2(ip)
+    else 
+        if Rjb > R2(ip)
             phi_MR = phi_M + dphiR(ip);
         end
     end
@@ -230,9 +236,11 @@ end
 
 if Vs30 >= v2
     phi_MRV = phi_MR;
-else if v1 <= Vs30 && Vs30 <= v2
+else 
+    if v1 <= Vs30 && Vs30 <= v2
         phi_MRV = phi_MR - dphiV(ip)*(log(v2/Vs30)/log(v2/v1));
-    else if Vs30 <= v1
+    else 
+        if Vs30 <= v1
             phi_MRV = phi_MR - dphiV(ip);
         end
     end

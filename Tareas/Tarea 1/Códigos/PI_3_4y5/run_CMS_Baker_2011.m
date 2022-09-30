@@ -1,6 +1,5 @@
 %% Run CMS_baker_2011
-% Script de prueba/ejemplo para ejecutar función CMS_Baker_2011.m
-% (Parte I.3.5 Tarea 1 - Sísmica Avanzada)
+% Parte I.3.5 - Tarea 1 -  Ingeniería Sísmica Avanzada
 % Contreras - Sanguinetti
 
 %% Inicializar
@@ -15,41 +14,79 @@ Ti_final = 5;                                                               % M�
 
 Ti = (Ti_init:Ti_step:Ti_final)';                                           % sec, Vector de Periodos
 Tast = 1;                                                                   % sec, Periodo Condicionante
-Sa_Tast = 0.4319;                                                           % g,  Ordenada Espectral del periodo condicinante (UHS Parte I.2)
+SaTast = 0.4319;                                                            % g,  Ordenada Espectral del periodo condicinante (UHS Parte I.2)
 M = 7.48;                                                                   % Magnitud de momento (Mw) (Parte I.3.a)
 R = 18.23;                                                                  % km (Parte I.3.a)
-Vs30 = 537;                                                                 % Clasificación C NEHRP
 mec_focal = 1;                                                              % Fault_Type de función BSSA_2014_nga.m (Strike-Slip)
 region = 1;                                                                 % region de función BSSA_2014_nga.m (California)
 z1 = 999;                                                                   % Basin depth (km) de función BSSA_2014_nga.m (Unspecified)
+Vs30 = 537;                                                                 % Clasificación C NEHRP
+
+%% Valores UHS (10% en 50 años)
+% https://earthquake.usgs.gov/hazards/interactive/
+UHS_periods = [0;0.1;0.2;0.3;0.5;0.75;1;2;3;4;5];
+UHS_groundMotion = [0.4706;0.9631;1.1412;1.0322;0.779;0.5636;0.4319;0.2056;0.1340;0.0988;0.0774];
+% UHS_Tast = 0.4319;                                                          % Sa(1 Sec)
 
 %% RUN
-[median_CMS,sigma_CMS,mu_lnSa,sigma_lnSa,epsilon_Tast] = test_CMS_Baker_2011(Ti,Tast,Sa_Tast,M,R,Vs30,mec_focal,region,z1);
+[median_CMS,sigma_CMS,mu_BSSA,sigma_BSSA,epsilon_Tast,rho] = CMS_Baker_2011(Ti,Tast,SaTast,M,R,Vs30,mec_focal,region,z1);
+% Outputs: 
+% median_CMS        -> Media del espectro condicionado [g]
+% sigma_CMS         -> Desv.Est del espectro condicionado [g]
+% mu_lnSa           -> Media del lnSa (BSSA_2014_nga.m) [g]
+% sigma_lnSa        -> Desv. Est del lnSa (BSSA_2014_nga.m) [g]
+% epsilon_Tast      -> Valor epsilon(T*)
 
 %% Graficamos
-figure
-plot(Ti, median_CMS)
-xlabel('Periodo (T) [sec]')
-ylabel('\mu_{lnSa(Ti)|lnSa(T*)}')
-title('\mu CMS Baker 2011')
-grid on
+
+% De lnSa a Ssa
+median_CMS = exp(median_CMS);                                               % mu_lnSa       -> mu_Sa
+% sigma_CMS = exp(sigma_CMS);                                                 % sigma_lnSa    -> sigma_Sa
+mu_BSSA = exp(mu_BSSA);
+% sigma_BSSA = exp(sigma_BSSA);
 
 figure
-plot(Ti, sigma_CMS)
-xlabel('Periodo (T) [sec]')
-ylabel('\sigma_{lnSa(Ti)|lnSa(T*)}')
-title('\sigma CMS Baker 2011')
-grid on
-
-figure
-plot(Ti, mu_lnSa)
+plot(UHS_periods,UHS_groundMotion,'--','color','k')
 hold on
-plot(Ti, median_CMS)
-plot(Ti, median_CMS+0.16*sigma_CMS)
-plot(Ti, median_CMS+0.84*sigma_CMS)
+plot(Ti,mu_BSSA,'-','color','k')
 hold off
-xlabel('Periodo (T) [sec]')
-ylabel('lnSa_{CMS}')
-title('CMS Baker 2011')
-legend('median','median_{CMS}','median_{CMS}+0.16sigma_{CMS}','median_{CMS}+0.84sigma_{CMS}')
+xlabel('Periodos (T) [sec]')
+ylabel('Aceleración Espectral [g]')
+legend('UHS 10% en 50 Años', 'Predicted Median BSSA\_2014\_nga.m (Mw = 7.48, R = 18.23km)')
 grid on
+title('UHS vs Predicted Median')
+
+figure
+plot(Ti,rho)
+xlabel('T*')
+ylabel('\rho(T_i,T*)')
+title('Correlación entre \epsilon(Ti,T*) / Backer & Jayaram (2008)')
+grid on
+legend('T* = 1 sec')
+
+figure
+plot(UHS_periods,UHS_groundMotion,'--','color','k')
+hold on
+plot(Ti,mu_BSSA,'-','color','k')
+plot(Ti,median_CMS,'-','color','r')
+hold off
+xlabel('Periodos (T) [sec]')
+ylabel('Aceleración Espectral [g]')
+legend('UHS 10% en 50 Años', 'Predicted Median BSSA\_2014\_nga.m (Mw = 7.48, R = 18.23km)','Conditional Mean Spectrum')
+grid on
+title('CMS Baker 2011')
+
+figure
+plot(UHS_periods,UHS_groundMotion,'--','color','k')
+hold on
+plot(Ti,mu_BSSA,'-','color','k')
+plot(Ti,median_CMS,'-','color','r')
+plot(Ti,median_CMS + 1*sigma_CMS,'--','color','m')
+plot(Ti,median_CMS - 1*sigma_CMS,'--','color','m')
+hold off
+xlabel('Periodos (T) [sec]')
+ylabel('Aceleración Espectral [g]')
+legend('UHS 10% en 50 Años', 'Predicted Mean BSSA\_2014\_nga.m (Mw = 7.48, R = 18.23km)','Conditional Mean Spectrum \mu_{CMS}','\mu_{CMS} +/- \sigma_{CMS}','')
+grid on
+title('CMS Baker 2011')
+
