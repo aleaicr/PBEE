@@ -1,14 +1,14 @@
-function [fj,a1,da,cij,b,dRi] = Copy_of_SM_AlAtik_Abrahamson_2010(Reg,dt,Tast,xi,PSaObj_Tast,error_adm,beta_Newmark,ui,udi,gamma_relax)
+function [fj,da,a1] = MultiplePeriods_SM_AlAtik_Abrahamson_2010(Reg,dt,Tast,xi,PSaObj_Tast,error_adm,beta_Newmark,ui,udi,gamma_relax)
 % An Improved Method for Nonstationary Spectral Matching
 % Linda Al Atik & Norman Abrahamson (2010)
 
 % Inputs
 % Reg               -> Registro de aceleraciones a modificar
 % dt                -> Espaciamiento de tiempo de muetro
-% Tast              -> Periodo(s) al cual el espectro será modificado (Periodo(s) de ajuste T*) (de la Estructura 1GDL)
-% xi                -> Razón de amortiguamiento del espectro a modificar (de la estructura 1GDL)
-% val_Obj           -> Valor objetivo del espectro de pseudo-aceleración en T*
-% error_objetivo    -> Error admisible para la diferencia entre PSa_Tast obtenido con onda modificada y el val_Obj_Tast
+% Tast              -> Periodos al cual el espectro será modificado (Periodo(s) de ajuste T*) (de la Estructura 1GDL)
+% xi                -> Razón de amortiguamiento del espectro a modificar (de la estructura 1GDL),
+% PSaObj_Tast       -> Valor objetivo del espectro de pseudo-aceleración en T*
+% error_adm    -> Error admisible para la diferencia entre PSa_Tast obtenido con onda modificada y el val_Obj_Tast
 % beta_Newmark      -> Beta del método de Newmark
 % ui, udi           -> Condiciones iniciales de desplazamiento y velocidad respectivamente
 % gamma_relax       -> Parámetro de relajación
@@ -28,7 +28,11 @@ t_length = Reg_length;                                                      % Ca
 % Inicializar valores y vectores
 hi = zeros(t_length,1);
 fj = zeros(t_length,1);
-
+wi = zeros(N,1);
+wi_prima = zeros(N,1);
+freq = zeros(N,1);
+gamma_f = zeros(N,1);
+Dtj = zeros(N,1);
 % Pseudo-Espectro de aceleraciones y tiempo al peak para el periodo de la estructura
 
 [~,~,~,~,PSa_Tast,~,tj,signPeak] = PSa_peak(beta_Newmark,xi,dt,ui,udi,Reg,Tast);   % Obtenemos solo el PSa en el periodo de interés
@@ -37,15 +41,15 @@ for j = 1:N   % (j: spectral point)                                         % Re
     % Como N = 1, no se van a ocupar vectores, pero cada uno debería
     % depender del vector periodo-amortiguamiento (i), el vector de tiempo (t)
     % y del vector de periodos a ajustar (j)
-    wi = 2*pi/Tast;                                                         % Frecuencia circular de estructura de 1GDL                                                        
+    wi(j) = 2*pi/Tast(j);                                                         % Frecuencia circular de estructura de 1GDL                                                        
     betai = xi;                                                             % Razón de amortiguamiento de estructura 1GDL
-    wi_prima = wi*sqrt(1-betai^2);                                          % (Eq.6) Frecuencia circular amortiguada de estructura de 1GDL
-    freq = wi_prima/(2*pi);                                                 % (Frecuencia)
-    gamma_f = 1.178*freq^-0.93;                                             % (Eq.17) Coeficiente que depende de la frecuencia (para Eq.16)
-    Dtj = atan(sqrt(1-betai^2)/betai)/wi_prima;                             % (Eq.14)
+    wi_prima(j) = wi*sqrt(1-betai^2);                                          % (Eq.6) Frecuencia circular amortiguada de estructura de 1GDL
+    freq(j) = wi_prima/(2*pi);                                                 % (Frecuencia)
+    gamma_f(j) = 1.178*freq^-0.93;                                             % (Eq.17) Coeficiente que depende de la frecuencia (para Eq.16)
+    Dtj(j) = atan(sqrt(1-betai^2)/betai)/wi_prima;                             % (Eq.14)
     for t = 1:t_length  % (t
-        hi(t) = -wi/(sqrt(1 - betai^2))*exp(-wi*betai*(t-1)*dt)*sin(wi_prima*(t-1)*dt);    % (Eq. 18)
-        fj(t) = cos(wi_prima*((t-1)*dt - tj + Dtj))*exp(-(((t-1)*dt - tj + Dtj)/gamma_f)^2);   % (Eq. 16)
+        hi(t) = -wi(j)/(sqrt(1 - betai^2))*exp(-wi(j)*betai*(t-1)*dt)*sin(wi_prima(j)*(t-1)*dt);    % (Eq. 18)
+        fj(t) = cos(wi_prima(j)*((t-1)*dt - tj(j) + Dtj))*exp(-(((t-1)*dt - tj + Dtj)/gamma_f)^2);   % (Eq. 16)
     end
 end
 

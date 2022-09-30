@@ -27,9 +27,9 @@ Reg = Reg*g;    % Pasamos el registro de [g] a cm/s2
 load('median_CMS.mat');
 
 % Periodos
-Tn_init = 0;                                                                % La media condicionada no puede empezar desde antes de 0.05 según Baker(2011)
-Tn_step = 0.1;
-Tn_final = 3;
+Tn_init = 0.05;                                                             % Mínimo TI que indica Baker (2011)
+Tn_step = 0.01;                                                             % Paso para los periodos
+Tn_final = 5;
 Tn = Tn_init:Tn_step:Tn_final;
 Tast = 1; % sec                                                             % Periodo de ajuste (Condicionante?)
 Tast_pos = find(Tn == Tast);
@@ -43,10 +43,9 @@ udi = 0;
 
 % PSa Objetivo
 PSaObj_Tast = median_CMS(Tast_pos); % g                                     % Valor objetivo del espectro de pseudo-aceleración condicionado en T*
-PSa_CMS_Tast = PSaObj_Tast; % g                                             
 
 % Error admisible
-error_adm = 10^-10;
+error_adm = 10^-5;
 
 % Beta para método de Newmark
 beta_Newmark  = 1/4;                                                        % Aceleración promedio constante
@@ -57,12 +56,18 @@ gamma_relax = 1;                                                            % En
 
 %% Run Function
 PSaObj_Tast = PSaObj_Tast*g;
+figure(1)
 
 % Escalar
 [~,~,~,~,PSa_reg,~,~,~] = PSa_peak(beta_Newmark,xi,dt,ui,udi,Reg,Tn');      % cm/s2 PSa del Registro
 fact_escala = PSaObj_Tast/PSa_reg(Tast_pos);                                % Factor de escala
 fprintf('El factor de escala es %.3f \n \n',fact_escala)                    % Mostrar factor de escala
-Reg = 1*Reg;                                                      % Escalamos el registro
+Reg = 1.3*Reg;                                                      % Escalamos el registro
+[~,~,~,~,PSa_reg_mod,~,~,~] = PSa_peak(beta_Newmark,xi,dt,ui,udi,Reg,Tn');      % cm/s2 PSa del Registro
+plot(Tn,PSa_reg_mod./g,'color','b')                                                     % PSa Registro Escalado
+hold on
+
+%% A CONTINUACIÓN SE COPIA LA FUNCIÓN plotPSa_a1_SM_AlAtik_Abrahamson_2010.m
 
 % An Improved Method for Nonstationary Spectral Matching
 % Linda Al Atik & Norman Abrahamson (2010)
@@ -109,8 +114,8 @@ for j = 1:N   % (j: spectral point)                                         % Re
     gamma_f = 1.178*freq^-0.93;                                             % (Eq.17) Coeficiente que depende de la frecuencia (para Eq.16)
     Dtj = atan(sqrt(1-betai^2)/betai)/wi_prima;                             % (Eq.14)
     for t = 1:t_length  % (t
-        hi(t) = -wi/(sqrt(1-betai^2))*exp(-wi*betai*(t-1)*dt)*sin(wi_prima*(t-1)*dt);    % (Eq. 18)
-        fj(t) = cos(wi_prima*((t-1)*dt-tj+Dtj))*exp(-(((t-1)*dt - tj + Dtj)/gamma_f)^2);   % (Eq. 16)
+        hi(t) = -wi/(sqrt(1 - betai^2))*exp(-wi*betai*(t-1)*dt)*sin(wi_prima*(t-1)*dt);    % (Eq. 18)
+        fj(t) = cos(wi_prima*((t-1)*dt - tj + Dtj))*exp(-(((t-1)*dt - tj + Dtj)/gamma_f)^2);   % (Eq. 16)
     end
 end
 
@@ -126,7 +131,7 @@ cij = trapz(dt,fj.*hi_titau);                                               % (E
 dRi = (PSaObj_Tast-PSa_Tast)*signPeak;                                    % (Eq.1)
 
 % b
-b = (cij^-1)*dRi;                                                           % (Eq.10)
+b = ((cij(end))^-1)*dRi;                                                           % (Eq.10)
 
 % da: Onda
 da = b.*fj;                                                                 % (Eq.2)
@@ -135,38 +140,52 @@ da = b.*fj;                                                                 % (E
 a1 = Reg + gamma_relax*da;                                                  % (Eq.11)
 
 % Verificación error, si no cumple, iteramos otra vez
+[~,~,~,~,PSamod_todos,~,~,~] = PSa_peak(beta_Newmark,xi,dt,ui,udi,a1,Tn');       % Obtenemos PSa del registro modificado  
+plot(Tn,PSamod_todos./g)
+
 [~,~,~,~,PSamod,~,~,~] = PSa_peak(beta_Newmark,xi,dt,ui,udi,a1,Tast);       % Obtenemos PSa del registro modificado  
 
 if abs(PSamod - PSaObj_Tast) > error_adm
     Reg = a1;   % reg = a(t) de (Eq.11)
     disp(1)
-    [fj,a1,da,cij,b,dRi] = Copy_of_SM_AlAtik_Abrahamson_2010(Reg,dt,Tast,xi,PSaObj_Tast,error_adm,beta_Newmark,ui,udi,gamma_relax);
+    [fj,a1,da] = plotPSa_a1_SM_AlAtik_Abrahamson_2010(Reg,dt,Tast,xi,PSaObj_Tast,error_adm,beta_Newmark,ui,udi,gamma_relax);
 end
+%% Fin función
+
+plot(Tn,median_CMS,'color','r')
+hold off
+grid on
+xlim([0 3])
+xlabel('Periodo (T) [s]')
+ylabel('Pseudo-Aceleración Espectral (PSa) [g]')
+legend('PSa Registro Escalado','PSa Registro modificado (a1_{iter1})','PSa Registro modificado (a1_{iter2})','CMS')
+
 [~,~,~,~,PSa_a1,~,~,~] = PSa_peak(beta_Newmark,xi,dt,ui,udi,a1,Tn');        % Obtenemos PSa_a1 en cm/s2
 
 a1 = a1./g;
 PSa_a1 = PSa_a1./g;                                                         % Pasamos de cm/s2 a g
 Reg = Reg./g;                                                               % Pasamos de cm/s2 a g
 PSa_reg = PSa_reg./g;                                                       % Pasamos de cm/s2 a g
+PSa_reg_mod = PSa_reg_mod./g;
 
 %% Gráficamos
-% Registro
-figure('Name','Registro Sísmico')
-plot(t_vect,Reg)
-xlabel('Tiempo t (sec)')
-ylabel('Aceleración [g]')
-grid on
-title('Registro de aceleraciones')
-legend('RSN1227 CHICHI CHY074-N')
+% % Registro
+% figure('Name','Registro Sísmico')
+% plot(t_vect,Reg)
+% xlabel('Tiempo t (sec)')
+% ylabel('Aceleración [g]')
+% grid on
+% title('Registro de aceleraciones')
+% legend('RSN1227 CHICHI CHY074-N')
 
-% PSa
-figure('Name', 'PSa')
-plot(Tn,PSa_reg)
-xlabel('Periodos T (sec)')
-ylabel('Pseudo-espectro de aceleraciones PSa (g)')
-grid on
-title('Pseudo-Espectro de Aceleraciones')
-legend('RSN1227 CHICHI CHY074-N')
+% % PSa
+% figure('Name', 'PSa')
+% plot(Tn,PSa_reg)
+% xlabel('Periodos T (sec)')
+% ylabel('Pseudo-espectro de aceleraciones PSa (g)')
+% grid on
+% title('Pseudo-Espectro de Aceleraciones')
+% legend('RSN1227 CHICHI CHY074-N')
 
 % fj
 figure('Name','fj')
@@ -186,27 +205,27 @@ title('Onda Modificadora \delta a')
 legend('Registro con Spectral-Matching')
 grid on
 
-% a1
-figure('Name','a1')
-plot(t_vect,a1)
-xlabel('Tiempo t [sec]')
-ylabel('Registro de Aceleraciones Modificado a_1 [g]')
-title('Registro de Aceleraciones Modificado a_1')
-legend('Registro con Spectral-Matching')
-grid on
+% % a1
+% figure('Name','a1')
+% plot(t_vect,a1)
+% xlabel('Tiempo t [sec]')
+% ylabel('Registro de Aceleraciones Modificado a_1 [g]')
+% title('Registro de Aceleraciones Modificado a_1')
+% legend('Registro con Spectral-Matching')
+% grid on
 
-% PSa_a1
-figure('Name', 'PSa a_1')
-plot(Tn,PSa_a1)
-xlabel('Periodos T (sec)')
-ylabel('Pseudo-espectro de aceleraciones PSa a_1 [g]')
-grid on
-title('Pseudo-Espectro de Aceleraciones a_1 Al Atik & Abrahamson (2010)')
-legend('Registro con Spectral-Matching')
+% % PSa_a1
+% figure('Name', 'PSa a_1')
+% plot(Tn,PSa_a1)
+% xlabel('Periodos T (sec)')
+% ylabel('Pseudo-espectro de aceleraciones PSa a_1 [g]')
+% grid on
+% title('Pseudo-Espectro de Aceleraciones a_1 Al Atik & Abrahamson (2010)')
+% legend('Registro con Spectral-Matching')
 
 % Comparación Registro
 figure('Name', 'Comparación Registro')
-plot(t_vect,Reg)
+plot(t_vect,Reg,'color','c')
 hold on
 plot(t_vect,a1)
 hold off
@@ -214,16 +233,29 @@ grid on
 xlabel('tiempo (t) [sec]')
 ylabel('Aceleración [g]')
 legend('RSN1227 CHICHI CHY074-N','Registro con Spectral-Matching')
+title('Comparación de Registros')
 
 % Comparación PSa
 figure('Name', 'Comparación PSa')
-plot(Tn,PSa_reg)
+plot(Tn,PSa_reg,'color','c')
 hold on
 plot(Tn,PSa_a1)
 hold off
 xlabel('Periodo (T) [sec]')
-ylabel('PSa [g]')
+ylabel('Pseudo-Aceleración Espectral [g]')
 legend('RSN1227 CHICHI CHY074-N','Registro con Spectral-Matching')
+title('Comparación de Espectros de Respuesta')
 grid on
+xlim([0 3])
 
-
+figure
+plot(Tn,median_CMS,'color','r')
+hold on
+plot(Tn,PSa_reg,'color','c')
+plot(Tn,PSa_reg_mod,'color','b')
+hold off
+grid on
+xlabel('Periodos')
+ylabel('Pseudo-Aceleración Espectral [g]')
+legend('Conditional Mean Spectrum','PSa Registro sin esacalar','PSa Registro escalado (x1.3)')
+xlim([0 3])

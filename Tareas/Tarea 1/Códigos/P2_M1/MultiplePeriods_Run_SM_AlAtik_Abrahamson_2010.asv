@@ -31,7 +31,14 @@ Tn_init = 0.05;                                                             % M�
 Tn_step = 0.01;                                                             % Paso para los periodos
 Tn_final = 5;
 Tn = Tn_init:Tn_step:Tn_final;
-Tast = 1; % sec                                                             % Periodo de ajuste (Condicionante?)
+
+%% MULTIPLES PERIODOS, definir vector
+Tast = [0.5;0.83;1;1.39]; % sec                                                             % Periodo de ajuste (Condicionante?)
+Tast_posi = zeros(length(Tast),1);
+
+% Identificar posición de todos los Tast para cada 
+for i = 1:length(Tast)
+Tast_posi
 Tast_pos = find(Tn == Tast);
 
 % Razón de amortiguamiento
