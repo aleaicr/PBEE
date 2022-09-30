@@ -101,7 +101,7 @@ plot(t_vect,fj)
 xlabel('Tiempo t [sec]')
 ylabel('Función de ajuste f_j')
 title('Función de ajuste f_j')
-legend('Tapered Cosine Wavelet')
+legend('Improved Tapered Cosine Wavelet')
 grid on
 
 % da
@@ -110,7 +110,7 @@ plot(t_vect,da)
 xlabel('Tiempo t [sec]')
 ylabel('Onda Modificadora \delta a')
 title('Onda Modificadora \delta a')
-legend('Registro con Spectral-Matching')
+legend('Improved Tapered Cosine Wavelet')
 grid on
 
 % % a1

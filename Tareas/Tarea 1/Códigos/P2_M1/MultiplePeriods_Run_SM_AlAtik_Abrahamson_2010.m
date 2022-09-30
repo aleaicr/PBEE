@@ -26,20 +26,24 @@ Reg = Reg*g;    % Pasamos el registro de [g] a cm/s2
 % CMS
 load('median_CMS.mat');
 
-% Periodos
+% Periodos (mismo que del median_CMS.mat)
 Tn_init = 0.05;                                                             % Mínimo TI que indica Baker (2011)
 Tn_step = 0.01;                                                             % Paso para los periodos
 Tn_final = 5;
 Tn = Tn_init:Tn_step:Tn_final;
 
 %% MULTIPLES PERIODOS, definir vector
-Tast = [0.5;0.83;1;1.39]; % sec                                                             % Periodo de ajuste (Condicionante?)
+Tast = [0.8;1]; % sec                                                             % Periodo de ajuste (Condicionante?)
 Tast_length = length(Tast);
 Tast_posi = zeros(Tast_length,1);
 
 % Identificar posición de todos los Tast para cada 
-for i = 1:lTast_length
-    Tast_posi(i) = find(Tn == Tast(i));
+for i = 1:length(Tn)
+    for j = 1:length(Tast)
+        if Tn(i) == Tast(j)
+            Tast_posi(j) = i;
+        end
+    end
 end
 
 % Razón de amortiguamiento
@@ -51,8 +55,11 @@ udi = 0;
 
 % PSa Objetivo para cada periodo de ajuste igual al del CMS
 PSaObj_Tast = zeros(Tast_length,1);
-for i = 1:Tast_length
-    PSaObj_Tast(i) = median_CMS(Tast_posi(i));
+clear j
+for j_val = 1:Tast_length
+    Tastposicion = Tast_posi(j_val);
+    medianCMS_val = median_CMS(Tastposicion);
+    PSaObj_Tast(j_val) = medianCMS_val;
 end
 
 % Error admisible
