@@ -118,20 +118,20 @@
 
 %% User inputs begin here
 % Ground motion database and type of selection 
-selectionParams.databaseFile    = 'CyberShake_meta_data'; 
+selectionParams.databaseFile    = 'NGA_W2_meta_data'; 
 % selectionParams.databaseFile    = 'NGA_W2_meta_data'; 
 % selectionParams.databaseFile    = 'BBP_GP_meta_data'; 
 selectionParams.cond            = 1;
-selectionParams.arb             = 2; 
+selectionParams.arb             = 1; 
 selectionParams.RotD            = 50; 
 
 % Number of ground motions and spectral periods of interest
-selectionParams.nGM        = 30;  % number of ground motions to be selected 
-selectionParams.Tcond      = 1.5; % Period at which spectra should be scaled and matched 
+selectionParams.nGM        = 20;  % number of ground motions to be selected 
+selectionParams.Tcond      = 1; % Period at which spectra should be scaled and matched 
 selectionParams.Tmin       = 0.1; % smallest spectral period of interest
 selectionParams.Tmax       = 10;  % largest spectral period of interest
 selectionParams.TgtPer = logspace(log10(selectionParams.Tmin),log10(selectionParams.Tmax),30); % compute an array of periods between Tmin and Tmax
-selectionParams.SaTcond    = [];   % (optional) target Sa(Tcond) to use when 
+selectionParams.SaTcond    = 0.4319;   % (optional) target Sa(Tcond) to use when 
                                   % computing a conditional spectrum 
                                   % if a value is provided here, rup.eps_bar 
                                   % will be back-computed in
@@ -149,7 +149,7 @@ selectionParams.TgtPerV = logspace(log10(selectionParams.TminV),log10(selectionP
 
 % other parameters to scale motions and evaluate selections 
 selectionParams.isScaled   = 1;       
-selectionParams.maxScale   = 5;       
+selectionParams.maxScale   = 3;       
 selectionParams.tol        = 10; 
 selectionParams.optType    = 0; 
 selectionParams.penalty    = 0;
@@ -158,10 +158,10 @@ selectionParams.nLoop      = 2;
 selectionParams.useVar     = 1;   % =1 to use computed variance, =0 to use a target variance of 0
 
 % User inputs to specify the target earthquake rupture scenario
-rup.M_bar       = 6.5;      % earthquake magnitude
-rup.Rjb         = 11;       % closest distance to surface projection of the fault rupture (km)
+rup.M_bar       = 7.18;      % earthquake magnitude
+rup.Rjb         = 16.18;       % closest distance to surface projection of the fault rupture (km)
 rup.eps_bar     = 1.9;      % epsilon value (used only for conditional selection)
-rup.Vs30        = 259;      % average shear wave velocity in the top 30m of the soil (m/s)
+rup.Vs30        = 357;      % average shear wave velocity in the top 30m of the soil (m/s)
 rup.z1          = 999;      % basin depth (km); depth from ground surface to the 1km/s shear-wave horizon,
                             % =999 if unknown
 rup.region      = 1;        % =0 for global (incl. Taiwan)
@@ -200,7 +200,7 @@ allowedRecs.idxInvalid = []; % Index numbers of ground motions to be excluded fr
 showPlots   = 1;        % =1 to plot results, =0 to suppress plots
 copyFiles   = 1;        % =1 to copy selected motions to a local directory, 
                         % otherwise =0 to suppress plots
-seedValue   = 0;        % =0 for random seed in when simulating 
+seedValue   = 14;        % =0 for random seed in when simulating 
                         % response spectra for initial matching, 
                         % otherwise the specifed seedValue is used.
 nTrials     = 20;       % number of iterations of the initial spectral 

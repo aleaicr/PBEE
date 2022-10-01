@@ -75,15 +75,12 @@ plot(UHS_periods,UHS_Spectrum,'--','color','k')
 hold on
 plot(Ti,mu_BSSA,'-','color','k')
 plot(Ti,median_CMS,'-','color','r')
-plot(T_DS,S_DS,'color','#0072c3')
 hold off
 xlabel('Periodos (T) [sec]')
 ylabel('Aceleración Espectral [g]')
-legend('UHS 10% en 50 Años', 'Predicted Median BSSA\_2014\_nga.m (Mw = 7.48, R = 18.23km)','Conditional Mean Spectrum','Espectro de Diseño ASCE-7 (Chapter 11)')
+legend('UHS 10% en 50 Años', 'Predicted Median BSSA\_2014\_nga.m (Mw = 7.48, R = 18.23km)','Conditional Mean Spectrum')
 grid on
 title('CMS Baker 2011')
-xlim([0 5])
-ylim([0 1.4])
 
 figure
 plot(UHS_periods,UHS_Spectrum,'--','color','k')
@@ -92,13 +89,10 @@ plot(Ti,mu_BSSA,'-','color','k')
 plot(Ti,median_CMS,'-','color','r')
 plot(Ti,exp(log(median_CMS) + 1*sigma_CMS),'--','color','m')
 plot(Ti,exp(log(median_CMS) - 1*sigma_CMS),'--','color','m')
-plot(T_DS,S_DS,'color','#0072c3')
 hold off
 xlabel('Periodos (T) [sec]')
 ylabel('Aceleración Espectral [g]')
-legend('UHS 10% en 50 Años', 'Predicted Mean BSSA\_2014\_nga.m (Mw = 7.48, R = 18.23km)','Conditional Mean Spectrum \mu_{CMS}','\mu_{CMS} +/- \sigma_{CMS}','','Espectro de Diseño ASCE-7 (Chapter 11)')
+legend('UHS 10% en 50 Años', 'Predicted Mean BSSA\_2014\_nga.m (Mw = 7.48, R = 18.23km)','Conditional Mean Spectrum \mu_{CMS}','\mu_{CMS} +/- \sigma_{CMS}','')
 grid on
 title('CMS Baker 2011')
-xlim([0 5])
-ylim([0 1.4])
 
