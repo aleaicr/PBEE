@@ -1,4 +1,4 @@
-function [EDP,IM] = getIdaCurves(ResultsFile)
+function [EDP,IM] = getIdaCurves(ResultsDir, ResultsName)
 
 % Version    : 1.0
 % Creado por : Cristian Cruz (CC) 
@@ -43,7 +43,7 @@ function [EDP,IM] = getIdaCurves(ResultsFile)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Cargar resultados
-load(ResultsFile)
+load ([ResultsDir + "\" + ResultsName])
 
 % variable nGM indica el numero de registros
 % variable IDA contiene resultados del analisis
@@ -61,5 +61,3 @@ for i = 1:nGM
     EDP(:,i) = IDA.(['U' num2str(i)])(1:nStripes);
     IM(:,i) =  IDA.(['Sa' num2str(i)])(1:nStripes);
 end
-
-
