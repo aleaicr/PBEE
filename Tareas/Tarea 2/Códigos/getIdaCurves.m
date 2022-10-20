@@ -43,7 +43,7 @@ function [EDP,IM] = getIdaCurves(ResultsDir, ResultsName)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Cargar resultados
-load ([ResultsDir + "\" + ResultsName])
+load([ResultsDir '\' ResultsName],'IDA','nGM');
 
 % variable nGM indica el numero de registros
 % variable IDA contiene resultados del analisis
