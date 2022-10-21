@@ -154,76 +154,9 @@ fprintf('P4. P(EDP > 25cm | IM = 1g = %.2f\n',EDP_valuesInterp);
 % Se corre un nuevo análisis en II-DAP pero con IM alternativa Sa_avg en
 % 'analysis type'
 
-% Guardar datos anteriores
-EDP_Sa = EDP;
-IM_Sa = IM;
-
-% Nombre para importar datos
-ResultsDir_Sa_avg = 'Resultados1';
-ResultsName_Sa_avg = 'estructura1_sa_avg';
-
 % getIdaCurves
-[EDP,IM] = getIdaCurves(ResultsDir_Sa_avg, ResultsName_Sa_avg);
-
-% Repetir paso 2 para IM = Sa_avg
-% Graficar curva IDA mediana y la desviación estándar logarítmica de los
-% desplazamientos como función de Sa(T1)
-
-% mu_ln = median(log(x))
-% median = geomean(x)
-% std_ln = std(log(x))
-
-EDP_muln = mean(log(EDP'));                                                 % Media
-EDP_median = geomean(EDP');                                                 % Mediana
-EDP_stdln = std(log(EDP'));                                                 % Desviación estandar
-
-% Gráficos
-
-% Mediana logarítmica
-figure
-plot(IM(:,1)/g,EDP_median','.')
-ylabel('Mediana logarítmica de EDP, geomean(EDP)')
-xlabel('IM: Sa(T_1,\xi) [g]') 
-grid on
-title('Mediana logarítmica EDP')
-
-figure
-plot(IM(:,1)/g,EDP_median','color','k')
-ylabel('Mediana logarítmica de EDP, geomean(EDP)')
-xlabel('IM: Sa(T_1,\xi) [g]') 
-grid on
-title('Mediana logarítmica EDP')
-
-% Desviación Estándar Logarítmica
-figure
-plot(IM(:,1)/g,EDP_stdln','.')
-ylabel('Desviación estandar logarítmica de EDP, std(log(EDP))')
-xlabel('IM: Sa(T_1,\xi) [g]') 
-grid on
-title('Desviación estándar EDP')
-
-figure
-plot(IM(:,1)/g,EDP_stdln','color','k')
-ylabel('Desviación estandar logarítmica de EDP, std(log(EDP))')
-xlabel('IM: Sa(T_1,\xi) [g]') 
-grid on
-title('Desviación estándar EDP')
-
-% Media
-figure
-plot(IM(:,1)/g,EDP_muln','.')
-ylabel('Media logarítmica de EDP, mean(log(EDP))')
-xlabel('IM: Sa(T_1,\xi) [g]') 
-grid on
-title('Media logarítmica EDP')
-
-figure
-plot(IM(:,1)/g,EDP_muln','color','k')
-ylabel('Media logarítmica de EDP, mean(log(EDP))')
-xlabel('IM: Sa(T_1,\xi) [g]') 
-grid on
-title('Media logarítmica EDP')
-
+ResultsDirSa_avg = 'Resultados1';
+R
 
 
 
