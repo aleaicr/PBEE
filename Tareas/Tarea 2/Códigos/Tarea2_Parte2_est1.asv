@@ -24,8 +24,8 @@ g = 9.81;   % m/s2
 % No debería haber colapso ya que no estamos considerando efectos P-Delta y
 % modelo no considera degradación.
 % Indicar punto de fluencia en las curvas IDA
-% incr = 0.1; % g                                                             % Incremento de IM
-% IMmax = 3; % g                                                              % IM máxima
+dIM = 0.1; % g                                                             % Incremento de IM
+IMmax = 3; % g                                                              % IM máxima
 
 % Nombre de carpeta donde están los archivos
 ResultsDir = 'Resultados1';
@@ -49,7 +49,7 @@ plot(dy,ay,'^','Color','r')
 xline(dy,'Color','r')
 hold off
 text(2,0.5,['Fluencia (dy,ay)' string([dy ay])])
-ylim([0 max(IM(:,1))/g])
+ylim([0 IMmax/g])
 xlabel('EDP: Desplazamiento Máximo [m]')
 ylabel('IM: Sa(T_1,\xi) [g]')                                               % En IIDAP, se pusieron unidades de metros y segundos => aceleraciones en m/s2
 title('Multi-Record IDA Curves', ' Estructura T_1 = 1.5s; \xi = 5%')
@@ -84,9 +84,9 @@ plot(EDP_median',IM(:,1)/g,'color','r','LineWidth',2)
 hold on
 plot(EDP,IM/g,'.-','color','#606060')
 xline(dy,'Color','b')
-ylim([0 max(IM(:,1))/g])
+ylim([0 IMmax/g])
 hold off
-xlabel('Mediana logarítmica de EDP, geomean(EDP)')
+xlabel('EDP y geomean(EDP)')
 ylabel('IM: Sa(T_1,\xi) [g]') 
 grid on
 title('Mediana logarítmica EDP')
@@ -123,8 +123,8 @@ hold on
 plot(IM(:,1)/g,exp(log(EDP_median')+EDP_stdln'),'.-','color','k')
 plot(IM(:,1)/g,exp(log(EDP_median')-EDP_stdln'),'.-','color','k')
 hold off
-xlabel('Mediana logarítmica de EDP, geomean(EDP)')
-ylabel('IM: Sa(T_1,\xi) [g]') 
+ylabel('Mediana logarítmica de EDP, geomean(EDP)')
+xlabel('IM: Sa(T_1,\xi) [g]') 
 grid on
 title('Mediana logarítmica EDP')
 
@@ -134,8 +134,8 @@ hold on
 plot(exp(log(EDP_median')+EDP_stdln'),IM(:,1)/g,'.-','color','k')
 plot(exp(log(EDP_median')-EDP_stdln'),IM(:,1)/g,'.-','color','k')
 hold off
-ylabel('Mediana logarítmica de EDP, geomean(EDP)')
-xlabel('IM: Sa(T_1,\xi) [g]') 
+xlabel('Mediana logarítmica de EDP, geomean(EDP)')
+ylabel('IM: Sa(T_1,\xi) [g]') 
 grid on
 title('Mediana logarítmica EDP')
 
@@ -181,29 +181,44 @@ legend('EDP_muln','Sd')
 % de que los desplazamientos máximos excedan 25cm para una ordenada
 % espectral de 1g.
 
+% % Desplazamiento máximo objetivo
+% desplMaxObj = 25/100; % 25  cm = 25/100 m
+% 
+% % Posición IM = 1g
+% posIM1g = find(IM(:,1)/g == 1);
+% 
+% % Columna de EDP que necesito para este análisis
+% EDP_col = EDP(:,posIM1g);
+% EDP_logncdf = logncdf(EDP_col);
+% EDP_valuesInterp = interp1(EDP_col,EDP_logncdf,desplMaxObj);                % Interpolando, el valor de la probabilidad es este
+% 
+% % Distribución
+% figure
+% plot(EDP_col,EDP_logncdf)
+% hold on
+% plot(desplMaxObj,EDP_valuesInterp,'^r')
+% hold off
+% xlabel('EDP|IM = 1g')
+% ylabel('logncdf(EDP)|IM = 1g')
+% text(desplMaxObj+0.1,EDP_valuesInterp,['P(EDP > 25cm | IM = 1g) =' string(EDP_valuesInterp)])
+% grid on
+% 
+% fprintf('P4. P(EDP > 25cm | IM = 1g) = %.4f\n',EDP_valuesInterp);
+
+% P(EDP>edp | IM = im) = 1 - cdf((ln(edp)-ln(EDP_median|IM=im))/EDP_sigmaln|IM=im)
+% Ya tenemos EDP_median|IM = 1g
+% Ya tenemos EDP_stdln|IM = 1g
+
 % Desplazamiento máximo objetivo
 desplMaxObj = 25/100; % 25  cm = 25/100 m
 
 % Posición IM = 1g
 posIM1g = find(IM(:,1)/g == 1);
 
-% Columna de EDP que necesito para este análisis
-EDP_col = EDP(:,posIM1g);
-EDP_logncdf = logncdf(EDP_col);
-EDP_valuesInterp = interp1(EDP_col,EDP_logncdf,desplMaxObj);                % Interpolando, el valor de la probabilidad es este
+% Probabilidad
+probabilidad = 1-normcdf(log(desplMaxObj),log(EDP_median(posIM1g)),EDP_stdln(posIM1g));
+fprintf('%f\n',probabilidad)
 
-% Distribución
-figure
-plot(EDP_col,EDP_logncdf)
-hold on
-plot(desplMaxObj,EDP_valuesInterp,'^r')
-hold off
-xlabel('EDP|IM = 1g')
-ylabel('logncdf(EDP)|IM = 1g')
-text(desplMaxObj+0.1,EDP_valuesInterp,['P(EDP > 25cm | IM = 1g) =' string(EDP_valuesInterp)])
-grid on
-
-fprintf('P4. P(EDP > 25cm | IM = 1g) = %.4f\n',EDP_valuesInterp);
 
 %% 5
 % Repetir proceso pero ahora con Sa_avg como IM, para definir Sa_avg
@@ -289,6 +304,11 @@ xlabel('IM: Sa(T_1,\xi) [g]')
 grid on
 title('Mediana logarítmica EDP')
 
+
+% Volvemos a dejar como estaba antes
+EDP = EDP_Sa;                                                               % EDP cuando IM es Sa(T1)
+IM = IM_Sa;                                                                 % IM  = Sa(T1)
+
 %% 6
 % Extraer curvas de amenaza sísmica desde USGS para periodos en estudio
 % Realizar interpolación lineal de los datos  de 0.1g
@@ -320,23 +340,25 @@ title('Hazard Curves')
 grid on
 legend('T=1[sec]','T=2[sec]')
 
-% Interpolamos ambas para IM
-IM_1_interp1 = 0.1:0.1:max(IM_1);
-IM_2_interp1 = 0.1:0.1:max(IM_2);
+% % Interpolamos ambas para IM
+% IM_1_interp1 = 0.1:0.1:IMmax;
+% IM_2_interp1 = 0.1:0.1:IMmax;
+% 
+% lambda_1_interp1 = interp1(IM_1,lambda_1,IM_1_interp1);
+% lambda_2_interp1 = interp1(IM_2,lambda_2,IM_2_interp1);
+% 
+% figure
+% loglog(IM_1_interp1,lambda_1_interp1,'.-','Color','r')
+% hold on
+% loglog(IM_2_interp1,lambda_2_interp1,'.-','Color','b')
+% hold off
+% xlabel('IM = Sa(T1) [g]')
+% ylabel('Frecuencia Anual de excedencia \lambda_{IM}')
+% title('Curvas de amenaza interpoladas')
+% legend('T=1[sec]','T=2[sec]')
+% grid on
 
-lambda_1_interp1 = interp1(IM_1,lambda_1,IM_1_interp1);
-lambda_2_interp1 = interp1(IM_2,lambda_2,IM_2_interp1);
-
-figure
-loglog(IM_1_interp1,lambda_1_interp1,'.-','Color','r')
-hold on
-loglog(IM_2_interp1,lambda_2_interp1,'.-','Color','b')
-hold off
-xlabel('IM = Sa(T1) [g]')
-ylabel('Frecuencia Anual de excedencia \lambda_{IM}')
-title('Curvas de amenaza interpoladas')
-legend('T=1[sec]','T=2[sec]')
-grid on
+% Trucazo, haciendo trampa
 
 % Interpolamos para tener mismas lambda_IM
 lambda_IM_interp1 = logspace(-5,-1,20)';    % Vector de 200 elementos entre 0.00001 y 0.1 en escala logaritmica
@@ -373,18 +395,32 @@ for i = 1:length(lambda_IM_interp1)                                             
 end
 
 figure
-loglog(IM_1sec_interp1,lambda_IM_interp1,'.-','Color','r')
+loglog(IM_1sec_interp1,lambda_IM_interp1,'.-','Color','#007d79')
 hold on
-loglog(IM_2sec_interp1,lambda_IM_interp1,'.-','Color','b')
-loglog(IM_1_5_sec,lambda_IM_interp1,'.-')
-loglog(IM_1_interp1,lambda_1_interp1,'.-','Color','r')
-loglog(IM_2_interp1,lambda_2_interp1,'.-','Color','b')
+loglog(IM_2sec_interp1,lambda_IM_interp1,'.-','Color','#6929c4')
+loglog(IM_1_5_sec,lambda_IM_interp1,'.-','Color','r')
+loglog(IM_1,lambda_1,'Color','#007d79')
+loglog(IM_2,lambda_2,'Color','#6929c4')
 hold off
 xlabel('IM = Sa(T1) [g]')
 ylabel('Frecuencia Anual de excedencia')
 title('Curvas de amenaza interpoladas')
-legend('T=1[sec]','T=2[sec]','T = 1.5[sec]','Curva 1sec interp en IM', 'Curva 2 sec interp IM')
+legend('T = 1[sec]','T = 2[sec]','T = 1.5[sec]','T = 1[sec] USGS', 'T = 2[sec] USGS')
 grid on
+
+
+% Terminando trucazo vuelvo a interpolar en IM para mi curva de amenaza sismica de T = 1.5s
+IM_interp1 = 0.1:0.1:IMmax;
+lambda_interp1 = interp1(IM_1_5_sec,lambda_IM_interp1,IM_interp1);
+
+figure
+loglog(IM_interp1,lambda_interp1,'.-','Color','r')
+xlabel('IM = Sa(T1) [g]')
+ylabel('Frecuencia Anual de excedencia')
+title('Curva de amenaza interpoladas')
+legend('T = 1.5s')
+grid on
+
 
 %% 6.2 Análisis probabilístico de la demanda sísmica
 % Relizar un análisis probabilístico de la demanda sísmica para caluclar
@@ -393,10 +429,52 @@ grid on
 % Ya tenemos la curva de amenaza sísmica -> podemos obtener d/dIM
 % (lambda(IM))
 
-% dlambda = abs(I);
+% Hasta la fecha no me dan los vectores de IM_T_15sec y lambdaIM_15sec (1.5 sec)
+% De la forma como las pide el profe, pero trabajemos con los que tenemos 
+% como si estuvieran correctos
 
+% Supongo que numéricamente, al no contar con dIM, se calcula como una
+% sumatoria en vez de una integral
 
-% Hasta la fecha no me dan los vectores de IM_T_15sec y lambdaIM_15sec 
+% Renombramos parámetros
+% IM = IM_1_5_sec;
+IM_amenaza = IM_interp1;                                                    % 0.1:0.1:3seg
+lambda_amenaza = lambda_interp1;                                            % Interpolación
+dIM = 0.1; % g
+
+% Obtención de abs(d/dIM (lambda_IM(x)))
+dlambdadIM = abs(diff(lambda_amenaza)/dIM)';
+
+% Rango de edp para lambda_EDP
+edps = (0.001:0.001:2)';
+
+lambda_EDP = zeros(length(edps),1);
+for edp = 1:length(edps)
+    multiplicacion = zeros(length(IM),1);
+    for im = 1:length(IM)
+         % Posición IM = 1g en curva de 
+        posIM = find(IM(:,1)/g == im);
+        
+        % EDP_median
+        EDP_median_val = EDP_median(posIM); 
+        
+        % EDP_stdln
+        EDP_stdln_val = EDP_stdln(posIM);
+        
+        % Parte EDP|IM
+        probabilidad = 1-normcdf(log(edps(edp)),log(EDP_median_val),EDP_stdln_val);
+    
+        % Parte IM
+        dlambdadIM_val = dlambdadIM(im);
+
+        % dIM
+        % dIM = 0.1; % g
+
+        % Multiplicacion
+        multiplicacion(im) = probabilidad*dlambdadIM_val*dIM;
+    end
+    lambda_EDP(edp) = sum(multiplicacion);
+end
 
 
 
