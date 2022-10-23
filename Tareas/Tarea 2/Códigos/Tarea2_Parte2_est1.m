@@ -440,8 +440,8 @@ grid on
 % IM = IM_1_5_sec;
 
 % Desde amenaza
-IM_amenaza = IM_interp1;                                                    % 0.1:0.1:3   [g]
-lambda_amenaza = lambda_interp1;                                            % Interpolación
+IM_amenaza = IM_interp1';                                                    % 0.1:0.1:3   [g]
+lambda_amenaza = lambda_interp1';                                            % Interpolación
 dIM = 0.1; % g
 
 % Desde EDP
@@ -450,6 +450,12 @@ EDP_IDA = EDP_Sa;
 
 % Obtención de abs(d/dIM (lambda_IM(x)))
 dlambdadIM = abs(diff(lambda_amenaza)/dIM)';
+
+figure
+plot(IM_amenaza(2:end,1),dlambdadIM)
+xlabel('IM')
+ylabel('diff(lambda(IM=im),IM=im)')
+grid on
 
 % Rango de edp para lambda_EDP
 edps = (0.001:0.001:2)';
