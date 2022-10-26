@@ -41,18 +41,15 @@ ResultsName = 'estructura1';                                                 % T
 
 ay = Cy;            % ay = Cy*g, pero en unidad g hay que volver a dividirlo
 dy = Cy*W/(4*pi^2*W/g/T^2);
-EDP_median = geomean(EDP');
 
 % Figuras 
 figure
-plot(EDP_median',IM(:,1)/g,'color','r','LineWidth',2)
-hold on
 plot(EDP,IM/g,'.-','color','#606060')
 hold on
-plot(dy,ay,'^','Color','b')
-xline(dy,'Color','b')
+plot(dy,ay,'^','Color','r')
+xline(dy,'Color','r')
 hold off
-% text(2,0.5,['Fluencia (dy,ay)' string([dy ay])])
+text(2,0.5,['Fluencia (dy,ay)' string([dy ay])])
 ylim([0 IM_max])
 xlabel('EDP: Desplazamiento Máximo [m]')
 ylabel('IM: Sa(T_1,\xi) [g]')                                               % En IIDAP, se pusieron unidades de metros y segundos => aceleraciones en m/s2
@@ -76,76 +73,72 @@ grid on
 % std_ln = std(log(x))
 
 % EDP_muln = mean(log(EDP')); % me da negativo usando lo del ppt
-% EDP_median = geomean(EDP');                                                 % Mediana
+EDP_median = geomean(EDP');                                                 % Mediana
 EDP_stdln = std(log(EDP'));                                                 % Desviación estandar
 EDP_muln = exp(log(EDP_median) + 0.5*EDP_stdln.^2);                         % Estimación de la Media
 
 % Gráficos
 
-% % Mediana logarítmica + Curvas IDA
-% figure
-% plot(EDP_median',IM(:,1)/g,'color','r','LineWidth',2)
-% hold on
-% plot(EDP,IM/g,'.-','color','#606060')
-% xline(dy,'Color','b')
-% ylim([0 IM_max])
-% hold off
-% xlabel('EDP y geomean(EDP)')
-% ylabel('IM: Sa(T_1,\xi) [g]') 
-% grid on
-% title('Mediana logarítmica EDP')
+% Mediana logarítmica + Curvas IDA
+figure
+plot(EDP_median',IM(:,1)/g,'color','r','LineWidth',2)
+hold on
+plot(EDP,IM/g,'.-','color','#606060')
+xline(dy,'Color','b')
+ylim([0 IM_max])
+hold off
+xlabel('EDP y geomean(EDP)')
+ylabel('IM: Sa(T_1,\xi) [g]') 
+grid on
+title('Mediana logarítmica EDP')
 
 
-% % Mediana logarítmica
-% figure
-% plot(IM(:,1)/g,EDP_median','.-','color','k')
-% ylabel('Mediana logarítmica de EDP, geomean(EDP)')
-% xlabel('IM: Sa(T_1,\xi) [g]') 
-% grid on
-% title('Mediana logarítmica EDP')
+% Mediana logarítmica
+figure
+plot(IM(:,1)/g,EDP_median','.-','color','k')
+ylabel('Mediana logarítmica de EDP, geomean(EDP)')
+xlabel('IM: Sa(T_1,\xi) [g]') 
+grid on
+title('Mediana logarítmica EDP')
 
 % Desviación Estándar Logarítmica
 figure
-plot(EDP_stdln',IM(:,1)/g,'.-','color','k')
-xlabel('Desviación estandar logarítmica de EDP, std(log(EDP))')
-ylabel('IM: Sa(T_1,\xi) [g]') 
+plot(IM(:,1)/g,EDP_stdln','.-','color','k')
+ylabel('Desviación estandar logarítmica de EDP, std(log(EDP))')
+xlabel('IM: Sa(T_1,\xi) [g]') 
 grid on
-title('Estructura 1')
-legend('Desviación Estándar Logarítmica')
+title('Desviación estándar EDP')
 
-% % Media
-% figure
-% plot(IM(:,1)/g,EDP_muln','.-','color','k')
-% ylabel('Media logarítmica de EDP, mean(log(EDP))')
-% xlabel('IM: Sa(T_1,\xi) [g]') 
-% grid on
-% title('Media logarítmica EDP')
+% Media
+figure
+plot(IM(:,1)/g,EDP_muln','.-','color','k')
+ylabel('Media logarítmica de EDP, mean(log(EDP))')
+xlabel('IM: Sa(T_1,\xi) [g]') 
+grid on
+title('Media logarítmica EDP')
 
-% % Mediana +- sigma
-% figure
-% plot(IM(:,1)/g,EDP_median','.-','color','r')
-% hold on
-% plot(IM(:,1)/g,exp(log(EDP_median')+EDP_stdln'),'.-','color','k')
-% plot(IM(:,1)/g,exp(log(EDP_median')-EDP_stdln'),'.-','color','k')
-% hold off
-% ylabel('Mediana logarítmica de EDP, geomean(EDP)')
-% xlabel('IM: Sa(T_1,\xi) [g]') 
-% grid on
-% title('Mediana logarítmica EDP +- sigma')
+% Mediana +- sigma
+figure
+plot(IM(:,1)/g,EDP_median','.-','color','r')
+hold on
+plot(IM(:,1)/g,exp(log(EDP_median')+EDP_stdln'),'.-','color','k')
+plot(IM(:,1)/g,exp(log(EDP_median')-EDP_stdln'),'.-','color','k')
+hold off
+ylabel('Mediana logarítmica de EDP, geomean(EDP)')
+xlabel('IM: Sa(T_1,\xi) [g]') 
+grid on
+title('Mediana logarítmica EDP')
 
-% Figura martina
 figure
 plot(EDP_median',IM(:,1)/g,'.-','color','r')
 hold on
 plot(exp(log(EDP_median')+EDP_stdln'),IM(:,1)/g,'.-','color','k')
 plot(exp(log(EDP_median')-EDP_stdln'),IM(:,1)/g,'.-','color','k')
-plot(EDP_muln',IM(:,1)/g,'.-','color','b')
 hold off
-xlabel('Mediana y media logarítmica de EDP, geomean(EDP)')
+xlabel('Mediana logarítmica de EDP, geomean(EDP)')
 ylabel('IM: Sa(T_1,\xi) [g]') 
-legend('Mediana','Mediana+-\sigma','','Media')
 grid on
-title('Estructura 1')
+title('Mediana logarítmica EDP')
 
 %% 3
 % Copiar gráficos media vs Sa, pero agregar curva de desplazamientos
@@ -161,15 +154,27 @@ Sd = IM(:,1)./omega^2;  % IM m/s2 omega en rad2/s2 -> Sd = metros
 
 % Media
 figure
-plot(EDP_muln',IM(:,1)/g,'color','r')
+plot(IM(:,1)/g,EDP_muln','.-','color','k')
 hold on
-plot(Sd,IM(:,1)/g,'.-','color','k')                                                        % Dejamos Sd en centimetros
+plot(IM(:,1)/g,Sd)
 hold off
-xlabel('Desplazamiento [m]')
+ylabel('Media logarítmica de EDP, mean(log(EDP))')
+xlabel('IM: Sa(T_1,\xi) [g]') 
+grid on
+title('Media logarítmica EDP')
+legend('EDP_muln','Sd')
+
+% Media
+figure
+plot(EDP_muln',IM(:,1)/g,'.-','color','k')
+hold on
+plot(Sd,IM(:,1)/g)                                                         % Dejamos Sd en centimetros
+hold off
+xlabel('Media logarítmica de EDP, mean(log(EDP))')
 ylabel('IM: Sa(T_1,\xi) [g]') 
 grid on
-title('Estructura 1')
-legend('Media','Sd(T_1)')
+title('Media logarítmica EDP')
+legend('EDP_muln','Sd')
 
 
 %% 4
@@ -247,65 +252,47 @@ EDP_muln = exp(log(EDP_median) + 0.5*EDP_stdln.^2);                         % Es
 
 figure
 plot(EDP,IM/g,'.-','color','#909090')
-hold on
-plot(EDP_median,IM(:,1)/g,'color','r')
-hold off
 ylabel('EDP: Desplazamiento Máximo [m]')
 xlabel('IM: Sa_avg [g]')                                                    % En IIDAP, se pusieron unidades de metros y segundos => aceleraciones en m/s2
 title('Multi-Record IDA Curves', ' Estructura T_1 = 1.5s; \xi = 5%')
 grid on
 
 % Gráficos
-% % Mediana logarítmica
-% figure
-% plot(IM(:,1)/g,EDP_median','.-','color','k')
-% ylabel('Mediana logarítmica de EDP, geomean(EDP)')
-% xlabel('IM: Sa_avg [g]') 
-% grid on
-% title('Mediana logarítmica EDP')
+% Mediana logarítmica
+figure
+plot(IM(:,1)/g,EDP_median','.-','color','k')
+ylabel('Mediana logarítmica de EDP, geomean(EDP)')
+xlabel('IM: Sa_avg [g]') 
+grid on
+title('Mediana logarítmica EDP')
 
 % Desviación Estándar Logarítmica
 figure
-plot(EDP_stdln',IM(:,1)/g,'.-','color','k')
-xlabel('Desviación estandar logarítmica de EDP, std(log(EDP))')
-ylabel('IM: Sa_avg [g]') 
+plot(IM(:,1)/g,EDP_stdln','.-','color','k')
+ylabel('Desviación estandar logarítmica de EDP, std(log(EDP))')
+xlabel('IM: Sa_avg [g]') 
 grid on
-title('Estructura 1')
-legend('Desviación estándar logarítmica')
-% % Media
-% figure
-% plot(IM(:,1)/g,EDP_muln','.-','color','k')
-% ylabel('Media logarítmica de EDP, mean(log(EDP))')
-% xlabel('IM: Sa_avg [g]') 
-% grid on
-% title('Media logarítmica EDP')
+title('Desviación estándar EDP')
 
-% % Mediana +- sigma
-% figure
-% plot(IM(:,1)/g,EDP_median','.-','color','r')
-% hold on
-% plot(IM(:,1)/g,exp(log(EDP_median')+EDP_stdln'),'.-','color','k')
-% plot(IM(:,1)/g,exp(log(EDP_median')-EDP_stdln'),'.-','color','k')
-% hold off
-% ylabel('Mediana logarítmica de EDP, geomean(EDP)')
-% xlabel('IM: Sa_avg [g]') 
-% grid on
-% title('Mediana logarítmica EDP')
-
-% Figura martina
-
+% Media
 figure
-plot(EDP_median',IM(:,1)/g,'.-','color','r')
-hold on
-plot(exp(log(EDP_median')+EDP_stdln'),IM(:,1)/g,'.-','color','k')
-plot(exp(log(EDP_median')-EDP_stdln'),IM(:,1)/g,'.-','color','k')
-plot(EDP_muln',IM(:,1)/g,'.-','color','b')
-hold off
-xlabel('Mediana y media logarítmica de EDP, geomean(EDP)')
-ylabel('IM: Sa_avg [g]') 
-legend('Mediana','Mediana+-\sigma','','Media')
+plot(IM(:,1)/g,EDP_muln','.-','color','k')
+ylabel('Media logarítmica de EDP, mean(log(EDP))')
+xlabel('IM: Sa_avg [g]') 
 grid on
-title('Estructura 1 pregunta 5')
+title('Media logarítmica EDP')
+
+% Mediana +- sigma
+figure
+plot(IM(:,1)/g,EDP_median','.-','color','r')
+hold on
+plot(IM(:,1)/g,exp(log(EDP_median')+EDP_stdln'),'.-','color','k')
+plot(IM(:,1)/g,exp(log(EDP_median')-EDP_stdln'),'.-','color','k')
+hold off
+ylabel('Mediana logarítmica de EDP, geomean(EDP)')
+xlabel('IM: Sa_avg [g]') 
+grid on
+title('Mediana logarítmica EDP')
 
 % Volvemos a dejar como estaba antes
 EDP = EDP_Sa;                                                               % EDP cuando IM es Sa(T1)
@@ -427,7 +414,7 @@ title('Derivada de la curva de amenaza sísmica')
 grid on
 
 % Rango de edp para lambda_EDP
-edps = (0.1:0.1:6)';
+edps = (0.001:0.001:6)';
 
 % Obtención de lambda_EDP
 lambda_EDP = zeros(length(edps),1);
