@@ -33,7 +33,8 @@ Ti_step = 0.01;                                                             % Pa
 Ti_final = 5;                                                               % Máximo Ti
 
 % Cantidad de puntos intermedios para interpolar 
-
+n_interpol = 100;
+1|
 %% Calculo Savg
 Tn_inicial = c1*T1;
 Tn_final = cN*T1;

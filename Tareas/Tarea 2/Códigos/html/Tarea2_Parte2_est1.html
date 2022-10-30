@@ -1,0 +1,1003 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Tarea2_Parte2_est1</title><meta name="generator" content="MATLAB 9.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-10-26"><meta name="DC.source" content="Tarea2_Parte2_est1.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Tarea 2 - Ingenier&iacute;a S&iacute;smica Avanzada</a></li><li><a href="#2">Inicializar</a></li><li><a href="#3">Estructura 1</a></li><li><a href="#4">Parte 2 - Estructura 1</a></li><li><a href="#5">1.</a></li><li><a href="#6">2.</a></li><li><a href="#7">3</a></li><li><a href="#8">4</a></li><li><a href="#9">5</a></li><li><a href="#10">6</a></li><li><a href="#11">6.2 An&aacute;lisis probabil&iacute;stico de la demanda s&iacute;smica</a></li><li><a href="#12">7</a></li></ul></div><h2 id="1">Tarea 2 - Ingenier&iacute;a S&iacute;smica Avanzada</h2><p>Alexis Contreras - Martina Sanguinetti Ingenier&iacute;a S&iacute;smica Avanzada - USM</p><pre class="codeinput"><span class="comment">% Parte 2 Estructura 1</span>
+</pre><h2 id="2">Inicializar</h2><pre class="codeinput">clear <span class="string">variables</span>
+close <span class="string">all</span>
+clc
+</pre><h2 id="3">Estructura 1</h2><pre class="codeinput">W = 550; <span class="comment">% tonf                                                             % Peso de la estructura</span>
+T = 1.5; <span class="comment">% sec                                                              % Periodo fundamental</span>
+zeta = 0.05; <span class="comment">% %                                                            % Fracci&oacute;n de amortiguamiento</span>
+Cy = 0.1; <span class="comment">%                                                                 % Coeficiente s&iacute;smico inel&aacute;stico</span>
+<span class="comment">% alfa = 0.02; %                                                              % Coeficiente de endurecimiento post-fluencia</span>
+g = 9.81;   <span class="comment">% m/s2</span>
+</pre><h2 id="4">Parte 2 - Estructura 1</h2><h2 id="5">1.</h2><p>Currvas IDA utilizando el desplazamiento m&aacute;ximo como EDP y Sa(T1,xi=5%) como IM. No deber&iacute;a haber colapso ya que no estamos considerando efectos P-Delta y modelo no considera degradaci&oacute;n. Indicar punto de fluencia en las curvas IDA</p><pre class="codeinput">dIM = 0.1; <span class="comment">% g                                                              % Incremento de IM</span>
+IM_max = 3; <span class="comment">% g                                                              % IM m&aacute;xima</span>
+IM_step = 0.1;
+<span class="comment">% IM_min = 0.1;</span>
+<span class="comment">% Nombre de carpeta donde est&aacute;n los archivos</span>
+ResultsDir = <span class="string">'Resultados1'</span>;
+
+<span class="comment">% Escribir el nombre de todos los archivos</span>
+ResultsName = <span class="string">'estructura1'</span>;                                                 <span class="comment">% Trucazo para leer nombres de una carpeta</span>
+
+<span class="comment">% Generar curvas IDA</span>
+[EDP,IM] = getIdaCurves(ResultsDir, ResultsName);
+<span class="comment">% EDP(nFranjas,nRegistros)</span>
+<span class="comment">% IM(nFranjas,nRegistros)</span>
+
+ay = Cy;            <span class="comment">% ay = Cy*g, pero en unidad g hay que volver a dividirlo</span>
+dy = Cy*W/(4*pi^2*W/g/T^2);
+EDP_median = geomean(EDP');
+
+<span class="comment">% Figuras</span>
+figure
+plot(EDP_median',IM(:,1)/g,<span class="string">'color'</span>,<span class="string">'r'</span>,<span class="string">'LineWidth'</span>,2)
+hold <span class="string">on</span>
+plot(EDP,IM/g,<span class="string">'.-'</span>,<span class="string">'color'</span>,<span class="string">'#606060'</span>)
+hold <span class="string">on</span>
+plot(dy,ay,<span class="string">'^'</span>,<span class="string">'Color'</span>,<span class="string">'b'</span>)
+xline(dy,<span class="string">'Color'</span>,<span class="string">'b'</span>)
+hold <span class="string">off</span>
+<span class="comment">% text(2,0.5,['Fluencia (dy,ay)' string([dy ay])])</span>
+ylim([0 IM_max])
+xlabel(<span class="string">'EDP: Desplazamiento M&aacute;ximo [m]'</span>)
+ylabel(<span class="string">'IM: Sa(T_1,\xi) [g]'</span>)                                               <span class="comment">% En IIDAP, se pusieron unidades de metros y segundos =&gt; aceleraciones en m/s2</span>
+title(<span class="string">'Multi-Record IDA Curves'</span>, <span class="string">' Estructura T_1 = 1.5s; \xi = 5%'</span>)
+grid <span class="string">on</span>
+
+
+<span class="comment">% figure</span>
+<span class="comment">% plot(IM/g,EDP,'.-','Color','#606060')</span>
+<span class="comment">% ylabel('EDP: Desplazamiento M&aacute;ximo [m]')</span>
+<span class="comment">% xlabel('IM: Sa(T_1,\xi) [g]')                                               % En IIDAP, se pusieron unidades de metros y segundos =&gt; aceleraciones en m/s2</span>
+<span class="comment">% title('Multi-Record IDA Curves', ' Estructura T_1 = 1.5s; \xi = 5%')</span>
+<span class="comment">% grid on</span>
+</pre><h2 id="6">2.</h2><p>Graficar curva IDA mediana y la desviaci&oacute;n est&aacute;ndar logar&iacute;tmica de los desplazamientos como funci&oacute;n de Sa(T1)</p><pre class="codeinput"><span class="comment">% mu_ln = median(log(x))</span>
+<span class="comment">% median = geomean(x)</span>
+<span class="comment">% std_ln = std(log(x))</span>
+
+<span class="comment">% EDP_muln = mean(log(EDP')); % me da negativo usando lo del ppt</span>
+<span class="comment">% EDP_median = geomean(EDP');                                                 % Mediana</span>
+EDP_stdln = std(log(EDP'));                                                 <span class="comment">% Desviaci&oacute;n estandar</span>
+EDP_muln = exp(log(EDP_median) + 0.5*EDP_stdln.^2);                         <span class="comment">% Estimaci&oacute;n de la Media</span>
+
+<span class="comment">% Gr&aacute;ficos</span>
+
+<span class="comment">% % Mediana logar&iacute;tmica + Curvas IDA</span>
+<span class="comment">% figure</span>
+<span class="comment">% plot(EDP_median',IM(:,1)/g,'color','r','LineWidth',2)</span>
+<span class="comment">% hold on</span>
+<span class="comment">% plot(EDP,IM/g,'.-','color','#606060')</span>
+<span class="comment">% xline(dy,'Color','b')</span>
+<span class="comment">% ylim([0 IM_max])</span>
+<span class="comment">% hold off</span>
+<span class="comment">% xlabel('EDP y geomean(EDP)')</span>
+<span class="comment">% ylabel('IM: Sa(T_1,\xi) [g]')</span>
+<span class="comment">% grid on</span>
+<span class="comment">% title('Mediana logar&iacute;tmica EDP')</span>
+
+
+<span class="comment">% % Mediana logar&iacute;tmica</span>
+<span class="comment">% figure</span>
+<span class="comment">% plot(IM(:,1)/g,EDP_median','.-','color','k')</span>
+<span class="comment">% ylabel('Mediana logar&iacute;tmica de EDP, geomean(EDP)')</span>
+<span class="comment">% xlabel('IM: Sa(T_1,\xi) [g]')</span>
+<span class="comment">% grid on</span>
+<span class="comment">% title('Mediana logar&iacute;tmica EDP')</span>
+
+<span class="comment">% Desviaci&oacute;n Est&aacute;ndar Logar&iacute;tmica</span>
+figure
+plot(EDP_stdln',IM(:,1)/g,<span class="string">'.-'</span>,<span class="string">'color'</span>,<span class="string">'k'</span>)
+xlabel(<span class="string">'Desviaci&oacute;n estandar logar&iacute;tmica de EDP, std(log(EDP))'</span>)
+ylabel(<span class="string">'IM: Sa(T_1,\xi) [g]'</span>)
+grid <span class="string">on</span>
+title(<span class="string">'Estructura 1'</span>)
+legend(<span class="string">'Desviaci&oacute;n Est&aacute;ndar Logar&iacute;tmica'</span>)
+
+<span class="comment">% % Media</span>
+<span class="comment">% figure</span>
+<span class="comment">% plot(IM(:,1)/g,EDP_muln','.-','color','k')</span>
+<span class="comment">% ylabel('Media logar&iacute;tmica de EDP, mean(log(EDP))')</span>
+<span class="comment">% xlabel('IM: Sa(T_1,\xi) [g]')</span>
+<span class="comment">% grid on</span>
+<span class="comment">% title('Media logar&iacute;tmica EDP')</span>
+
+<span class="comment">% % Mediana +- sigma</span>
+<span class="comment">% figure</span>
+<span class="comment">% plot(IM(:,1)/g,EDP_median','.-','color','r')</span>
+<span class="comment">% hold on</span>
+<span class="comment">% plot(IM(:,1)/g,exp(log(EDP_median')+EDP_stdln'),'.-','color','k')</span>
+<span class="comment">% plot(IM(:,1)/g,exp(log(EDP_median')-EDP_stdln'),'.-','color','k')</span>
+<span class="comment">% hold off</span>
+<span class="comment">% ylabel('Mediana logar&iacute;tmica de EDP, geomean(EDP)')</span>
+<span class="comment">% xlabel('IM: Sa(T_1,\xi) [g]')</span>
+<span class="comment">% grid on</span>
+<span class="comment">% title('Mediana logar&iacute;tmica EDP +- sigma')</span>
+
+<span class="comment">% Figura martina</span>
+figure
+plot(EDP_median',IM(:,1)/g,<span class="string">'.-'</span>,<span class="string">'color'</span>,<span class="string">'r'</span>)
+hold <span class="string">on</span>
+plot(exp(log(EDP_median')+EDP_stdln'),IM(:,1)/g,<span class="string">'.-'</span>,<span class="string">'color'</span>,<span class="string">'k'</span>)
+plot(exp(log(EDP_median')-EDP_stdln'),IM(:,1)/g,<span class="string">'.-'</span>,<span class="string">'color'</span>,<span class="string">'k'</span>)
+plot(EDP_muln',IM(:,1)/g,<span class="string">'.-'</span>,<span class="string">'color'</span>,<span class="string">'b'</span>)
+hold <span class="string">off</span>
+xlabel(<span class="string">'Mediana y media logar&iacute;tmica de EDP, geomean(EDP)'</span>)
+ylabel(<span class="string">'IM: Sa(T_1,\xi) [g]'</span>)
+legend(<span class="string">'Mediana'</span>,<span class="string">'Mediana+-\sigma'</span>,<span class="string">''</span>,<span class="string">'Media'</span>)
+grid <span class="string">on</span>
+title(<span class="string">'Estructura 1'</span>)
+</pre><h2 id="7">3</h2><p>Copiar gr&aacute;ficos media vs Sa, pero agregar curva de desplazamientos m&aacute;ximos que se obtendr&iacute;an asumiendo principio de igualdad de desplazamientos</p><pre class="codeinput"><span class="comment">% Se cumplir&iacute;a este principio solo en la primera estructura ya tiene periodo</span>
+<span class="comment">% mayor a 1[s], pero no para la segunda estructura</span>
+
+<span class="comment">% Principio de grandes desplazamientos</span>
+omega = 2*pi/T;
+Sd = IM(:,1)./omega^2;  <span class="comment">% IM m/s2 omega en rad2/s2 -&gt; Sd = metros</span>
+
+<span class="comment">% Media</span>
+figure
+plot(EDP_muln',IM(:,1)/g,<span class="string">'color'</span>,<span class="string">'r'</span>)
+hold <span class="string">on</span>
+plot(Sd,IM(:,1)/g,<span class="string">'.-'</span>,<span class="string">'color'</span>,<span class="string">'k'</span>)                                                        <span class="comment">% Dejamos Sd en centimetros</span>
+hold <span class="string">off</span>
+xlabel(<span class="string">'Desplazamiento [m]'</span>)
+ylabel(<span class="string">'IM: Sa(T_1,\xi) [g]'</span>)
+grid <span class="string">on</span>
+title(<span class="string">'Estructura 1'</span>)
+legend(<span class="string">'Media'</span>,<span class="string">'Sd(T_1)'</span>)
+</pre><h2 id="8">4</h2><p>Suponiendo distribuci&oacute;n lognormal para EDP dado IM, calcular probabilidad de que los desplazamientos m&aacute;ximos excedan 25cm para una ordenada espectral de 1g.</p><pre class="codeinput"><span class="comment">% % Desplazamiento m&aacute;ximo objetivo</span>
+<span class="comment">% desplMaxObj = 25/100; % 25  cm = 25/100 m</span>
+<span class="comment">%</span>
+<span class="comment">% % Posici&oacute;n IM = 1g</span>
+<span class="comment">% posIM1g = find(IM(:,1)/g == 1);</span>
+<span class="comment">%</span>
+<span class="comment">% % Columna de EDP que necesito para este an&aacute;lisis</span>
+<span class="comment">% EDP_col = EDP(:,posIM1g);</span>
+<span class="comment">% EDP_logncdf = logncdf(EDP_col);</span>
+<span class="comment">% EDP_valuesInterp = interp1(EDP_col,EDP_logncdf,desplMaxObj);                % Interpolando, el valor de la probabilidad es este</span>
+<span class="comment">%</span>
+<span class="comment">% % Distribuci&oacute;n</span>
+<span class="comment">% figure</span>
+<span class="comment">% plot(EDP_col,EDP_logncdf)</span>
+<span class="comment">% hold on</span>
+<span class="comment">% plot(desplMaxObj,EDP_valuesInterp,'^r')</span>
+<span class="comment">% hold off</span>
+<span class="comment">% xlabel('EDP|IM = 1g')</span>
+<span class="comment">% ylabel('logncdf(EDP)|IM = 1g')</span>
+<span class="comment">% text(desplMaxObj+0.1,EDP_valuesInterp,['P(EDP &gt; 25cm | IM = 1g) =' string(EDP_valuesInterp)])</span>
+<span class="comment">% grid on</span>
+<span class="comment">%</span>
+<span class="comment">% fprintf('P4. P(EDP &gt; 25cm | IM = 1g) = %.4f\n',EDP_valuesInterp);</span>
+
+<span class="comment">% P(EDP&gt;edp | IM = im) = 1 - cdf((ln(edp)-ln(EDP_median|IM=im))/EDP_sigmaln|IM=im)</span>
+<span class="comment">% Ya tenemos EDP_median|IM = 1g</span>
+<span class="comment">% Ya tenemos EDP_stdln|IM = 1g</span>
+
+<span class="comment">% Desplazamiento m&aacute;ximo objetivo</span>
+desplMaxObj = 25/100; <span class="comment">% 25  cm = 25/100 m</span>
+
+<span class="comment">% Posici&oacute;n IM = 1g</span>
+posIM1g = find(IM(:,1)/g == 1);
+
+<span class="comment">% Probabilidad</span>
+probabilidad = 1-normcdf(log(desplMaxObj),log(EDP_median(posIM1g)),EDP_stdln(posIM1g));
+fprintf(<span class="string">'%f\n'</span>,probabilidad)
+</pre><h2 id="9">5</h2><p>Repetir proceso pero ahora con Sa_avg como IM, para definir Sa_avg utilizar 20 periodos entre 0.2T y 3.0T</p><pre class="codeinput"><span class="comment">% Se corre un nuevo an&aacute;lisis en II-DAP pero con IM alternativa Sa_avg en</span>
+<span class="comment">% 'analysis type'</span>
+
+<span class="comment">% Guardar datos anteriores</span>
+EDP_Sa = EDP;                                                               <span class="comment">% EDP cuando IM es Sa(T1)</span>
+IM_Sa = IM;                                                                 <span class="comment">% IM  = Sa(T1)</span>
+
+<span class="comment">% Nombre para importar datos</span>
+ResultsDir_Sa_avg = <span class="string">'Resultados1'</span>;
+ResultsName_Sa_avg = <span class="string">'estructura1_sa_avg'</span>;
+
+<span class="comment">% getIdaCurves</span>
+[EDP,IM] = getIdaCurves(ResultsDir_Sa_avg, ResultsName_Sa_avg);
+
+<span class="comment">% Repetir paso 2 para IM = Sa_avg</span>
+<span class="comment">% Graficar curva IDA mediana y la desviaci&oacute;n est&aacute;ndar logar&iacute;tmica de los</span>
+<span class="comment">% desplazamientos como funci&oacute;n de Sa(T1)</span>
+
+EDP_median = geomean(EDP');                                                 <span class="comment">% Mediana</span>
+EDP_stdln = std(log(EDP'));                                                 <span class="comment">% Desviaci&oacute;n estandar</span>
+EDP_muln = exp(log(EDP_median) + 0.5*EDP_stdln.^2);                         <span class="comment">% Estimaci&oacute;n de la Media</span>
+
+<span class="comment">% Gr&aacute;ficos</span>
+<span class="comment">% EDP vs IM</span>
+
+figure
+plot(EDP,IM/g,<span class="string">'.-'</span>,<span class="string">'color'</span>,<span class="string">'#909090'</span>)
+hold <span class="string">on</span>
+plot(EDP_median,IM(:,1)/g,<span class="string">'color'</span>,<span class="string">'r'</span>)
+hold <span class="string">off</span>
+ylabel(<span class="string">'EDP: Desplazamiento M&aacute;ximo [m]'</span>)
+xlabel(<span class="string">'IM: Sa_avg [g]'</span>)                                                    <span class="comment">% En IIDAP, se pusieron unidades de metros y segundos =&gt; aceleraciones en m/s2</span>
+title(<span class="string">'Multi-Record IDA Curves'</span>, <span class="string">' Estructura T_1 = 1.5s; \xi = 5%'</span>)
+grid <span class="string">on</span>
+
+<span class="comment">% Gr&aacute;ficos</span>
+<span class="comment">% % Mediana logar&iacute;tmica</span>
+<span class="comment">% figure</span>
+<span class="comment">% plot(IM(:,1)/g,EDP_median','.-','color','k')</span>
+<span class="comment">% ylabel('Mediana logar&iacute;tmica de EDP, geomean(EDP)')</span>
+<span class="comment">% xlabel('IM: Sa_avg [g]')</span>
+<span class="comment">% grid on</span>
+<span class="comment">% title('Mediana logar&iacute;tmica EDP')</span>
+
+<span class="comment">% Desviaci&oacute;n Est&aacute;ndar Logar&iacute;tmica</span>
+figure
+plot(EDP_stdln',IM(:,1)/g,<span class="string">'.-'</span>,<span class="string">'color'</span>,<span class="string">'k'</span>)
+xlabel(<span class="string">'Desviaci&oacute;n estandar logar&iacute;tmica de EDP, std(log(EDP))'</span>)
+ylabel(<span class="string">'IM: Sa_avg [g]'</span>)
+grid <span class="string">on</span>
+title(<span class="string">'Estructura 1'</span>)
+legend(<span class="string">'Desviaci&oacute;n est&aacute;ndar logar&iacute;tmica'</span>)
+<span class="comment">% % Media</span>
+<span class="comment">% figure</span>
+<span class="comment">% plot(IM(:,1)/g,EDP_muln','.-','color','k')</span>
+<span class="comment">% ylabel('Media logar&iacute;tmica de EDP, mean(log(EDP))')</span>
+<span class="comment">% xlabel('IM: Sa_avg [g]')</span>
+<span class="comment">% grid on</span>
+<span class="comment">% title('Media logar&iacute;tmica EDP')</span>
+
+<span class="comment">% % Mediana +- sigma</span>
+<span class="comment">% figure</span>
+<span class="comment">% plot(IM(:,1)/g,EDP_median','.-','color','r')</span>
+<span class="comment">% hold on</span>
+<span class="comment">% plot(IM(:,1)/g,exp(log(EDP_median')+EDP_stdln'),'.-','color','k')</span>
+<span class="comment">% plot(IM(:,1)/g,exp(log(EDP_median')-EDP_stdln'),'.-','color','k')</span>
+<span class="comment">% hold off</span>
+<span class="comment">% ylabel('Mediana logar&iacute;tmica de EDP, geomean(EDP)')</span>
+<span class="comment">% xlabel('IM: Sa_avg [g]')</span>
+<span class="comment">% grid on</span>
+<span class="comment">% title('Mediana logar&iacute;tmica EDP')</span>
+
+<span class="comment">% Figura martina</span>
+
+figure
+plot(EDP_median',IM(:,1)/g,<span class="string">'.-'</span>,<span class="string">'color'</span>,<span class="string">'r'</span>)
+hold <span class="string">on</span>
+plot(exp(log(EDP_median')+EDP_stdln'),IM(:,1)/g,<span class="string">'.-'</span>,<span class="string">'color'</span>,<span class="string">'k'</span>)
+plot(exp(log(EDP_median')-EDP_stdln'),IM(:,1)/g,<span class="string">'.-'</span>,<span class="string">'color'</span>,<span class="string">'k'</span>)
+plot(EDP_muln',IM(:,1)/g,<span class="string">'.-'</span>,<span class="string">'color'</span>,<span class="string">'b'</span>)
+hold <span class="string">off</span>
+xlabel(<span class="string">'Mediana y media logar&iacute;tmica de EDP, geomean(EDP)'</span>)
+ylabel(<span class="string">'IM: Sa_avg [g]'</span>)
+legend(<span class="string">'Mediana'</span>,<span class="string">'Mediana+-\sigma'</span>,<span class="string">''</span>,<span class="string">'Media'</span>)
+grid <span class="string">on</span>
+title(<span class="string">'Estructura 1 pregunta 5'</span>)
+
+<span class="comment">% Volvemos a dejar como estaba antes</span>
+EDP = EDP_Sa;                                                               <span class="comment">% EDP cuando IM es Sa(T1)</span>
+IM = IM_Sa;                                                                 <span class="comment">% IM  = Sa(T1)</span>
+</pre><h2 id="10">6</h2><p>Extraer curvas de amenaza s&iacute;smica desde USGS para periodos en estudio Realizar interpolaci&oacute;n lineal de los datos  de 0.1g Notar que no hay para T = 1.5sec -&gt; Interpolar de forma hiperb&oacute;lica en periodo (Sa prop. 1/T)</p><pre class="codeinput"><span class="comment">% USGS Data</span>
+USGS_data_Dir = <span class="string">'Resultados1'</span>;
+USGS_data_Name = <span class="string">'USGS_data_est1'</span>;
+
+USGS_data = readmatrix([USGS_data_Dir <span class="string">'\'</span> USGS_data_Name]);
+<span class="comment">% Col1: Ground Motion, Col2: Lambda, Col3: GM, Col4: lambda, Col5: Sa -&gt; USGS</span>
+T1 = 1;                                                                     <span class="comment">% Periodo de las dos primeras columnas</span>
+T2 = 2;                                                                     <span class="comment">% Periodo de las dos segundas columnas</span>
+
+<span class="comment">% Hazazrd Curve (T = 1sec)</span>
+IM_1 = USGS_data(:,1);      <span class="comment">% [g]</span>
+lambda_1 = USGS_data(:,2);
+
+<span class="comment">% Hazard Curve (T = 2sec)</span>
+IM_2 = USGS_data(:,3);      <span class="comment">% [g]</span>
+lambda_2 = USGS_data(:,4);
+
+<span class="comment">% Figura</span>
+figure
+loglog(IM_1,lambda_1,<span class="string">'Color'</span>,<span class="string">'#007d79'</span>)
+hold <span class="string">on</span>
+loglog(IM_2,lambda_2,<span class="string">'Color'</span>,<span class="string">'#6929c4'</span>)
+hold <span class="string">off</span>
+xlabel(<span class="string">'Ground Motion [g] IM = Sa(T_1)'</span>)
+ylabel(<span class="string">'Annual Frequency of Excedence \lambda_{IM}'</span>)
+title(<span class="string">'Hazard Curves USGS'</span>)
+grid <span class="string">on</span>
+legend(<span class="string">'T=1[sec]'</span>,<span class="string">'T=2[sec]'</span>)
+
+<span class="comment">% Interpolamos ambas para IM</span>
+IM_obj = IM_Sa(:,1)/g;
+lambda_1_int = zeros(length(IM_obj),1);
+lambda_2_int = zeros(length(IM_obj),1);
+lambda_1_5_int = zeros(length(IM_obj),1);
+
+<span class="keyword">for</span> i = 1:length(IM_obj)
+    lambda_1_int(i) = interp1(IM_1,lambda_1,IM_obj(i));
+    lambda_2_int(i) = interp1(IM_2,lambda_2,IM_obj(i));
+<span class="keyword">end</span>
+
+<span class="keyword">for</span> i = 1:length(IM_obj)
+    lambda_1_5_int(i) = interp1([1/T1 1/T2], [lambda_1_int(i) lambda_2_int(i)],1/T);
+<span class="keyword">end</span>
+
+figure
+loglog(IM_obj,lambda_1_5_int,<span class="string">'.-'</span>,<span class="string">'color'</span>,<span class="string">'r'</span>)
+hold <span class="string">on</span>
+loglog(IM_obj,lambda_1_int,<span class="string">'.-'</span>,<span class="string">'Color'</span>,<span class="string">'#007d79'</span>)
+loglog(IM_obj,lambda_2_int,<span class="string">'.-'</span>,<span class="string">'Color'</span>,<span class="string">'#6929c4'</span>)
+hold <span class="string">off</span>
+xlabel(<span class="string">'Ground Motion [g] IM = Sa(T_1)'</span>)
+ylabel(<span class="string">'Annual Frequency of Excende \lambda_{IM}'</span>)
+title(<span class="string">'Hazard Curves USGS'</span>)
+legend(<span class="string">'T = 1.5[s]'</span>, <span class="string">'T = 1[s]'</span>,<span class="string">'T = 2[s]'</span>)
+grid <span class="string">on</span>
+
+<span class="comment">%</span>
+</pre><h2 id="11">6.2 An&aacute;lisis probabil&iacute;stico de la demanda s&iacute;smica</h2><p>Relizar un an&aacute;lisis probabil&iacute;stico de la demanda s&iacute;smica para caluclar lambda_EDP, con IM = Sa(T1) y despl_max como EDP</p><pre class="codeinput"><span class="comment">% Ya tenemos la curva de amenaza s&iacute;smica -&gt; podemos obtener d/dIM</span>
+<span class="comment">% (lambda(IM))</span>
+
+<span class="comment">% Hasta la fecha no me dan los vectores de IM_T_15sec y lambdaIM_15sec (1.5 sec)</span>
+<span class="comment">% De la forma como las pide el profe, pero trabajemos con los que tenemos</span>
+<span class="comment">% como si estuvieran correctos</span>
+
+<span class="comment">% Supongo que num&eacute;ricamente, al no contar con dIM, se calcula como una</span>
+<span class="comment">% sumatoria en vez de una integral</span>
+
+<span class="comment">% Renombramos par&aacute;metros</span>
+<span class="comment">% IM = IM_1_5_sec;</span>
+
+<span class="comment">% Desde amenaza</span>
+<span class="comment">% IM_amenaza = IM_interp1(1:IM_max/IM_step);                                                    % 0.1:0.1:3   [g]</span>
+IM_amenaza = IM_obj;
+IM_amenaza(1,:) = [];
+lambda_amenaza = lambda_1_5_int;                                            <span class="comment">% Interpolaci&oacute;n</span>
+lambda_amenaza(1,:) = [];
+<span class="comment">% Desde Curvas IDA, las arreglamos para que tengan mismo paso que amenaza</span>
+<span class="comment">% sismica</span>
+
+IM_IDA = IM_amenaza;                                                        <span class="comment">% IM_IDA = IM_Sa(:,1)/g; IM_IDA(31:33)=[]; IM_IDA(0) = [];</span>
+EDP_IDA = EDP_Sa;
+EDP_IDA(1,:) = [];
+
+<span class="comment">% Par&aacute;metros distribuci&oacute;n lognormal</span>
+EDP_median = geomean(EDP_IDA')';                                            <span class="comment">% Mediana</span>
+EDP_stdln = std(log(EDP_IDA'))';                                            <span class="comment">% Desviaci&oacute;n estandar</span>
+EDP_muln = exp(log(EDP_median) + 0.5*EDP_stdln.^2);                        <span class="comment">% Estimaci&oacute;n de la Media</span>
+
+<span class="comment">% Obtenci&oacute;n de abs(d/dIM (lambda_IM(x)))</span>
+
+<span class="comment">% dlambdadIM = zeros(length(lambda_amenaza),1);</span>
+<span class="comment">% for i = 1:length(lambda_amenaza)-1</span>
+<span class="comment">%     dlambdadIM(i) = abs((lambda_amenaza(i+1)-lambda_amenaza(i))/(IM_amenaza(i+1)-IM_amenaza(i)));</span>
+<span class="comment">% end</span>
+dIM = diff(IM_amenaza);
+dlambdadIM = abs(diff(lambda_amenaza)./dIM);
+
+figure
+loglog(IM_amenaza(2:end,1),dlambdadIM)
+<span class="comment">% loglog(IM_amenaza,dlambdadIM)</span>
+xlabel(<span class="string">'IM'</span>)
+ylabel(<span class="string">'$|\frac{d\lambda(IM=im)}{dIM}|$'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>)
+title(<span class="string">'Derivada de la curva de amenaza s&iacute;smica'</span>)
+grid <span class="string">on</span>
+
+<span class="comment">% Rango de edp para lambda_EDP</span>
+edps = (0.1:0.1:6)';
+
+<span class="comment">% Obtenci&oacute;n de lambda_EDP</span>
+lambda_EDP = zeros(length(edps),1);
+multiplicacion = zeros(length(IM_IDA),length(edps));
+probabilidad = zeros(length(IM_IDA),length(edps));
+
+<span class="keyword">for</span> e = 1:length(edps)
+    edp = edps(e);
+    <span class="keyword">for</span> i = 1:length(IM_amenaza)-1
+        <span class="comment">% Valor de im</span>
+        im = IM_amenaza(i);
+
+        <span class="comment">% Posici&oacute;n IM = 1g en curvas IDA</span>
+        posIM = find(IM_IDA == im);                                         <span class="comment">% En verdad es igual a "i"</span>
+
+        <span class="comment">% EDP_median</span>
+        EDP_median_val = EDP_median(posIM);                                 <span class="comment">% EDP_median obtenido para todas las IM=im en punto 2</span>
+
+        <span class="comment">% EDP_stdln</span>
+        EDP_stdln_val = EDP_stdln(posIM);                                   <span class="comment">% EDP_stdln_val otebnido para todas las IM=im en punto 2</span>
+
+        <span class="comment">% EDP_muln</span>
+        EDP_muln_val = EDP_muln(posIM);
+
+        <span class="comment">% Parte EDP|IM</span>
+        <span class="comment">% Asumir que EDP distribuye como lognormal en funci&oacute;n de IM</span>
+        probabilidad(i,e) = 1 - normcdf(log(edp),log(EDP_median_val),EDP_stdln_val);
+<span class="comment">%         probabilidad(i,e) = 1 - normcdf(log(edp),log(EDP_muln_val),EDP_stdln_val);</span>
+
+        <span class="comment">% Parte IM</span>
+        dlambdadIM_val = dlambdadIM(i);
+
+        <span class="comment">% dIM</span>
+        <span class="comment">% dIM = 0.1; % g (en inputs arriba)</span>
+
+        <span class="comment">% Multiplicacion</span>
+        multiplicacion(i,e) = probabilidad(i,e)*dlambdadIM_val*dIM(i);
+    <span class="keyword">end</span>
+    lambda_EDP(e) = sum(multiplicacion(:,e));
+<span class="keyword">end</span>
+
+figure
+semilogy(edps,lambda_EDP)
+xlabel(<span class="string">'EDP: Desplazamiento m&aacute;ximo [m]'</span>)
+ylabel(<span class="string">'\lambda_{edp}: Frecuencia anual de excedencia'</span>)
+title(<span class="string">'Curva de demanda s&iacute;smica'</span>)
+grid <span class="string">on</span>
+
+figure
+loglog(edps,lambda_EDP)
+xlabel(<span class="string">'EDP: Desplazamiento m&aacute;ximo [m]'</span>)
+ylabel(<span class="string">'\lambda_{edp}: Frecuencia anual de excedencia'</span>)
+title(<span class="string">'Curva de demanda s&iacute;smica'</span>)
+grid <span class="string">on</span>
+</pre><h2 id="12">7</h2><p>Solo para estructura de T = 0.3s (segunda estructura)</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2022a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Tarea 2 - Ingeniería Sísmica Avanzada
+% Alexis Contreras - Martina Sanguinetti
+% Ingeniería Sísmica Avanzada - USM
+
+% Parte 2 Estructura 1
+
+%% Inicializar
+clear variables
+close all
+clc
+
+%% Estructura 1
+W = 550; % tonf                                                             % Peso de la estructura
+T = 1.5; % sec                                                              % Periodo fundamental
+zeta = 0.05; % %                                                            % Fracción de amortiguamiento
+Cy = 0.1; %                                                                 % Coeficiente sísmico inelástico
+% alfa = 0.02; %                                                              % Coeficiente de endurecimiento post-fluencia
+g = 9.81;   % m/s2
+
+%% Parte 2 - Estructura 1
+%% 1.
+% Currvas IDA utilizando el desplazamiento máximo como EDP y Sa(T1,xi=5%)
+% como IM.
+% No debería haber colapso ya que no estamos considerando efectos P-Delta y
+% modelo no considera degradación.
+% Indicar punto de fluencia en las curvas IDA
+dIM = 0.1; % g                                                              % Incremento de IM
+IM_max = 3; % g                                                              % IM máxima
+IM_step = 0.1;
+% IM_min = 0.1;
+% Nombre de carpeta donde están los archivos
+ResultsDir = 'Resultados1';
+
+% Escribir el nombre de todos los archivos
+ResultsName = 'estructura1';                                                 % Trucazo para leer nombres de una carpeta
+
+% Generar curvas IDA
+[EDP,IM] = getIdaCurves(ResultsDir, ResultsName);
+% EDP(nFranjas,nRegistros)
+% IM(nFranjas,nRegistros)
+
+ay = Cy;            % ay = Cy*g, pero en unidad g hay que volver a dividirlo
+dy = Cy*W/(4*pi^2*W/g/T^2);
+EDP_median = geomean(EDP');
+
+% Figuras 
+figure
+plot(EDP_median',IM(:,1)/g,'color','r','LineWidth',2)
+hold on
+plot(EDP,IM/g,'.-','color','#606060')
+hold on
+plot(dy,ay,'^','Color','b')
+xline(dy,'Color','b')
+hold off
+% text(2,0.5,['Fluencia (dy,ay)' string([dy ay])])
+ylim([0 IM_max])
+xlabel('EDP: Desplazamiento Máximo [m]')
+ylabel('IM: Sa(T_1,\xi) [g]')                                               % En IIDAP, se pusieron unidades de metros y segundos => aceleraciones en m/s2
+title('Multi-Record IDA Curves', ' Estructura T_1 = 1.5s; \xi = 5%')
+grid on
+
+
+% figure
+% plot(IM/g,EDP,'.-','Color','#606060')
+% ylabel('EDP: Desplazamiento Máximo [m]')
+% xlabel('IM: Sa(T_1,\xi) [g]')                                               % En IIDAP, se pusieron unidades de metros y segundos => aceleraciones en m/s2
+% title('Multi-Record IDA Curves', ' Estructura T_1 = 1.5s; \xi = 5%')
+% grid on
+
+%% 2.
+% Graficar curva IDA mediana y la desviación estándar logarítmica de los
+% desplazamientos como función de Sa(T1)
+
+% mu_ln = median(log(x))
+% median = geomean(x)
+% std_ln = std(log(x))
+
+% EDP_muln = mean(log(EDP')); % me da negativo usando lo del ppt
+% EDP_median = geomean(EDP');                                                 % Mediana
+EDP_stdln = std(log(EDP'));                                                 % Desviación estandar
+EDP_muln = exp(log(EDP_median) + 0.5*EDP_stdln.^2);                         % Estimación de la Media
+
+% Gráficos
+
+% % Mediana logarítmica + Curvas IDA
+% figure
+% plot(EDP_median',IM(:,1)/g,'color','r','LineWidth',2)
+% hold on
+% plot(EDP,IM/g,'.-','color','#606060')
+% xline(dy,'Color','b')
+% ylim([0 IM_max])
+% hold off
+% xlabel('EDP y geomean(EDP)')
+% ylabel('IM: Sa(T_1,\xi) [g]') 
+% grid on
+% title('Mediana logarítmica EDP')
+
+
+% % Mediana logarítmica
+% figure
+% plot(IM(:,1)/g,EDP_median','.-','color','k')
+% ylabel('Mediana logarítmica de EDP, geomean(EDP)')
+% xlabel('IM: Sa(T_1,\xi) [g]') 
+% grid on
+% title('Mediana logarítmica EDP')
+
+% Desviación Estándar Logarítmica
+figure
+plot(EDP_stdln',IM(:,1)/g,'.-','color','k')
+xlabel('Desviación estandar logarítmica de EDP, std(log(EDP))')
+ylabel('IM: Sa(T_1,\xi) [g]') 
+grid on
+title('Estructura 1')
+legend('Desviación Estándar Logarítmica')
+
+% % Media
+% figure
+% plot(IM(:,1)/g,EDP_muln','.-','color','k')
+% ylabel('Media logarítmica de EDP, mean(log(EDP))')
+% xlabel('IM: Sa(T_1,\xi) [g]') 
+% grid on
+% title('Media logarítmica EDP')
+
+% % Mediana +- sigma
+% figure
+% plot(IM(:,1)/g,EDP_median','.-','color','r')
+% hold on
+% plot(IM(:,1)/g,exp(log(EDP_median')+EDP_stdln'),'.-','color','k')
+% plot(IM(:,1)/g,exp(log(EDP_median')-EDP_stdln'),'.-','color','k')
+% hold off
+% ylabel('Mediana logarítmica de EDP, geomean(EDP)')
+% xlabel('IM: Sa(T_1,\xi) [g]') 
+% grid on
+% title('Mediana logarítmica EDP +- sigma')
+
+% Figura martina
+figure
+plot(EDP_median',IM(:,1)/g,'.-','color','r')
+hold on
+plot(exp(log(EDP_median')+EDP_stdln'),IM(:,1)/g,'.-','color','k')
+plot(exp(log(EDP_median')-EDP_stdln'),IM(:,1)/g,'.-','color','k')
+plot(EDP_muln',IM(:,1)/g,'.-','color','b')
+hold off
+xlabel('Mediana y media logarítmica de EDP, geomean(EDP)')
+ylabel('IM: Sa(T_1,\xi) [g]') 
+legend('Mediana','Mediana+-\sigma','','Media')
+grid on
+title('Estructura 1')
+
+%% 3
+% Copiar gráficos media vs Sa, pero agregar curva de desplazamientos
+% máximos que se obtendrían asumiendo principio de igualdad de
+% desplazamientos
+
+% Se cumpliría este principio solo en la primera estructura ya tiene periodo
+% mayor a 1[s], pero no para la segunda estructura
+
+% Principio de grandes desplazamientos
+omega = 2*pi/T;
+Sd = IM(:,1)./omega^2;  % IM m/s2 omega en rad2/s2 -> Sd = metros
+
+% Media
+figure
+plot(EDP_muln',IM(:,1)/g,'color','r')
+hold on
+plot(Sd,IM(:,1)/g,'.-','color','k')                                                        % Dejamos Sd en centimetros
+hold off
+xlabel('Desplazamiento [m]')
+ylabel('IM: Sa(T_1,\xi) [g]') 
+grid on
+title('Estructura 1')
+legend('Media','Sd(T_1)')
+
+
+%% 4
+% Suponiendo distribución lognormal para EDP dado IM, calcular probabilidad
+% de que los desplazamientos máximos excedan 25cm para una ordenada
+% espectral de 1g.
+
+% % Desplazamiento máximo objetivo
+% desplMaxObj = 25/100; % 25  cm = 25/100 m
+% 
+% % Posición IM = 1g
+% posIM1g = find(IM(:,1)/g == 1);
+% 
+% % Columna de EDP que necesito para este análisis
+% EDP_col = EDP(:,posIM1g);
+% EDP_logncdf = logncdf(EDP_col);
+% EDP_valuesInterp = interp1(EDP_col,EDP_logncdf,desplMaxObj);                % Interpolando, el valor de la probabilidad es este
+% 
+% % Distribución
+% figure
+% plot(EDP_col,EDP_logncdf)
+% hold on
+% plot(desplMaxObj,EDP_valuesInterp,'^r')
+% hold off
+% xlabel('EDP|IM = 1g')
+% ylabel('logncdf(EDP)|IM = 1g')
+% text(desplMaxObj+0.1,EDP_valuesInterp,['P(EDP > 25cm | IM = 1g) =' string(EDP_valuesInterp)])
+% grid on
+% 
+% fprintf('P4. P(EDP > 25cm | IM = 1g) = %.4f\n',EDP_valuesInterp);
+
+% P(EDP>edp | IM = im) = 1 - cdf((ln(edp)-ln(EDP_median|IM=im))/EDP_sigmaln|IM=im)
+% Ya tenemos EDP_median|IM = 1g
+% Ya tenemos EDP_stdln|IM = 1g
+
+% Desplazamiento máximo objetivo
+desplMaxObj = 25/100; % 25  cm = 25/100 m
+
+% Posición IM = 1g
+posIM1g = find(IM(:,1)/g == 1);
+
+% Probabilidad
+probabilidad = 1-normcdf(log(desplMaxObj),log(EDP_median(posIM1g)),EDP_stdln(posIM1g));
+fprintf('%f\n',probabilidad)
+
+
+%% 5
+% Repetir proceso pero ahora con Sa_avg como IM, para definir Sa_avg
+% utilizar 20 periodos entre 0.2T y 3.0T
+
+% Se corre un nuevo análisis en II-DAP pero con IM alternativa Sa_avg en
+% 'analysis type'
+
+% Guardar datos anteriores
+EDP_Sa = EDP;                                                               % EDP cuando IM es Sa(T1)
+IM_Sa = IM;                                                                 % IM  = Sa(T1)
+
+% Nombre para importar datos
+ResultsDir_Sa_avg = 'Resultados1';
+ResultsName_Sa_avg = 'estructura1_sa_avg';
+
+% getIdaCurves
+[EDP,IM] = getIdaCurves(ResultsDir_Sa_avg, ResultsName_Sa_avg);
+
+% Repetir paso 2 para IM = Sa_avg
+% Graficar curva IDA mediana y la desviación estándar logarítmica de los
+% desplazamientos como función de Sa(T1)
+
+EDP_median = geomean(EDP');                                                 % Mediana
+EDP_stdln = std(log(EDP'));                                                 % Desviación estandar
+EDP_muln = exp(log(EDP_median) + 0.5*EDP_stdln.^2);                         % Estimación de la Media
+
+% Gráficos
+% EDP vs IM
+
+figure
+plot(EDP,IM/g,'.-','color','#909090')
+hold on
+plot(EDP_median,IM(:,1)/g,'color','r')
+hold off
+ylabel('EDP: Desplazamiento Máximo [m]')
+xlabel('IM: Sa_avg [g]')                                                    % En IIDAP, se pusieron unidades de metros y segundos => aceleraciones en m/s2
+title('Multi-Record IDA Curves', ' Estructura T_1 = 1.5s; \xi = 5%')
+grid on
+
+% Gráficos
+% % Mediana logarítmica
+% figure
+% plot(IM(:,1)/g,EDP_median','.-','color','k')
+% ylabel('Mediana logarítmica de EDP, geomean(EDP)')
+% xlabel('IM: Sa_avg [g]') 
+% grid on
+% title('Mediana logarítmica EDP')
+
+% Desviación Estándar Logarítmica
+figure
+plot(EDP_stdln',IM(:,1)/g,'.-','color','k')
+xlabel('Desviación estandar logarítmica de EDP, std(log(EDP))')
+ylabel('IM: Sa_avg [g]') 
+grid on
+title('Estructura 1')
+legend('Desviación estándar logarítmica')
+% % Media
+% figure
+% plot(IM(:,1)/g,EDP_muln','.-','color','k')
+% ylabel('Media logarítmica de EDP, mean(log(EDP))')
+% xlabel('IM: Sa_avg [g]') 
+% grid on
+% title('Media logarítmica EDP')
+
+% % Mediana +- sigma
+% figure
+% plot(IM(:,1)/g,EDP_median','.-','color','r')
+% hold on
+% plot(IM(:,1)/g,exp(log(EDP_median')+EDP_stdln'),'.-','color','k')
+% plot(IM(:,1)/g,exp(log(EDP_median')-EDP_stdln'),'.-','color','k')
+% hold off
+% ylabel('Mediana logarítmica de EDP, geomean(EDP)')
+% xlabel('IM: Sa_avg [g]') 
+% grid on
+% title('Mediana logarítmica EDP')
+
+% Figura martina
+
+figure
+plot(EDP_median',IM(:,1)/g,'.-','color','r')
+hold on
+plot(exp(log(EDP_median')+EDP_stdln'),IM(:,1)/g,'.-','color','k')
+plot(exp(log(EDP_median')-EDP_stdln'),IM(:,1)/g,'.-','color','k')
+plot(EDP_muln',IM(:,1)/g,'.-','color','b')
+hold off
+xlabel('Mediana y media logarítmica de EDP, geomean(EDP)')
+ylabel('IM: Sa_avg [g]') 
+legend('Mediana','Mediana+-\sigma','','Media')
+grid on
+title('Estructura 1 pregunta 5')
+
+% Volvemos a dejar como estaba antes
+EDP = EDP_Sa;                                                               % EDP cuando IM es Sa(T1)
+IM = IM_Sa;                                                                 % IM  = Sa(T1)
+
+%% 6
+% Extraer curvas de amenaza sísmica desde USGS para periodos en estudio
+% Realizar interpolación lineal de los datos  de 0.1g
+% Notar que no hay para T = 1.5sec -> Interpolar de forma hiperbólica en
+% periodo (Sa prop. 1/T)
+
+% USGS Data
+USGS_data_Dir = 'Resultados1';
+USGS_data_Name = 'USGS_data_est1';
+
+USGS_data = readmatrix([USGS_data_Dir '\' USGS_data_Name]);
+% Col1: Ground Motion, Col2: Lambda, Col3: GM, Col4: lambda, Col5: Sa -> USGS
+T1 = 1;                                                                     % Periodo de las dos primeras columnas
+T2 = 2;                                                                     % Periodo de las dos segundas columnas
+
+% Hazazrd Curve (T = 1sec)
+IM_1 = USGS_data(:,1);      % [g]
+lambda_1 = USGS_data(:,2);
+
+% Hazard Curve (T = 2sec)
+IM_2 = USGS_data(:,3);      % [g]
+lambda_2 = USGS_data(:,4);
+
+% Figura
+figure
+loglog(IM_1,lambda_1,'Color','#007d79')
+hold on
+loglog(IM_2,lambda_2,'Color','#6929c4')
+hold off
+xlabel('Ground Motion [g] IM = Sa(T_1)')
+ylabel('Annual Frequency of Excedence \lambda_{IM}')
+title('Hazard Curves USGS')
+grid on
+legend('T=1[sec]','T=2[sec]')
+
+% Interpolamos ambas para IM
+IM_obj = IM_Sa(:,1)/g;
+lambda_1_int = zeros(length(IM_obj),1);
+lambda_2_int = zeros(length(IM_obj),1);
+lambda_1_5_int = zeros(length(IM_obj),1);
+
+for i = 1:length(IM_obj)
+    lambda_1_int(i) = interp1(IM_1,lambda_1,IM_obj(i));
+    lambda_2_int(i) = interp1(IM_2,lambda_2,IM_obj(i));
+end
+
+for i = 1:length(IM_obj)
+    lambda_1_5_int(i) = interp1([1/T1 1/T2], [lambda_1_int(i) lambda_2_int(i)],1/T);
+end
+
+figure
+loglog(IM_obj,lambda_1_5_int,'.-','color','r')
+hold on
+loglog(IM_obj,lambda_1_int,'.-','Color','#007d79')
+loglog(IM_obj,lambda_2_int,'.-','Color','#6929c4')
+hold off
+xlabel('Ground Motion [g] IM = Sa(T_1)')
+ylabel('Annual Frequency of Excende \lambda_{IM}')
+title('Hazard Curves USGS')
+legend('T = 1.5[s]', 'T = 1[s]','T = 2[s]')
+grid on
+
+% 
+%% 6.2 Análisis probabilístico de la demanda sísmica
+% Relizar un análisis probabilístico de la demanda sísmica para caluclar
+% lambda_EDP, con IM = Sa(T1) y despl_max como EDP
+
+% Ya tenemos la curva de amenaza sísmica -> podemos obtener d/dIM
+% (lambda(IM))
+
+% Hasta la fecha no me dan los vectores de IM_T_15sec y lambdaIM_15sec (1.5 sec)
+% De la forma como las pide el profe, pero trabajemos con los que tenemos 
+% como si estuvieran correctos
+
+% Supongo que numéricamente, al no contar con dIM, se calcula como una
+% sumatoria en vez de una integral
+
+% Renombramos parámetros
+% IM = IM_1_5_sec;
+
+% Desde amenaza
+% IM_amenaza = IM_interp1(1:IM_max/IM_step);                                                    % 0.1:0.1:3   [g]
+IM_amenaza = IM_obj;
+IM_amenaza(1,:) = [];
+lambda_amenaza = lambda_1_5_int;                                            % Interpolación
+lambda_amenaza(1,:) = [];
+% Desde Curvas IDA, las arreglamos para que tengan mismo paso que amenaza
+% sismica
+
+IM_IDA = IM_amenaza;                                                        % IM_IDA = IM_Sa(:,1)/g; IM_IDA(31:33)=[]; IM_IDA(0) = [];
+EDP_IDA = EDP_Sa;
+EDP_IDA(1,:) = [];
+
+% Parámetros distribución lognormal
+EDP_median = geomean(EDP_IDA')';                                            % Mediana
+EDP_stdln = std(log(EDP_IDA'))';                                            % Desviación estandar
+EDP_muln = exp(log(EDP_median) + 0.5*EDP_stdln.^2);                        % Estimación de la Media
+
+% Obtención de abs(d/dIM (lambda_IM(x)))
+
+% dlambdadIM = zeros(length(lambda_amenaza),1);
+% for i = 1:length(lambda_amenaza)-1
+%     dlambdadIM(i) = abs((lambda_amenaza(i+1)-lambda_amenaza(i))/(IM_amenaza(i+1)-IM_amenaza(i)));
+% end
+dIM = diff(IM_amenaza);
+dlambdadIM = abs(diff(lambda_amenaza)./dIM);
+
+figure
+loglog(IM_amenaza(2:end,1),dlambdadIM)
+% loglog(IM_amenaza,dlambdadIM)
+xlabel('IM')
+ylabel('$|\frac{d\lambda(IM=im)}{dIM}|$','interpreter','latex')
+title('Derivada de la curva de amenaza sísmica')
+grid on
+
+% Rango de edp para lambda_EDP
+edps = (0.1:0.1:6)';
+
+% Obtención de lambda_EDP
+lambda_EDP = zeros(length(edps),1);
+multiplicacion = zeros(length(IM_IDA),length(edps));
+probabilidad = zeros(length(IM_IDA),length(edps));
+
+for e = 1:length(edps)
+    edp = edps(e);
+    for i = 1:length(IM_amenaza)-1
+        % Valor de im
+        im = IM_amenaza(i);
+        
+        % Posición IM = 1g en curvas IDA 
+        posIM = find(IM_IDA == im);                                         % En verdad es igual a "i"
+        
+        % EDP_median
+        EDP_median_val = EDP_median(posIM);                                 % EDP_median obtenido para todas las IM=im en punto 2
+        
+        % EDP_stdln
+        EDP_stdln_val = EDP_stdln(posIM);                                   % EDP_stdln_val otebnido para todas las IM=im en punto 2
+        
+        % EDP_muln
+        EDP_muln_val = EDP_muln(posIM);
+
+        % Parte EDP|IM
+        % Asumir que EDP distribuye como lognormal en función de IM
+        probabilidad(i,e) = 1 - normcdf(log(edp),log(EDP_median_val),EDP_stdln_val);
+%         probabilidad(i,e) = 1 - normcdf(log(edp),log(EDP_muln_val),EDP_stdln_val);
+
+        % Parte IM
+        dlambdadIM_val = dlambdadIM(i);
+
+        % dIM
+        % dIM = 0.1; % g (en inputs arriba)
+
+        % Multiplicacion
+        multiplicacion(i,e) = probabilidad(i,e)*dlambdadIM_val*dIM(i);
+    end
+    lambda_EDP(e) = sum(multiplicacion(:,e));
+end
+
+figure
+semilogy(edps,lambda_EDP)
+xlabel('EDP: Desplazamiento máximo [m]')
+ylabel('\lambda_{edp}: Frecuencia anual de excedencia')
+title('Curva de demanda sísmica')
+grid on
+
+figure
+loglog(edps,lambda_EDP)
+xlabel('EDP: Desplazamiento máximo [m]')
+ylabel('\lambda_{edp}: Frecuencia anual de excedencia')
+title('Curva de demanda sísmica')
+grid on
+
+%% 7
+% Solo para estructura de T = 0.3s (segunda estructura)
+
+
+
+
+
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>

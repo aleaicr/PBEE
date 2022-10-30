@@ -98,7 +98,6 @@ a1 = Reg + gamma_relax*da;                                                  % (E
 
 if abs(PSamod - PSaObj_Tast) > error_adm
     Reg = a1;   % reg = a(t) de (Eq.11)
-    disp(1)
     [fj,a1,da] = MultiplePeriods_SM_AlAtik_Abrahamson_2010(Reg,dt,Tast,xi,PSaObj_Tast,error_adm,beta_Newmark,ui,udi,gamma_relax);
 end
 

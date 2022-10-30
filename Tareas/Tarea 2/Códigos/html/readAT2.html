@@ -1,0 +1,169 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>readAT2</title><meta name="generator" content="MATLAB 9.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-10-26"><meta name="DC.source" content="readAT2.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#3">Leer dt</a></li><li><a href="#4">Leer registro, reordenar como vector y escribir txt</a></li></ul></div><pre class="codeinput"><span class="keyword">function</span> [Reg,dt] = readAT2(AT2fileDir,AT2fileName,newTxtFileDir,newTxtFileName)
+</pre><pre class="codeinput"><span class="comment">% Leer formato AT2, dejarlo como vector columna y crear archivo .txt que</span>
+<span class="comment">% guarde el registro, si se a&ntilde;ade un nuevo 'path', no es necesario incluir</span>
+<span class="comment">% direcciones, solo el nombre y fijarse que no se repita</span>
+
+<span class="comment">% Alexis Contreras - Martina Sanguinetti</span>
+<span class="comment">% Ingenier&iacute;a S&iacute;smica Avanzada - USM</span>
+
+<span class="comment">% Inputs</span>
+<span class="comment">% AT2fileDir        -&gt; Direcci&oacute;n del arhicov</span>
+<span class="comment">% AT2fileName       -&gt; Nombre del archivo AT2 de PEER (char)</span>
+<span class="comment">% newTxtFileDir     -&gt; Direcci&oacute;n donde se quiere guardar nuevo archivo txt</span>
+<span class="comment">% newTxtFileName    -&gt; Nombre para guardar el archivo en txt</span>
+
+
+<span class="comment">% Outputs</span>
+<span class="comment">% Reg               -&gt; Vector con aceleraciones del registro</span>
+<span class="comment">% dt                -&gt; Valor del paso temporal del muestreo</span>
+</pre><h2 id="3">Leer dt</h2><pre class="codeinput"><span class="keyword">if</span> isempty(AT2fileDir)                                                      <span class="comment">% Est&aacute; en la misma carpeta donde se corre la funci&oacute;n</span>
+    fileID = fopen(AT2fileName,<span class="string">'r'</span>);                                        <span class="comment">% Abrir modo lectura</span>
+<span class="keyword">else</span>
+    fileID = fopen([AT2fileDir <span class="string">'\'</span> AT2fileName],<span class="string">'r'</span>);                       <span class="comment">% Abrir modo lectura pero el archivo .AT2 est&aacute; en otra carpeta</span>
+<span class="keyword">end</span>
+unoAUno = textscan(fileID, <span class="string">'%s'</span>);                                           <span class="comment">% Escan a cada elemento como string</span>
+dt = str2double(unoAUno{1}(22));                                            <span class="comment">% El elemento 22 tiene el valor de dt y se convierte en double</span>
+fclose(fileID);                                                             <span class="comment">% Cerrar archivo</span>
+</pre><h2 id="4">Leer registro, reordenar como vector y escribir txt</h2><pre class="codeinput"><span class="keyword">if</span> isempty(AT2fileDir)                                                      <span class="comment">% Est&aacute; en la misma carpeta donde se corre la funci&oacute;n</span>
+    A = dlmread(AT2fileName,<span class="string">''</span>,4,0);                                        <span class="comment">% Leer documento .AT2 si est&aacute; en la misma carpeta</span>
+<span class="keyword">else</span>
+    A = dlmread([AT2fileDir <span class="string">'\'</span> AT2fileName],<span class="string">''</span>,4,0);                       <span class="comment">% Leer documento .AT2 pero est&aacute; en otra carpeta</span>
+<span class="keyword">end</span>
+
+Reg = reshape(A',size(A,1)*size(A,2),1);                                    <span class="comment">% Reordenar matriz como vector</span>
+
+<span class="keyword">if</span> isempty(newTxtFileDir)
+    fID = fopen(newTxtFileName,<span class="string">'w'</span>);
+    fprintf(fID,<span class="string">'%.10f\r\n'</span>,Reg);                                           <span class="comment">% Escribir registro en nuevo .txt</span>
+    fclose(fID);
+<span class="keyword">else</span>
+    fID = fopen([newTxtFileDir <span class="string">'\'</span> newTxtFileName],<span class="string">'w'</span>);
+    fprintf(fID,<span class="string">'%.10f\r\n'</span>,Reg);                                           <span class="comment">% Escribir registro en nuevo .txt</span>
+    fclose(fID);
+<span class="keyword">end</span>
+fprintf(<span class="string">'Archivo AT2 tiene dt = %f \n'</span>,dt)
+fprintf(<span class="string">'Se ha creado el archivo %s \n'</span>,newTxtFileName)
+</pre><pre class="codeinput"><span class="keyword">end</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2022a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+function [Reg,dt] = readAT2(AT2fileDir,AT2fileName,newTxtFileDir,newTxtFileName)
+% Leer formato AT2, dejarlo como vector columna y crear archivo .txt que
+% guarde el registro, si se añade un nuevo 'path', no es necesario incluir
+% direcciones, solo el nombre y fijarse que no se repita
+
+% Alexis Contreras - Martina Sanguinetti
+% Ingeniería Sísmica Avanzada - USM
+
+% Inputs
+% AT2fileDir        -> Dirección del arhicov 
+% AT2fileName       -> Nombre del archivo AT2 de PEER (char)
+% newTxtFileDir     -> Dirección donde se quiere guardar nuevo archivo txt
+% newTxtFileName    -> Nombre para guardar el archivo en txt
+
+
+% Outputs
+% Reg               -> Vector con aceleraciones del registro
+% dt                -> Valor del paso temporal del muestreo
+
+%% Leer dt
+if isempty(AT2fileDir)                                                      % Está en la misma carpeta donde se corre la función
+    fileID = fopen(AT2fileName,'r');                                        % Abrir modo lectura
+else
+    fileID = fopen([AT2fileDir '\' AT2fileName],'r');                       % Abrir modo lectura pero el archivo .AT2 está en otra carpeta
+end
+unoAUno = textscan(fileID, '%s');                                           % Escan a cada elemento como string
+dt = str2double(unoAUno{1}(22));                                            % El elemento 22 tiene el valor de dt y se convierte en double
+fclose(fileID);                                                             % Cerrar archivo
+
+%% Leer registro, reordenar como vector y escribir txt
+if isempty(AT2fileDir)                                                      % Está en la misma carpeta donde se corre la función
+    A = dlmread(AT2fileName,'',4,0);                                        % Leer documento .AT2 si está en la misma carpeta
+else
+    A = dlmread([AT2fileDir '\' AT2fileName],'',4,0);                       % Leer documento .AT2 pero está en otra carpeta
+end
+
+Reg = reshape(A',size(A,1)*size(A,2),1);                                    % Reordenar matriz como vector  
+
+if isempty(newTxtFileDir)   
+    fID = fopen(newTxtFileName,'w');
+    fprintf(fID,'%.10f\r\n',Reg);                                           % Escribir registro en nuevo .txt
+    fclose(fID);
+else
+    fID = fopen([newTxtFileDir '\' newTxtFileName],'w');
+    fprintf(fID,'%.10f\r\n',Reg);                                           % Escribir registro en nuevo .txt
+    fclose(fID);
+end
+fprintf('Archivo AT2 tiene dt = %f \n',dt)
+fprintf('Se ha creado el archivo %s \n',newTxtFileName)
+end
+##### SOURCE END #####
+--></body></html>
