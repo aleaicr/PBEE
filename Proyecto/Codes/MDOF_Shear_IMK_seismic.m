@@ -152,7 +152,7 @@ It(1) = 1;
 kt_prev = k;
 i = 1;
 kk = 0;
-while i < size(u,2);
+while i < size(u,2)
 
     u(:,i+1) = u(:,i);
 
@@ -209,7 +209,7 @@ while i < size(u,2);
         P = -M*r*ug*g;          % Equivalent external load
 
         u = [u(:,1:i) zeros(N,9) u(:,i+1:end)];
-
+        
         fs_st = [fs_st(:,1:i) zeros(N,9) fs_st(:,i+1:end)];
         fs = [fs(:,1:i) zeros(N,9) fs(:,i+1:end)];
         v = [v(:,1:i) zeros(N,9) v(:,i+1:end)];
@@ -226,7 +226,7 @@ while i < size(u,2);
                 % Newton-Raphson iterations
                 j = 0;
                 R(:,i+i2) = p_ - fs(:,i+i2) - a1_2*u(:,i+i2);
-                
+
                 while sum(abs(R(:,i+i2)) > tol)   &&  j < MaxIter+1
                     Kt_ = Kt + a1_2;
                     du = Kt_\R(:,i+i2);
@@ -254,19 +254,13 @@ while i < size(u,2);
         end
         i = i+10;
         kt_prev = kt;
-
     end
-
 end
 a_t = a/g + r*ug; 	% Absolute acceleration, in [g]
-
 ug_up = ug;
-
 end
 
-
 function [K] = ComputeK(k)
-
 if length(k) > 1
     k_aux = k(2:end);
     k_aux(end+1,1) = 0;
@@ -275,8 +269,7 @@ else
     K = k;
 end
 end
-
-    
+   
 function [fs,kt,Fmax2,Fmin2,LimMax2,LimMin2] = StateDet(h,Pi,u0,u1,u2,fs1,k,Fy,a_s,dc,a_c,Fmax,Fmin,LimMax,LimMin,StrengthLimitCheck)
 
 du0 = [u0(1);diff(u0)];
@@ -337,20 +330,5 @@ for i = 1:length(du1)
     end
     
     fs(i) = fs(i) - Pi(i)/h(i)*du2(i);
+end 
 end
-      
-end                          
-Footer
-© 2022 GitHub, Inc.
-Footer navigation
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
