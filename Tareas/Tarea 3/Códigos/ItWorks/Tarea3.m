@@ -15,7 +15,7 @@ IM_maximo = 20; % g
 ResultsFiles = ["est_1_A";"est_1_B";"est_1_C";"est_1_D";"est_2_A";"est_2_B";"est_2_C";"est_2_D"];
 ResultsDir = "IIDAP_T3";
 n_ests = length(ResultsFiles);
-IM_interpolacion = (0.1:0.1:IM_maximo).'; % g
+IM_interp1 = (0.1:0.1:IM_maximo).'; % g
 
 ResultsFilesString= ["estructura 1A";"estructura 1B";"estructura 1C";"estructura 1D";"estructura 2A";"estructura 2B";"estructura 2C";"estructura 2D"];
 n_interp = 100;                                                             % Cantidad de puntos en linspace para EDP interp1 para P2
@@ -62,25 +62,17 @@ clear dy dp dpc du dres fy fmax fres X Y
 
 %% P2
 % Graficar curvas IDA
-n_franjas = 200;
 for i = 1:n_ests
-    for n = 1:cant_registros
-        EDP_rmm = rmmissing(Data(i).EDP(:,n));
-        IM_rmm = rmmissing(Data(i).IM(:,n));
-        Data(i).IM_interp1(:,n) = linspace(0.1,max(Data(i).IM(:,n)),n_franjas); % g
-        Data(i).EDP_interp1(:,n) = interp1(IM_rmm,EDP_rmm,Data(i).IM_interp1(:,n),'linear','extrap');
-%         Data(i).EDP_interp1(:,n) = interp1(Data(i).IM(:,n),Data(i).EDP(:,n),Data(i).IM_interp1(:,n),'linear','extrap');
-%         Data(i).EDP_interp1_pchip(:,n) = interp1(Data(i).IM(:,n),Data(i).EDP(:,n),Data(i).IM_interp1(:,n),'pchip');
-    end
-%     EDP_stdln = std(log(Data(i).EDP_interp1.'));                           % Sin dispersión porq no me da razonable, IDKW
-    EDP_median = geomean(Data(i).EDP_interp1.','omitnan');
+%     for n = 1:cant_registros
+%         Data(i).EDP_interp1(:,n) = linspace(0,max(max(Data(i).EDP)),100);
+%         Data(i).IM_interp1(:,n) = interp1(Data(i).EDP(:,n),Data(i).IM(:,n)./g,Data(i).EDP_interp1(:,n));
+%     end
+    EDP_median = geomean(Data(i).EDP.','omitnan');
+%     IM_vals = Data(i).IM_interp1(1:length(EDP_median.'),1);
     figure
-    plot(Data(i).EDP,Data(i).IM,'.-','color','#606060')
+    plot(Data(i).EDP,Data(i).IM./g,'.-','color','#606060')
     hold on
-%     plot(Data(i).EDP_interp1,Data(i).IM_interp1,'color','#606060');
-    plot(EDP_median.',Data(i).IM_interp1(:,1),'color','r','LineWidth',2)
-%     plot(exp(log(EDP_median.')+EDP_stdln.'),Data(i).IM_interp1(:,1),'--','color','r','LineWidth',2)
-%     plot(exp(log(EDP_median.')-EDP_stdln.'),Data(i).IM_interp1(:,1),'--','color','r','LineWidth',2)
+    plot(EDP_median.',Data(i).IM./g,'color','r')
     hold off
     xlabel('EDP: desplazamiento latereal [m]')
     ylabel('IM: Sa(T_1) [g]')
@@ -93,9 +85,22 @@ end
 % Graficar las curvas de fragilidad de colapso para cada estructura
 % (modelo)
 
-% Hay que identificar en qué EDP=edpc ocurre el colapso
-for i = 1:n_ests
-    edp_c(i) = identifyCollapseEDP(Data(i).EDP_interp1);
-    for n = 1:n_registros
-        if Data(i).EDP > edp_c 
-end
+% IM_general = Data(1).IM(:,1);
+% 
+% % Por separado
+% for i = 1:n_estr
+%     figure
+%     IM_vect = ;2
+%     Prob_vect = ;
+%     plot(IM_vect,Prob_vect)
+%     xlabel('IM: Sa(T_1) [g]')
+%     ylabel('P(C|IM=im)')
+% end
+% 
+% % Todas juntas
+% for i = 1:cant_estr
+%     figure
+%     for j = 1:cant_variantes
+% end
+% %     end
+% % end

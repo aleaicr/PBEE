@@ -78,8 +78,8 @@ IMc = zeros(1,A.nGM);
 for i = 1:A.nGM
     nStripes_i = length(A.IDA.(['Sa' num2str(i)]))-1;
     EDP(1:nStripes_i,i) = A.IDA.(['U' num2str(i)])(1:nStripes_i);
-    IM(1:nStripes_i,i) =  A.IDA.(['Sa' num2str(i)])(1:nStripes_i)/g;
-    IMc(i) = A.IDA.(['Sa' num2str(i)])(end)/g;
+    IM(1:nStripes_i,i) =  A.IDA.(['Sa' num2str(i)])(1:nStripes_i)./g;
+    IMc(i) = A.IDA.(['Sa' num2str(i)])(end)./g;
 end
 
 % Gurdar Backbone
