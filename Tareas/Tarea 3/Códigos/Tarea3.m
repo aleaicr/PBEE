@@ -62,8 +62,9 @@ clear dy dp dpc du dres fy fmax fres X Y
 
 %% P2
 % Graficar curvas IDA
-n_franjas = 200;
+n_franjas = 200;                                                            % Cantidad de franjas para interpolación de IM (0.1g hasta el máximo del "escalamiento" del registro)
 for i = 1:n_ests
+    % Interpolación
     for n = 1:cant_registros
         EDP_rmm = rmmissing(Data(i).EDP(:,n));
         IM_rmm = rmmissing(Data(i).IM(:,n));
@@ -72,8 +73,12 @@ for i = 1:n_ests
 %         Data(i).EDP_interp1(:,n) = interp1(Data(i).IM(:,n),Data(i).EDP(:,n),Data(i).IM_interp1(:,n),'linear','extrap');
 %         Data(i).EDP_interp1_pchip(:,n) = interp1(Data(i).IM(:,n),Data(i).EDP(:,n),Data(i).IM_interp1(:,n),'pchip');
     end
+
+    % Distribución
 %     EDP_stdln = std(log(Data(i).EDP_interp1.'));                           % Sin dispersión porq no me da razonable, IDKW
-    EDP_median = geomean(Data(i).EDP_interp1.','omitnan');
+    EDP_median = geomean(Data(i).EDP_interp1.','omitnan');                  % Creo que no es necesario omitnan ahora ya que interpolamos con rmmissing
+    
+    % Figura
     figure
     plot(Data(i).EDP,Data(i).IM,'.-','color','#606060')
     hold on
@@ -86,16 +91,16 @@ for i = 1:n_ests
     ylabel('IM: Sa(T_1) [g]')
     title('Curvas IDA', ResultsFilesString(i))
     grid on
-    legend('Curvas IDA','Mediana','','Mediana +- \sigma')
+    legend('Curvas IDA','Mediana')
 end
 
 %% P3
 % Graficar las curvas de fragilidad de colapso para cada estructura
 % (modelo)
 
-% Hay que identificar en qué EDP=edpc ocurre el colapso
-for i = 1:n_ests
-    edp_c(i) = identifyCollapseEDP(Data(i).EDP_interp1);
-    for n = 1:n_registros
-        if Data(i).EDP > edp_c 
-end
+% % Hay que identificar en qué EDP=edpc ocurre el colapso
+% for i = 1:n_ests
+%     edp_c(i) = identifyCollapseEDP(Data(i).EDP_interp1);
+%     for n = 1:n_registros
+%         if Data(i).EDP > edp_c 
+% end
