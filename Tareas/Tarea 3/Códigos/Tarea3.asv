@@ -155,8 +155,8 @@ grid on
 
 % Interpolación para generar más datos
 IM_length = 100;                                                            % Cantidad de valores a interpolar
-USGSinterp_est1(:,1) = linspace(0.0025,3.28,IM_length).';                   % Mejor modificarlo a meno, si no, puede que el ajuste polinomial de Miranda salga mal
-USGSinterp_est2(:,1) = linspace(0.0025,7.3,IM_length).';                   % Los límites deben ser de la parte curva
+USGSinterp_est1(:,1) = linspace(0.0025,4.92,IM_length).';
+USGSinterp_est2(:,1) = linspace(0.0025,7.38,IM_length).';
 
 USGSinterp_est1(:,2) = exp(interp1(log(USGS_est1(:,1)),log(USGS_est1(:,2)),log(USGSinterp_est1(:,1))));
 USGSinterp_est2(:,2) = exp(interp1(log(USGS_est2(:,1)),log(USGS_est2(:,2)),log(USGSinterp_est2(:,1))));
@@ -178,25 +178,25 @@ title('Hazard Curves USGS', 'Interpolado')
 legend('USGS_Interp T = 3.00 [sec]','USGS_Interp T = 0.2 [sec]')
 grid on
 
-USGS = struct();
-USGS(1).interpvals = USGSinterp_est1;
-USGS(2).interpvals = USGSinterp_est2;
+USG
 
 %% P5
-% Coeficientes del ajuste polinomial
+
+% IM_length = 100;                                                            % Cantidad de valores a interpolar
+
+% Ajuste polinomio
 [P1,S1] = polyfit(log(USGSinterp_est1(:,1)),log(USGSinterp_est1(:,2)),4);   % Busqueda de constantes del ajuste polinomial para estructura 1
 [P2,S2] = polyfit(log(USGSinterp_est2(:,1)),log(USGSinterp_est2(:,2)),4);   % Busqueda de constantes del ajuste polinomial para estructura 2
 
 % Generación de los valores debido al ajuste polinomial de cuarto orden
-lambda1_pf = zeros(IM_length,1);                                            % Inicializar lambda del polinomio est 1 (lambda = MAF: Mean Annual Frequency)
+IM_vals1 = linspace(0.0025,10,IM_length).';                                       % Valores de IM para interpolar
+IM_vals2 = linspace(0.0025,10,IM_length).';                                       % Valores de IM para interpolar
+lambda1_pf = zeros(IM_length,1);                                            % Inicializar lambda del polinomio est 1
 lambda2_pf = zeros(IM_length,1);                                            % Inicializar almbda del polinomio est 2
-for i = 1:IM_length
-    % Ajuste polinomial primera estructura
-    im = USGS(1).interpvals(i,1);
+for i = 1:length(IM_vals)
+    USGS
+    im = IM_vals(i);
     lambda1_pf(i) = exp(P1(5) + P1(4)*log(im) + P1(3)*log(im)^2 + P1(2)*log(im)^3 + P1(1)*log(im)^4); % Eq.3 Miranda Polinomio
-
-    % Ajuste polinomial segunda estructura
-    im = USGS(2).interpvals(i,1);
     lambda2_pf(i) = exp(P2(5) + P2(4)*log(im) + P2(3)*log(im)^2 + P2(2)*log(im)^3 + P2(1)*log(im)^4); % Eq.3 Miranda Polinomio
 end
 
@@ -209,11 +209,11 @@ figure
 loglog(USGS_est1(:,1),USGS_est1(:,2),'.-')
 hold on
 loglog(USGS_est2(:,1),USGS_est2(:,2),'.-')
-loglog(USGS(1).interpvals(:,1),lambda1_pf)
-loglog(USGS(2).interpvals(:,1),lambda2_pf)
+loglog(IM_vals,lambda1_pf)
+loglog(IM_vals,lambda2_pf)
 hold off
 xlabel('IM: Sa(T_1) [g]')
-ylabel('Annual Frequency of Exceedence \lambda_c (MAF)')
+ylabel('Annual Frequency of Exceedence \lambda_c')
 title('Hazard Curves USGS')
-legend('USGS T = 3.00 [sec]','USGS T = 0.2 [sec]','Polinomial Fit T = 3.00 [sec]','Polyfit T = 0.2 [sec]')
+legend('USGS T = 3.00 [sec]','USGS T = 0.2 [sec]','Polyfit T = 3.00 [sec]','Polyfit T = 0.2 [sec]')
 grid on

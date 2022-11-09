@@ -407,7 +407,7 @@ EDP_IDA(1,:) = [];
 % Parámetros distribución lognormal
 EDP_median = geomean(EDP_IDA')';                                            % Mediana
 EDP_stdln = std(log(EDP_IDA'))';                                            % Desviación estandar
-EDP_muln = exp(log(EDP_median) + 0.5*EDP_stdln.^2);                        % Estimación de la Media
+EDP_muln = exp(log(EDP_median) + 0.5*EDP_stdln.^2);                         % Estimación de la Media
 
 % Obtención de abs(d/dIM (lambda_IM(x)))
 
