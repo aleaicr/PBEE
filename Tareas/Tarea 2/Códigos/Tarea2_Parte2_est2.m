@@ -559,7 +559,7 @@ lambda_EDP_loglog = lambda_EDP;
 % Improved Analytical Representation of Seismic Hazard Curves (Miranda)
 
 % Ajuste polinomio de interpolación loglog anterior (4 orden)
-[P,S]=polyfit(log(IM_03_intlog),log(lambda_03_intlog),4);
+[P,S] = polyfit(log(IM_03_intlog),log(lambda_03_intlog),4);
 
 % Guardamos
 IM_Sa = IM;
@@ -577,7 +577,6 @@ for im = 1:length(IM)
     dmafimdim(im) = abs(parte1*exponente);
 end
 
-syms im
 figure
 loglog(IM_obj,lambda_03_int,'.-')
 hold on
@@ -589,8 +588,6 @@ ylabel('Annual Frequency of Excedence \lambda_{IM}')
 title('Curva de Amenaza sísmica (P7b)')
 legend('Interpolación Lineal','Interpolación Log-Log','Polinomio cuarto orden (Miranda)')
 grid on
-
-clear im
 
 figure
 loglog(IM,lambda_03_7b,'.-')

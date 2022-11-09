@@ -1,5 +1,5 @@
-function [EDP,IM,IMc,Backbone_Data] = getIdaCurves_v2(ResultsDir, ResultsFile)
-% Modificada por: Alexis Contreras en Tarea 3 para obtener backbone 
+function [EDP,IM,IMc,Backbone_Data] = getIdaCurves_v2_mod(ResultsDir, ResultsFile)
+% Modificada por: Alexis Contreras en Tarea 3 para obtener struct backbone_data
 
 % Version    : 2.0
 % Creado por : Cristian Cruz (CC) y Pablo Heresi (PH)
