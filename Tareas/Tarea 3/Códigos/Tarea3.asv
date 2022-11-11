@@ -522,12 +522,9 @@ clear tabla
 
 figure
 plot(hazard(1).IMlog, desCol(1).Desagregacion_poli)
-hold on
-plot(hazard(1).IMlog, desCol(2).Desagregacion_poli)
-plot(hazard(1).IMlog, desCol(3).Desagregacion_poli)
-plot(hazard(1).IMlog, desCol(4).Desagregacion_poli)
+hold off
 xlabel('IM: Sa(T_1)')
 ylabel('P(C|IM=im)*|d\lambda_IM/dIM|')
-title('Desagregación Tasa Anual Media de Colapso')
-legend('1A','1B','1C','1D')
+title(['Desagregación Tasa Anual Media de Colapso', ResultsFilesString(1)])
+legend('Interpolación Lineal', 'Interpolación LogLog', 'Ajuste Polinomial Miranda')
 grid on
