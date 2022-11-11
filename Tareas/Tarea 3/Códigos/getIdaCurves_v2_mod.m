@@ -1,4 +1,4 @@
-function [EDP,IM,IMc,Backbone_Data] = getIdaCurves_v2_mod(ResultsDir, ResultsFile)
+function [EDP,IM,IMc,Backbone_Data,nGM] = getIdaCurves_v2_mod(ResultsDir, ResultsFile)
 % Modificada por: Alexis Contreras en Tarea 3 para obtener struct backbone_data
 
 % Version    : 2.0
@@ -84,5 +84,6 @@ end
 
 % Gurdar Backbone
 Backbone_Data = A.Backbone;
+nGM = A.nGM;
 
 
