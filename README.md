@@ -1,2 +1,2 @@
-# Sismica-Avanzada
- Tareas
+# Ingeniería Sismica Avanzada
+
