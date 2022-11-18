@@ -32,10 +32,10 @@ fclose(fileID);                                                             % Se
 % Abrir para escribir
 fileID = fopen([GMDataDir '\' GMDataName],'a+');                            % Abrir archivo para escritura (escribir al final)
 
-% Si ya existe (j=1), entonces no se añade, si no existe (else) entonces se
+% Si ya existe (j = 1), entonces no se añade, si no existe (else) entonces se
 % añade
 if j == 1
-    % nada
+    % no se añade
 elseif j == 0
     fprintf(fileID,'%s\t%.2f\r',newRegName,newReg_dt);                    % Escribir al final
 end
