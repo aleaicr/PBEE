@@ -1,4 +1,4 @@
-function []= GMThamdofFormat(GMFolder,GMDataName,T,IM_SaT1,xi,beta_newmark,t_extra,GMTHAMDOFName)
+function []= SingleGMThamdofFormat(GMFolder,GMDataName,T,xi,beta_newmark,t_extra,GMTHAMDOFName_collapse)
 % Contreras - Sanguinetti
 % Ingeniería Sísmica Avanzada - USM 2022
 
@@ -11,10 +11,9 @@ function []= GMThamdofFormat(GMFolder,GMDataName,T,IM_SaT1,xi,beta_newmark,t_ext
 % GMDataName: Nombre del archivo "GM Data.txt" donde se guardan los pasos
 %             temporales de cada registro (debe estar ordenado)
 % T: Periodo fundamental de la estructura [sec]
-% IM_SaT1: Vector columna de todas las franjas que se desean IM_SaT1 [g]
 % beta_newmark: factor del método de Newmark (ej: beta_newmark = 1/4)
 % t_extra: Tiempo extra de simulación (cantidad de filas extra en matriz matrix_csv_
-% GMTHAMDOFName: Nombre del archivo THAMDOF (requisito que sea con .csv si o si)
+% GMTHAMDOFName_collapse: Nombre del archivo THAMDOF para análisis del riesgo de colapso (requisito que sea con .csv si o si)
 
 % Outputs
 % Ninguno, pero Genera un archivo csv con Todos los registros de la carpeta
@@ -25,6 +24,7 @@ function []= GMThamdofFormat(GMFolder,GMDataName,T,IM_SaT1,xi,beta_newmark,t_ext
 % espectral del primer modo (newmarkbeta)
 % - Los -3 y +3 que se ven son por la posición con la que se ven los
 % archivos al utilizar la función dir(), los registros parten del 3
+
 
 %% Leer archivos de la carpeta
 files = dir(GMFolder);
@@ -58,17 +58,9 @@ while ischar(fLine)
 end
 fclose(fileID);
 
-%% Determinar factores de escala
-IM_length = length(IM_SaT1);                                                % Cantidad de franjas
-SF = zeros(IM_length,length(files)-3);                                      % (sf, registro)
-for i = 4:length(files)
-    for im = 1:IM_length
-        SF(im,i-3) = IM_SaT1(im,1)/a(i-3).SaT1;                             % SF = Sa_obj/Sa_original  (Sa espectro de aceleraciones lineal)
-    end    
-end
-
 %% Formato THAMDOF
 % GM; length; dt; factor de escala; registro
+IM_length = 1;
 matrix_csv_ = zeros(max_length_GM+3+max(t_extra),(length(files)-3)*IM_length);
 for i = 4:length(files)                                                     % Cantidad de registros
     for j = 1:IM_length                                                     % Cantidad de franjas que uno quiere
@@ -80,7 +72,7 @@ for i = 4:length(files)                                                     % Ca
             elseif r == 3
                 matrix_csv_(r,IM_length*((i-3)-1)+j) = a(i-3).dt;           % Paso temporal del sampling del registro (muestreo?)
             elseif r == 4
-                matrix_csv_(r,IM_length*((i-3)-1)+j) = SF(j,i-3);           % Factor de Escala para las IM que se quieren
+                matrix_csv_(r,IM_length*((i-3)-1)+j) = 1;           % Factor de Escala para las IM que se quieren
             end
         end
         for k = 5:length(a(i-3).GM)+4
@@ -91,7 +83,7 @@ end
 
 %% Escribir matriz en CSV
 matrix_csv_(1,:) = [];
-titles = convertStringsToChars(["GM" + string([1:1:(length(files)-3)]) + " - IM" + string([1:1:IM_length]).']).';
+titles = convertStringsToChars(["GM" + string([1:1:(length(files)-3)])]).';
 A = cell(1,IM_length*(length(files)-3));
 for i = 4:length(files)
     for j = 1:IM_length
@@ -100,8 +92,8 @@ for i = 4:length(files)
 end
 table_csv = array2table(matrix_csv_);
 table_csv.Properties.VariableNames(1:IM_length*(length(files)-3)) = string(A);
-writetable(table_csv,GMTHAMDOFName)
-fprintf('Se ha creado el archivo %s\n\n',GMTHAMDOFName)
+writetable(table_csv,GMTHAMDOFName_collapse)
+fprintf('Se ha creado el archivo %s\n\n',GMTHAMDOFName_collapse)
 end
 
 %% Método de Newmark-beta utilizado para determinar el espectro, descomentar ctrl+shift+R si no se tiene programado
