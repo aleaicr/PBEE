@@ -34,7 +34,7 @@ Ti_final = 5;                                                               % M√
 
 % Cantidad de puntos intermedios para interpolar 
 n_interpol = 100;
-1|
+
 %% Calculo Savg
 Tn_inicial = c1*T1;
 Tn_final = cN*T1;
@@ -62,6 +62,7 @@ Sa_avg = prod(Sa_avg_vect)^(1/length(Sa_avg_vect));
 
 Sa = [Sa_1;Sa_2];
 [m,n] = size(Sa);
+
 %% 5) Calcular Sa_avg(T=1sec) de cada espectro
 % n_interpol = n_interpol;                                                             % Creo que funci√≥n interp no funciona como creo que funciona
 

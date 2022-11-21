@@ -91,8 +91,10 @@ end
 
 %% Escribir matriz en CSV
 matrix_csv_(1,:) = [];
-titles = convertStringsToChars(["GM" + string([1:1:(length(files)-3)]) + " - IM" + string([1:1:IM_length]).']).';
+titles = convertStringsToChars("GM" + string(1:1:(length(files)-3)) + " - IM" + string(1:1:IM_length).').';   % El título de la columna. Ej: "GM1 - IM3", donde GM1 es el primer registro e IM3 es la tercera franja
 A = cell(1,IM_length*(length(files)-3));
+% Quedan ordenados de la siguiente forma, cada registro, en su franja por columnas:
+% GM1 - IM1 | GM1 - IM2 | GM1 - IM3| GM1 - IM4 | GM2 -IM1 | GM2 - IM2 | ... | GM20 - IM3 | GM20 - IM4|
 for i = 4:length(files)
     for j = 1:IM_length
         A{IM_length*(i-3-1)+j} = titles(i-3,j);

@@ -24,6 +24,7 @@ Vs30 = 537;                                                                 % Cl
 
 %% Valores UHS (10% en 50 años)
 % https://earthquake.usgs.gov/hazards/interactive/
+% Para cierto nivel de amenaza que uno quiera (?)
 UHS_periods = [0;0.1;0.2;0.3;0.5;0.75;1;2;3;4;5];
 UHS_Spectrum = [0.4706;0.9631;1.1412;1.0322;0.779;0.5636;0.4319;0.2056;0.1340;0.0988;0.0774];
 % UHS_Tast = 0.4319;                                                          % Sa(1 Sec)
@@ -32,7 +33,6 @@ UHS_Spectrum = [0.4706;0.9631;1.1412;1.0322;0.779;0.5636;0.4319;0.2056;0.1340;0.
 designSpectrum = load('designSpectrum.mat');
 T_DS = designSpectrum.designSpectrum(:,1);
 Sa_DS = designSpectrum.designSpectrum(:,2);
-
 
 %% RUN
 [median_CMS,sigma_CMS,mu_BSSA,sigma_BSSA,epsilon_Tast,rho] = CMS_Baker_2011(Ti,Tast,SaTast,M,R,Vs30,mec_focal,region,z1);
