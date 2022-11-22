@@ -2,11 +2,6 @@
 % Optimización de TMD para mejora de desempeño sísmico a través de análisis
 % del riesgo de colapso
 
-% Comentarios:
-% - Ingresar rigidez desde el pushover
-% - Masa debe ser LA MASA SÍSMICA, no la masa de la estructura
-%               Masa Sísmica es desde D + 0.25L (Ohtori et al 2004 ya
-%               entrega la masa sísmica)
 %% Inicializar
 clear variables
 close all
@@ -105,31 +100,12 @@ for i = 1:length(k_TMD)
         structure(length(xi_TMD)*(i-1)+j).Cn_new = Phi_new.'* TMD(length(xi_TMD)*(i-1)+j).C_TMD*Phi_new;
         
         % xi_n_new
-        structure(length(xi_TMD)*(i-1)+j).xi_modal = diag(structure(length(xi_TMD)*(i-1)+j).Cn_new)./(2*Mn_new(length(xi_TMD)*(i-1)+j,length(xi_TMD)*(i-1)+j)*wn_new(length(xi_TMD)*(i-1)+j));
-        structure(length(xi_TMD)*(i-1)+j).Kn = Kn_new;
-        structure(length(xi_TMD)*(i-1)+j).Mn = Mn_new;
+        structure(length(xi_TMD)*(i-1)+j).xi = diag(structure(length(xi_TMD)*(i-1)+j).Cn_new)./(2*Mn_new(length(xi_TMD)*(i-1)+j,length(xi_TMD)*(i-1)+j)*wn_new(length(xi_TMD)*(i-1)+j));
+        structure(length(xi_TMD)*(i-1+j)).Kn = Kn_new;
+        structure(length(xi_TMD)*(i-1+j)).Mn = Mn_new;
     end
 end
 
-%% Crear datos para analisis
-xi_modal = zeros(length(structure(1).xi_modal),length(structure));  % fila: amortiguamiento del modo, columna: j
-for i = 1:length(structure)
-    xi_modal(:,i) = structure(i).xi_modal;
-end
-k_TMD_vect = zeros(1,length(TMD));
-xi_TMD_vect = zeros(1,length(TMD));
-for i = 1:length(TMD)
-    k_TMD_vect(1,i) = TMD(i).k_TMD;
-    xi_TMD_vect(1,i) = TMD(i).xi_TMD;
-end
-
-%% Guardar datos
-matObj = matfile('ModalDamping_Data.mat');
-matObj.Properties.Writable = true;
-matObj.xi_modal = xi_modal;
-matObj.k_TMD_vect = k_TMD_vect;
-matObj.xi_TMD_vect = xi_TMD_vect;
-clear matObj
 
 
 
