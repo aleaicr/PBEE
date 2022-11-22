@@ -1,4 +1,4 @@
-function []= GMThamdofFormat(GMFolder,GMDataName,T,IM_SaT1,xi,beta_newmark,t_extra,GMTHAMDOFName)
+function []= GMThamdofFormat(GMFolder,GMDataName,T,IM_SaT1,xi,beta_newmark,t_extra,GMTHAMDOFName,unit_GM)
 % Contreras - Sanguinetti
 % Ingeniería Sísmica Avanzada - USM 2022
 
@@ -26,6 +26,15 @@ function []= GMThamdofFormat(GMFolder,GMDataName,T,IM_SaT1,xi,beta_newmark,t_ext
 % - Los -3 y +3 que se ven son por la posición con la que se ven los
 % archivos al utilizar la función dir(), los registros parten del 3
 
+%% Unidad del registro
+% Si registro está en g, entonces código no se tiene que cambiar, si está
+% en m/s2, entonces se tiene que cambiar línea del método de newmark para
+% que retorne en 'g'
+if isequal(unit_GM,'g')
+    g = 1;
+elseif isequal(unit_GM,'m/s2')
+    g = 9.81;
+end
 %% Leer archivos de la carpeta
 files = dir(GMFolder);
 % los nombres de los archivos parten desde el 4 
@@ -45,13 +54,16 @@ end
 %% Leer Archivo GM Data.txt
 fileID = fopen([GMFolder '\' GMDataName],'r');                              % Abrir archivo para lectura
 fLine = fgetl(fileID);                                                      % Char de la primera linea del GM Data.txt
+GMData = struct();
 while ischar(fLine)
     string_data_line = split(string(fLine));                                % Separamos en dos (por el tab)
     for i = 4:length(files)
+        GMData(i).name = string_data_line(1);
+        GMData(i).dt = string_data_line(2);
         if string_data_line(1) == string(files(i).name)                     % Solo si es el mismo registro
             a(i-3).dt = double(string_data_line(2));                        % Guardamos dt
             % Aprovechar de obtener la aceleración espectral
-            a(i-3).SaT1 = Newmark_Lineal_Sa(beta_newmark,xi,a(i-3).dt,0,0,a(i-3).GM,T); % Guardar aceleración espectral del primer modo, GM está en m/s
+            a(i-3).SaT1 = Newmark_Lineal_Sa(beta_newmark,xi,a(i-3).dt,0,0,a(i-3).GM,T)./g; % Guardar aceleración espectral del primer modo, GM está en m/s
         end
     end
     fLine = fgetl(fileID);                                                  % Siguiente línea del GM Data.txt
@@ -97,7 +109,8 @@ A = cell(1,IM_length*(length(files)-3));
 % GM1 - IM1 | GM1 - IM2 | GM1 - IM3| GM1 - IM4 | GM2 -IM1 | GM2 - IM2 | ... | GM20 - IM3 | GM20 - IM4|
 for i = 4:length(files)
     for j = 1:IM_length
-        A{IM_length*(i-3-1)+j} = titles(i-3,j);
+        A{IM_length*(i-3-1)+j} = convertStringsToChars(string(GMData(i).name) + " - IM" + string(1:1:IM_length));
+%         A{IM_length*(i-3-1)+j} = titles(i-3,j);
     end
 end
 table_csv = array2table(matrix_csv_);

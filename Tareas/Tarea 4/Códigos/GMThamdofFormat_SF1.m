@@ -1,4 +1,4 @@
-function []= SingleGMThamdofFormat(GMFolder,GMDataName,T,xi,beta_newmark,t_extra,GMTHAMDOFName_collapse)
+function []= GMThamdofFormat_SF1(GMFolder,GMDataName,T,xi,beta_newmark,t_extra,GMTHAMDOFName_SF1)
 % Contreras - Sanguinetti
 % Ingeniería Sísmica Avanzada - USM 2022
 
@@ -83,7 +83,7 @@ end
 
 %% Escribir matriz en CSV
 matrix_csv_(1,:) = [];
-titles = convertStringsToChars(["GM" + string([1:1:(length(files)-3)])]).';
+titles = convertStringsToChars("GM" + string(1:1:(length(files)-3))).';
 A = cell(1,IM_length*(length(files)-3));
 for i = 4:length(files)
     for j = 1:IM_length
@@ -92,8 +92,8 @@ for i = 4:length(files)
 end
 table_csv = array2table(matrix_csv_);
 table_csv.Properties.VariableNames(1:IM_length*(length(files)-3)) = string(A);
-writetable(table_csv,GMTHAMDOFName_collapse)
-fprintf('Se ha creado el archivo %s\n\n',GMTHAMDOFName_collapse)
+writetable(table_csv,GMTHAMDOFName_SF1)
+fprintf('Se ha creado el archivo %s\n\n',GMTHAMDOFName_SF1)
 end
 
 %% Método de Newmark-beta utilizado para determinar el espectro, descomentar ctrl+shift+R si no se tiene programado
