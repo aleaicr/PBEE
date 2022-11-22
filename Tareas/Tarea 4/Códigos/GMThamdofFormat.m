@@ -58,9 +58,9 @@ GMData = struct();
 while ischar(fLine)
     string_data_line = split(string(fLine));                                % Separamos en dos (por el tab)
     for i = 4:length(files)
-        GMData(i).name = string_data_line(1);
-        GMData(i).dt = string_data_line(2);
         if string_data_line(1) == string(files(i).name)                     % Solo si es el mismo registro
+            GMData(i-3).name = string_data_line(1);                           % Guardar nombre en GM Data.txt del registro
+            GMData(i-3).dt = string_data_line(2);                             % Guardar dt en GM Data.txt del registro
             a(i-3).dt = double(string_data_line(2));                        % Guardamos dt
             % Aprovechar de obtener la aceleración espectral
             a(i-3).SaT1 = Newmark_Lineal_Sa(beta_newmark,xi,a(i-3).dt,0,0,a(i-3).GM,T)./g; % Guardar aceleración espectral del primer modo, GM está en m/s
@@ -109,8 +109,8 @@ A = cell(1,IM_length*(length(files)-3));
 % GM1 - IM1 | GM1 - IM2 | GM1 - IM3| GM1 - IM4 | GM2 -IM1 | GM2 - IM2 | ... | GM20 - IM3 | GM20 - IM4|
 for i = 4:length(files)
     for j = 1:IM_length
-        A{IM_length*(i-3-1)+j} = convertStringsToChars(string(GMData(i).name) + " - IM" + string(1:1:IM_length));
-%         A{IM_length*(i-3-1)+j} = titles(i-3,j);
+%         A{IM_length*(i-3-1)+j} = convertStringsToChars(string(GMData(i).name) + " - IM" + string(1:1:IM_length));
+        A{IM_length*(i-3-1)+j} = titles(i-3,j);
     end
 end
 table_csv = array2table(matrix_csv_);

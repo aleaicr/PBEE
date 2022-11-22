@@ -270,7 +270,7 @@ figure
 plot([0; IMs], [0 ; EDP_stdln(:,1)],'--','color','r')
 xlabel('IM = Sa(T1) [g]')
 ylabel('EDP stdln')
-title('Desviación estándar logarítmica','Máximo IDR Piso 1')
+title('Desviación estándar logarítmica','Piso 1')
 grid on
 
 %b
@@ -279,37 +279,30 @@ figure
 plot([0; IMs], [0 ; EDP_stdln(:,9)],'--','color','r')
 xlabel('IM = Sa(T1) [g]')
 ylabel('EDP stdln')
-title('Desviación estándar logarítmica','Máximo IDR Piso 9')
+title('Desviación estándar logarítmica','Piso 9')
 grid on
 
 
 % c
 EDP_stdln = EDP_stdln_PFA;
 figure
-plot([0; IMs], [0 ; EDP_stdln(:,9)],'--','color','r')
+plot([0; IMs], [0 ; EDP_stdln(:,1)],'--','color','r')
 xlabel('IM = Sa(T1) [g]')
 ylabel('EDP stdln')
-title('Desviación estándar logarítmica','Máximo PFA Techo')
+title('Desviación estándar logarítmica','Piso 1')
 grid on
 
 % d
-EDP_stdln = EDP_stdln_maxFloorIDR;
+EDP_stdln = EDP_stdln;
 figure
 plot([0; IMs], [0 ; EDP_stdln(:,1)],'--','color','r')
 xlabel('IM = Sa(T1) [g]')
 ylabel('EDP stdln')
-title('Desviación estándar logarítmica','Máximo IDR en cualquier piso')
+title('Desviación estándar logarítmica','Piso 1')
 grid on
 
 
 % e
-EDP_stdln = EDP_stdln_maxFloorresIDR;
-figure
-plot([0; IMs], [0 ; EDP_stdln(:,1)],'--','color','r')
-xlabel('IM = Sa(T1) [g]')
-ylabel('EDP stdln')
-title('Desviación estándar logarítmica','Máximo ResIDR en cualquier piso')
-grid on
 
 %% P3
 % 
