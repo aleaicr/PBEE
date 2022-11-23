@@ -8,6 +8,10 @@
 % guardar como Displacement.xlsx)
 % - En los inputs de texto usar chars, no strings  (i.e: usar apostrofe
 % ('), no comillas ("))
+% - Revisar todos los vectores y matrices definidas como inputs en las preguntas
+% correspondientes
+% - También revisar el límite para considerar qué es colapso (10^20 en
+% general debería funcionar, revisar todos, depende la unidad de medida)
 
 %% Inicializar
 clear variables
@@ -26,7 +30,7 @@ g = 9.81;
 nA_IDR = 'IDR.xlsx';                                                        % Interstory Drift Ratio
 nA_PFA = 'Total Acceleration.xlsx';                                         % Peak Floor Aceleration
 nA_rIDR = 'Residual IDR.xlsx';                                              % Residual Interstory Drift Ratio
-
+nA_Disp = 'Displacement.xlsx';
 % Alphabet
 alphabet = string('A':'Z');
 alphab = strings(cant_registros*cant_franjas,1);
@@ -49,7 +53,7 @@ end
 
 %% Load Data
 files = dir(ResultsDir);                                                    % Ver carpeta
-files(1:1:3) = [];
+files(1:1:2) = [];
 
 for i = 1:length(files)
     if isequal(files(i).name, nA_IDR)
@@ -60,6 +64,9 @@ for i = 1:length(files)
         continue
     elseif isequal(files(i).name,nA_rIDR)
         rIDRid = i;
+        continue
+    elseif isequal(files(i).name,nA_Disp)
+        Dispid = i;
         continue
     end
 end
@@ -88,12 +95,13 @@ F_EDP = max(abs(F_EDP_pos),abs(F_EDP_neg));                                 % Fl
 % Mediana dado no colapso para todos los pisos
 EDP_median = zeros(length(IMs),cant_pisos);
 EDP_stdln = zeros(length(IMs),cant_pisos);
+
 for i = 1:cant_pisos
     figure
     hold on
     leyenda_string = strings(length(IMs),1);
     for j = 1:length(IMs)
-        vect = j+1 + 0:4:cant_registros*cant_franjas;                       % j para ir por cada IM, el +1 es para empezar desde la segunda y el 
+        vect = j+1 + 0:cant_franjas:cant_registros*cant_franjas;                       % j para ir por cada IM, el +1 es para empezar desde la segunda y el 
         F_EDP_vect = F_EDP(i,vect);
         F_EDP_vect(F_EDP_vect > 10^20) = [];                                % Límite para definir colapso para TODOS LOS pisos de 10^20, puede ser menos y hasta se puede poner como input
         EDP_median_vect = F_EDP(i,vect);
@@ -134,12 +142,13 @@ F_EDP = max(abs(F_EDP_pos),abs(F_EDP_neg));                                 % Fl
 % Mediana dado no colapso para todos los pisos
 EDP_median = zeros(length(IMs),cant_pisos);
 EDP_stdln = zeros(length(IMs),cant_pisos);
+
 for i = 1:cant_pisos
     figure
     hold on
 %     leyenda_string = strings(length(IMs),1);
     for j = 1:length(IMs)
-        vect = j+1 + 0:4:cant_registros*cant_franjas;
+        vect = j+1 + 0:cant_franjas:cant_registros*cant_franjas;
         F_EDP_vect = F_EDP(i,vect);
         F_EDP_vect(F_EDP_vect > 10^20) = [];                                % Límite para definir colapso para TODOS LOS pisos de 10^20, puede ser menos y hasta se puede poner como input
         EDP_median_vect = F_EDP(i,vect);
@@ -176,10 +185,11 @@ F_EDP = max(abs(F_EDP_pos),abs(F_EDP_neg));                                 % Fl
 % Mediana dado no colapso para el máximo IDR de todos los pisos
 EDP_median = zeros(length(IMs),1);
 EDP_stdln = zeros(length(IMs),1);
+
 figure
 hold on
 for j = 1:length(IMs)
-    vect = j + 0:4:cant_registros*cant_franjas;                         
+    vect = j + 0:cant_franjas:cant_registros*cant_franjas;                         
     F_EDP_vect = F_EDP(:,vect);
     F_EDP_vect_new = zeros(cant_registros,1);
     for r = 1:cant_registros                                                % Para cada registro
@@ -226,10 +236,11 @@ F_EDP = abs(rIDR_data.data.ResIDR(1:cant_pisos,(2:(cant_registros*cant_franjas+1
 % Mediana dado no colapso para el máximo IDR de todos los pisos
 EDP_median = zeros(length(IMs),1);
 EDP_stdln = zeros(length(IMs),1);
+
 figure
 hold on
 for j = 1:length(IMs)
-    vect = j + 0:4:cant_registros*cant_franjas;                         
+    vect = j + 0:cant_franjas:cant_registros*cant_franjas;                         
     F_EDP_vect = F_EDP(:,vect);
     F_EDP_vect_new = zeros(cant_registros,1);
     for r = 1:cant_registros                                                % Para cada registro
@@ -263,11 +274,11 @@ ylabel('EDP = maxFloor resIDR [%]')
 EDP_stdln_maxFloorresIDR = EDP_stdln;                                       % máximo del piso
 
 %% P2
-% Desviación de EDP dado no colapso
+% Desviación de EDP dado no colapso para los mismos casos que en P1
 % a
 EDP_stdln = EDP_stdln_IDR;
 figure
-plot([0; IMs], [0 ; EDP_stdln(:,1)],'--','color','r')
+plot([0; IMs], [0 ; EDP_stdln(:,1)],'-o','color','r')
 xlabel('IM = Sa(T1) [g]')
 ylabel('EDP stdln')
 title('Desviación estándar logarítmica','Máximo IDR Piso 1')
@@ -276,17 +287,16 @@ grid on
 %b
 EDP_stdln = EDP_stdln_IDR;
 figure
-plot([0; IMs], [0 ; EDP_stdln(:,9)],'--','color','r')
+plot([0; IMs], [0 ; EDP_stdln(:,9)],'-o','color','r')
 xlabel('IM = Sa(T1) [g]')
 ylabel('EDP stdln')
 title('Desviación estándar logarítmica','Máximo IDR Piso 9')
 grid on
 
-
 % c
 EDP_stdln = EDP_stdln_PFA;
 figure
-plot([0; IMs], [0 ; EDP_stdln(:,9)],'--','color','r')
+plot([0; IMs], [0 ; EDP_stdln(:,9)],'-o','color','r')
 xlabel('IM = Sa(T1) [g]')
 ylabel('EDP stdln')
 title('Desviación estándar logarítmica','Máximo PFA Techo')
@@ -295,35 +305,156 @@ grid on
 % d
 EDP_stdln = EDP_stdln_maxFloorIDR;
 figure
-plot([0; IMs], [0 ; EDP_stdln(:,1)],'--','color','r')
+plot([0; IMs], [0 ; EDP_stdln(:,1)],'-o','color','r')
 xlabel('IM = Sa(T1) [g]')
 ylabel('EDP stdln')
 title('Desviación estándar logarítmica','Máximo IDR en cualquier piso')
 grid on
 
-
 % e
 EDP_stdln = EDP_stdln_maxFloorresIDR;
 figure
-plot([0; IMs], [0 ; EDP_stdln(:,1)],'--','color','r')
+plot([0; IMs], [0 ; EDP_stdln(:,1)],'-o','color','r')
 xlabel('IM = Sa(T1) [g]')
 ylabel('EDP stdln')
 title('Desviación estándar logarítmica','Máximo ResIDR en cualquier piso')
 grid on
 
-%% P3
-% 
+%% P3   (Martina)
+% Generar gráficos que muestren la distribución en altura de la media
+% geométrica de los siguientes EDP, dado no colapso
+
+% Eje x -> Media geométrica para cada piso para cada IM
+% EJe y -> Número del piso
+
+pisos = 1:1:cant_pisos;
+
+% a. La máxima razón de derivas de piso (delta)
+
+
+
+
+% b. El máximo valor residual de delta
+
+% c. PFA
 
 %% P4
 % Determinar Curva de Fragilidad de Colapso (CFC) con método de mínimos
 % cuadrados y método de máxima verosimilitud y comparar
 
+% El colapso quedará definido cuando el desplazamiento, de cualquier piso,
+% exceda el desplazamiento de resistencia 0 (du - desplazamiento último)
 
+Disp_data = importdata(convertStringsToChars(string(ResultsDir) + "\" + string(files(Dispid).name)));
+F_EDP_pos = Disp_data.data.u(1:cant_pisos,(2:(cant_registros*cant_franjas+1)));                              % Floor EDP_positivos
+F_EDP_neg = Disp_data.data.u((cant_pisos+4):(2*cant_pisos+3),(2:(cant_registros*cant_franjas+1)));           % Floor EDP negativos
+F_EDP = max(abs(F_EDP_pos),abs(F_EDP_neg)); 
+
+n_collapse = zeros(cant_franjas,1);
+fraccion = zeros(cant_franjas,1);
+for i = 1:cant_franjas
+    vect = i + 0:cant_franjas:cant_franjas*cant_registros;
+    F_EDP_vect = F_EDP(:,vect);
+    for r = 1:cant_registros
+        for j = 1:cant_pisos
+            if F_EDP_vect(j,r) > 10^20
+                n_collapse(i,1) = n_collapse(i,1) + 1;
+                break
+            end
+        end
+    end
+    fraccion(i,1) = n_collapse(i,1)./cant_registros;
+end
+
+% Rango de Mu y Sigma para realizar la "optimización" del fittind de la
+% curva CFC por método de minimos cuadrados y 
+
+% Inputs
+mus = -5:0.01:5;
+sigmas = 0.001:0.001:1;
+
+% Método de los mínimos cuadrados
+E = zeros(cant_franjas,1);
+mc = +inf;
+for m = 1:length(mus)
+    for s = 1:length(sigmas)
+        for i = 1:cant_franjas
+            E(i) = abs(fraccion(i) - normcdf((log(IMs(i)) - mus(m))./sigmas(s)))^2;
+        end
+        if sum(E) < mc
+            mc = sum(E);
+            sigma_mc = sigmas(s);
+            mu_mc = mus(m);
+        end
+    end
+end
+
+% Método de máxima verosimilitud
+mv = -inf;
+L = zeros(cant_franjas,1);
+for m = 1:length(mus)
+    for s = 1:length(sigmas)
+        for i = 1:cant_franjas
+            combinatoria = nchoosek(cant_registros,n_collapse(i));          % n: cantidad registros, k: cantidad de colapsos
+            pc = normcdf((log(IMs(i)) - mus(m))/sigmas(s))^n_collapse(i);
+            pnc = (1-normcdf((log(IMs(i)) - mus(m))/sigmas(s)))^(cant_registros-n_collapse(i));
+            L(i,1) = combinatoria*pc*pnc;
+        end
+        if exp(sum(L)) > mv
+            mv = exp(sum(L));
+            mu_mv = mus(m);
+            sigma_mv = sigmas(s);
+        end
+    end
+end
+tabla = table();
+tabla.par = ["mu";"sigma"];
+tabla.mc = [mu_mc; sigma_mc];
+tabla.mv = [mu_mv; sigma_mv];
+disp(tabla)
+clear tabla
+
+% Generar figura para corrobarar método
+% Inputs
+IM_range = 0.01:0.01:3; % g
+% Figura
+figure
+plot(IMs,fraccion,'o','Color','r','linewidth',1.5)
+hold on
+plot(IM_range,normcdf((log(IM_range)-mu_mc)/sigma_mc),'color','b','Linewidth',1.5)
+plot(IM_range,normcdf((log(IM_range)-mu_mv)/sigma_mv),'color','g','Linewidth',1.5)
+hold off
+xlabel('IM: Sa(T1) [g]')
+ylabel('P(C|IM=im)')
+title('Curva de Fragilidad de Colapso')
+legend('Data','Mínimos Cuadrados','Máxima Verosimilitud')
+grid on
 
 %% P5
+% Obtener la curva de amenaza sísmica desde el sitio web de USGS, suelo
+% clase D, coord(37.785,-122.44), realizar ajuster polinomial de tercer
+% grado, graficar e incluir R2
 
+% Data USGS
+IM_USGS = [ 0.0025;0.0045;0.0075;0.0113;0.0169;0.0253;0.038;0.057;0.0854;0.128;0.192;0.288;0.432;0.649;0.973;1.46;2.19;3.28;4.92;7.38];
+lambda_USGS = [0.56700011;0.3744033;0.24882876;0.17413627;0.12000236;0.081077782;0.053541436;0.03454773;0.02167907;0.013171584;0.0076841789;0.0042117965;0.0020870034;8.8886321E-4;3.1228863E-4;8.4600432E-5;1.5386503E-5;1.3194825E-6;1.5856989E-8;6.4405085E-13];
 
-
+% Ajuste polinomial
 
 %% P6
+% Calcular valores
+
+% a
+
+
+% b
+
+
+% c
+
+
+% d
+
+
+% e
 
