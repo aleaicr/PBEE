@@ -866,8 +866,8 @@ hold on
 plot(IMs, des_lambda_frac_1,'-o','color','r')
 hold off
 xlabel('IM: Sa(T_1) [g]')
-ylabel('P(EDP > 0.5 [g] | IM = im, NC)*|\lambda_{IM}/dIM|')
-title('Desagregación \lambda_{EDP}(PFA_r > 0.5 [g])')
+ylabel('P(EDP > 0.01 | IM = im, NC)*|\lambda_{IM}/dIM|')
+title('Desagregación \lambda_{EDP > 0.01}')
 legend('Interpolado','Franjas')
 grid on
 
@@ -877,16 +877,17 @@ hold on
 plot(IMs, des_lambda_frac_2,'-o','color','r')
 hold off
 xlabel('IM: Sa(T_1) [g]')
-ylabel('P(EDP > 1 [g] | IM = im, NC)*|\lambda_{IM}/dIM|')
-title('Desagregación \lambda_{EDP}(PFA_r > 1 [g])')
+ylabel('P(EDP > 1 | IM = im, NC)*|\lambda_{IM}/dIM|')
+title('Desagregación \lambda_{EDP}(PFA_r > 1')
 legend('Interpolado','Franjas')
 grid on
 
 lambda_EDP_1 = trapz(IM_range,des_lambda_1);
 lambda_EDP_2 = trapz(IM_range,des_lambda_2);
 
+
 % P(C|IM=im) ya se tiene desde máxima verosimilitud
-PColIM = normcdf((log(IM_range)-mu_mv)/sigma_mv);                           % Desde curva de fragilidad
+PColIM = normcdf((log(IM_range)-mu_mv)/sigma_mv);
 
 % Cambio Pexc
 Pexc_EDP_nc_1 = Pexc_EDP_nc_1.*(ones(length(IM_range),1)-PColIM) + PColIM;

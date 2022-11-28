@@ -454,7 +454,7 @@ lambda_USGS = [0.03454773; 0.02167907; 0.013171584; 0.0076841789; 0.0042117965; 
 [P,S] = polyfit(log(IM_USGS),log(lambda_USGS),3);
 
 % Ajustar curva
-more_IM = (0.057:0.01:1.5).';                                               % Mismo rango que los datos para el ajuste polinomial
+more_IM = (0.057:0.01:2.5).';                                               % Mismo rango que los datos para el ajuste polinomial
 IM_range = sort([more_IM; IMs]);                          % Vector para el cual se va a realizar la interpolación, notar que se agregaron los IMs de Interés
 lambda_poly = exp(P(4)*ones(length(IM_range),1) + P(3)*log(IM_range) + P(2)*log(IM_range).^2 + P(1)*log(IM_range).^3); 
 R_square = 1 - S.normr^2 / norm(log(lambda_USGS)-mean(log(lambda_USGS)))^2; % Valor de R^2
@@ -577,7 +577,7 @@ grid on
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SI CALCULAMOS LAS "FRACCIONES"
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ESAS SERÍAN NUESTRAS PROBABILIDADES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LUEGO LAS MULTIPLICAMOS POR DLAMBDA
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% RESPECTIVO en su IMs
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% RESPECTIVO
 d1 = 0.01; % interstory drift ratio (delta)
 d2 = 0.02;
 IDR_data = importdata(convertStringsToChars(string(ResultsDir) + "\" + string(files(IDRid).name)));
@@ -710,96 +710,12 @@ tabla.diferencia_porcentual = [(lambda_EDP_1- lambda_EDP_1_C)/lambda_EDP_1*100 ;
 disp(tabla)
 clear tabla
 
-%% P6 d}
-close all
+%% P6 d
 % Calcular lambda_EDP, EDP PFA_roof para 0.5g y 1g, i.e.:
 % lambda_EDP(PFA_roof> 0.5g) y lambda_EDP(PFA_roof>1g), suponer que
 % PFA_roof> 1 g si la estructura colapsa
 
 % Tenemos que hacer lo mismo que la a y b al mismo tiempo.
-
-% Teniendo la media y la desviación de PFA_roof para no colapso se puede
-% calcular la probabilidad de obtener EDP > edp | NC como:
-% P(EDP > edp | IM = im, nonCollapse) = 1 - normcdf((log(edp)-mu)/sigma)
-
-EDP_median = EDP_muln_PFA(:,cant_pisos);                                    % Obtenemos solo la del techo, el resto no nos importa
-EDP_stdln = EDP_stdln_PFA(:,cant_pisos);
-
-% Interpolamos estos valores para un rango de IM (IM_range, aprovechando)
-EDP_median_interp = interp1(IMs,EDP_median,IM_range,'linear','extrap');
-EDP_stdln_interp = interp1(IMs,EDP_stdln,IM_range,'linear','extrap');
-
-% Graficamos
-figure
-plot(IMs,EDP_median,'o','color','r')
-hold on
-plot(IM_range,EDP_median_interp,'color','b')
-hold off
-xlabel('IM: Sa(T_1) [g]')
-ylabel('\mu_{ln} (%)')
-legend('Media para franjas','Media interpolada')
-grid on
-
-
-figure
-plot(IMs,EDP_stdln,'o','color','r')
-hold on
-plot(IM_range,EDP_stdln_interp,'color','b')
-hold off
-xlabel('IM: Sa(T_1) [g]')
-ylabel('\sigma_{ln} (%)')
-legend('Desv. Estándar para franjas','Desv. Estandar interpolada')
-grid on
-
-% Ahora calculamos la probabilidad
-edp1 = 0.5;                                                                % Drift máximo para los pisos
-edp2 = 1;                                                                % Drift máximo para los pisos
-Pexc_EDP_nc_1 = ones(length(IM_range),1) - normcdf(ones(length(IM_range),1)*log(edp1), log(EDP_median_interp), EDP_stdln_interp);
-Pexc_EDP_nc_2 = ones(length(IM_range),1) - normcdf(ones(length(IM_range),1)*log(edp2), log(EDP_median_interp), EDP_stdln_interp);
-
-% Graficamos
-figure
-plot(IM_range,Pexc_EDP_nc_1,'color','b')
-xlabel('IM: Sa(T_1) [g]')
-ylabel('P(PFA_{roof} > 0.5 [g] | IM = im, NC')
-title('Probabilidad de Excedencia')
-legend('Prob. Excedencia PFA_{roof} = 0.5[g]')
-grid on
-
-% Graficamos
-figure
-plot(IM_range,Pexc_EDP_nc_2,'color','b')
-xlabel('IM: Sa(T_1) [g]')
-ylabel('P(PFA_{roof} > 1 [g] | IM = im, NC')
-title('Probabilidad de Excedencia')
-legend('Prob. Excedencia PFA_{roof} = 1 [g]')
-grid on
-
-% Ahora multiplicamos Probabilida*|dlambda(IM=im)/delta(im))|
-des_lambda_1 = Pexc_EDP_nc_1.*dlim_poly;                                    % des_lambda de desagregación de lambda
-des_lambda_2 = Pexc_EDP_nc_2.*dlim_poly;
-
-figure
-plot(IM_range,des_lambda_1,'color','b')
-xlabel('IM: Sa(T_1) [g]')
-ylabel('P(PFA_{roof} > 0.5 [g] | IM = im, NC)*|\lambda_{IM}/dIM|')
-title('Desagregación \lambda_{EDP}(PFA_{roof} > 0.5 [g]}')
-grid on
-
-figure
-plot(IM_range,des_lambda_2,'color','b')
-xlabel('IM: Sa(T_1) [g]')
-ylabel('P(PFA_{roof} > 1 [g] | IM = im, NC)*|\lambda_{IM}/dIM|')
-title('Desagregación \lambda_{EDP}(PFA_{roof} > 1 [g]}')
-grid on
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SI CALCULAMOS LAS "FRACCIONES"
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ESAS SERÍAN NUESTRAS PROBABILIDADES
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LUEGO LAS MULTIPLICAMOS POR DLAMBDA
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% RESPECTIVO EN SU IMs
-
-d1 = 0.5; % Peak floor acceleration in roof (PFA_roof)
-d2 = 1;
 
 PFA_data = importdata(convertStringsToChars(string(ResultsDir) + "\" + string(files(PFAid).name)));
 
@@ -811,163 +727,8 @@ EDP = max(abs(EDP_pos),abs(EDP_neg));                                       % Fl
 % Seleccionar el del último piso
 EDP = EDP(cant_pisos,:);
 
-frac_d1 = zeros(length(IMs),1);
-frac_d2 = zeros(length(IMs),1);
-for i = 1:length(IMs)
-    im = IMs(i); % g
-    
-    % Fijar en una franja
-    vect = i+1 + 0:cant_franjas:cant_registros*cant_franjas;                % Vector que
-    EDP_franja = EDP(:,vect);
-    
-    % Quitar franjas que den colapsos (en cualquier piso)
-    [rows,cols] = find(EDP_franja > 100);
-    EDP_franja(:,cols) = [];
-
-    % Largo real del im (cant registros nueva)
-    EDP_im_length_new = length(EDP_franja);                                     % Cantidad de registros que no dan colapso para IM = im_i
-
-    % Inicializar Contadores de "cuantas veces da mayor a d1(o d2,d3,d4...)"
-    count_d1 = 0;
-    count_d2 = 0;
-
-    % Fijar en un registro
-    for reg = 1:EDP_im_length_new
-        EDP_franja_reg = EDP_franja(reg);                                   % Vector que fija un registro de una franja
-
-        % EDP en verdad es el máximo delta entre todos los pisos
-        EDP_maxIDR = max(EDP_franja_reg);                                   % EDP de ese registro (EDP = max(IDR_todosLosPisos))
-        
-        % ¿Es edp mayor a d1?
-        if EDP_maxIDR >= d1
-            count_d1 = count_d1 + 1;
-        end
-
-        % ¿Es edp mayor a d2?
-        if EDP_maxIDR >= d2
-            count_d2 = count_d2 + 1;
-        end
-
-        % Se pueden realizar preguntas cuantas veces se quiera, o cuantos
-        % lambda_EDPs se quieran realizar (en este caso son solo dos)
-    end
-
-    % fracción (Probabilidad EDP > edp (edp = d1 o d2 o d3...) | IM, NC)
-    frac_d1(i,1) = count_d1/EDP_im_length_new;
-    frac_d2(i,1) = count_d2/EDP_im_length_new;
-end
-des_lambda_frac_1 = frac_d1.*dlim_IMs;
-des_lambda_frac_2 = frac_d2.*dlim_IMs;
-
-
-figure
-plot(IM_range,des_lambda_1,'color','b')
-hold on
-plot(IMs, des_lambda_frac_1,'-o','color','r')
-hold off
-xlabel('IM: Sa(T_1) [g]')
-ylabel('P(EDP > 0.5 [g] | IM = im, NC)*|\lambda_{IM}/dIM|')
-title('Desagregación \lambda_{EDP}(PFA_r > 0.5 [g])')
-legend('Interpolado','Franjas')
-grid on
-
-figure
-plot(IM_range,des_lambda_2,'color','b')
-hold on
-plot(IMs, des_lambda_frac_2,'-o','color','r')
-hold off
-xlabel('IM: Sa(T_1) [g]')
-ylabel('P(EDP > 1 [g] | IM = im, NC)*|\lambda_{IM}/dIM|')
-title('Desagregación \lambda_{EDP}(PFA_r > 1 [g])')
-legend('Interpolado','Franjas')
-grid on
-
-lambda_EDP_1 = trapz(IM_range,des_lambda_1);
-lambda_EDP_2 = trapz(IM_range,des_lambda_2);
-
-% P(C|IM=im) ya se tiene desde máxima verosimilitud
-PColIM = normcdf((log(IM_range)-mu_mv)/sigma_mv);                           % Desde curva de fragilidad
-
-% Cambio Pexc
-Pexc_EDP_nc_1 = Pexc_EDP_nc_1.*(ones(length(IM_range),1)-PColIM) + PColIM;
-Pexc_EDP_nc_2 = Pexc_EDP_nc_2.*(ones(length(IM_range),1)-PColIM) + PColIM;
-
-% des_lambda
-des_lambda_1_C = Pexc_EDP_nc_1.*dlim_poly;                                    % des_lambda de desagregación de lambda
-des_lambda_2_C = Pexc_EDP_nc_2.*dlim_poly;
-
-% Figuras
-figure
-plot(IM_range,des_lambda_1,'color','r')
-hold on
-plot(IM_range,des_lambda_1_C,'color','b')
-hold off
-xlabel('IM: Sa(T_1) [g]')
-ylabel('P(PFA_{roof} > 0.5[g] | IM = im, NC)*|\lambda_{IM}/dIM|')
-title('Desagregación \lambda_{EDP}(PFA_r > 0.5 [g])')
-legend('\lambda_{EDP}(PFA_r > 0.5|NC)','\lambda_{EDP}(PFA_r > 0.5)')
-grid on
-
-% Figuras
-figure
-plot(IM_range,des_lambda_2,'color','r')
-hold on
-plot(IM_range,des_lambda_2_C,'color','b')
-hold off
-xlabel('IM: Sa(T_1) [g]')
-ylabel('P(PFA_{roof} > 1 [g] | IM = im, NC)*|\lambda_{IM}/dIM|')
-title('Desagregación \lambda_{EDP}(PFA_r > 1 [g])')
-legend('\lambda_{EDP}(PFA_r > 1|NC)','\lambda_{EDP}(PFA_r > 1)')
-grid on
-
-lambda_EDP_1_C = trapz(IM_range,des_lambda_1_C);
-lambda_EDP_2_C = trapz(IM_range,des_lambda_2_C);
-
-% Comparación dado NC y dado NC y C
-tabla = table();
-tabla.delta_max = [0.01; 0.04];
-tabla.lambda_NC = [lambda_EDP_1; lambda_EDP_2];
-tabla.lambda = [lambda_EDP_1_C; lambda_EDP_2_C];
-tabla.diferencia = [lambda_EDP_1-lambda_EDP_1_C; lambda_EDP_2-lambda_EDP_2_C];
-tabla.diferencia_porcentual = [(lambda_EDP_1- lambda_EDP_1_C)/lambda_EDP_1*100 ; (lambda_EDP_2- lambda_EDP_2_C)/lambda_EDP_2*100];
-disp(tabla)
-clear tabla
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+% Teniendo la media y la desviación de PFA_roof para no colapso se puede
+% calcular la probabilidad de obtener EDP > edp | NC como:
+% P(EDP > edp | IM = im, nonCollapse) = 1 - normcdf((log(edp)-mu)/sigma)
 
 

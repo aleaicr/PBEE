@@ -25,7 +25,7 @@ Alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';                                    % Le
 ResultsFilesString = ["estructura 1A";"estructura 1B";"estructura 1C";"estructura 1D";"estructura 2A";"estructura 2B";"estructura 2C";"estructura 2D"];
 Colors = ["#0072BD";"#D95319";"#EDB120";"#7E2F8E";"#77AC30";"#4DBEEE";"#A2142F"]; % hay 7 colores, si se quieren más, fijarlos
 
-IM_range = (0.1:0.1:7).';                                                   % Cambiar 7 a 4 o menos para que no se generen  valores NaN en interpolación (debe verse la forma de distrbibución lognromal en el último gráfico)
+IM_range = (0.1:0.1:4).';                                                   % Cambiar 7 a 4 o menos para que no se generen  valores NaN en interpolación (debe verse la forma de distrbibución lognromal en el último gráfico)
 
 sequence = zeros(cant_estructuras,cant_variantes);                          % Secuencia para identificar ABCD de estructura 1 o dos viendo las columnas y filas (find())
 for i = 1:cant_estructuras
@@ -493,18 +493,18 @@ title(['Desagregación Tasa Anual Media de Colapso', ResultsFilesString(1)])
 legend('Interpolación Lineal', 'Interpolación LogLog', 'Ajuste Polinomial Miranda')
 grid on
 
-
-figure
-plot(hazard(2).IMlineal,desCol(5).Desagregacion_lineal)
-hold on
-plot(hazard(2).IMlog, desCol(5).Desagregacion_log)
-plot(hazard(2).IMlog, desCol(5).Desagregacion_poli)
-hold off
-xlabel('IM: Sa(T_1)')
-ylabel('P(C|IM=im)*|d\lambda_IM/dIM|')
-title(['Desagregación Tasa Anual Media de Colapso', ResultsFilesString(5)])
-legend('Interpolación Lineal', 'Interpolación LogLog', 'Ajuste Polinomial Miranda')
-grid on
+% Acá tengo desCol(5), pero ahora no me corre, y lo cambié a 4
+% figure
+% plot(hazard(2).IMlineal,desCol(5).Desagregacion_lineal)
+% hold o
+% plot(hazard(2).IMlog, desCol(5).Desagregacion_log)
+% plot(hazard(2).IMlog, desCol(5).Desagregacion_poli)
+% hold off
+% xlabel('IM: Sa(T_1)')
+% ylabel('P(C|IM=im)*|d\lambda_IM/dIM|')
+% title(['Desagregación Tasa Anual Media de Colapso', ResultsFilesString(5)])
+% legend('Interpolación Lineal', 'Interpolación LogLog', 'Ajuste Polinomial Miranda')
+% grid on
 
 tabla = table();
 tabla.Lineal = lambda_col;
