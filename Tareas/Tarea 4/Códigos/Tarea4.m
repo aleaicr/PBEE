@@ -341,6 +341,7 @@ pisos = 1:1:cant_pisos;
 
 % c. PFA
 
+close all
 %% P4
 % Determinar Curva de Fragilidad de Colapso (CFC) con método de mínimos
 % cuadrados y método de máxima verosimilitud y comparar
@@ -418,10 +419,22 @@ disp(tabla)
 clear tabla
 
 % Generar figura para corrobarar método
-% Inputs
-more_IM = (0.057:0.01:2.5).';                                               % Mismo rango que los datos para el ajuste polinomial
+
+more_IM = (0.057:0.01:1.5).';                                               % Mismo rango que los datos para el ajuste polinomial
 IM_range = sort([more_IM; IMs]);                          % Vector para el cual se va a realizar la interpolación, notar que se agregaron los IMs de Interés
-% Figura
+
+% Figuras
+
+figure
+plot(IMs,fraccion,'o','Color','r','linewidth',1.5)
+xlabel('IM: Sa(T1) [g]')
+ylabel('P(C|IM=im)')
+xlim([0 IM_range(end)])
+ylim([0 1])
+title('Fracciones zj/nj')
+legend('Data')
+grid on
+
 figure
 plot(IMs,fraccion,'o','Color','r','linewidth',1.5)
 hold on
@@ -454,7 +467,9 @@ lambda_USGS = [0.03454773; 0.02167907; 0.013171584; 0.0076841789; 0.0042117965; 
 [P,S] = polyfit(log(IM_USGS),log(lambda_USGS),3);
 
 % Ajustar curva
-more_IM = (0.057:0.01:1.5).';                                               % Mismo rango que los datos para el ajuste polinomial
+% El IM_range a utilizar para calcular los puntos serán los mismos que en
+% la parte anterior
+more_IM = (IM_USGS(1,1):0.01:3).';                                               % Mismo rango que los datos para el ajuste polinomial
 IM_range = sort([more_IM; IMs]);                          % Vector para el cual se va a realizar la interpolación, notar que se agregaron los IMs de Interés
 lambda_poly = exp(P(4)*ones(length(IM_range),1) + P(3)*log(IM_range) + P(2)*log(IM_range).^2 + P(1)*log(IM_range).^3); 
 R_square = 1 - S.normr^2 / norm(log(lambda_USGS)-mean(log(lambda_USGS)))^2; % Valor de R^2
@@ -473,8 +488,8 @@ text(10^0,10^-2,"R2 = " + string(R_square))
 title('Curva de amenaza sísimca')
 
 % Derivada
-parte1 = (P(3)*log(IM_range) + 2*P(2)*log(IM_range) + 3*P(1)*log(IM_range).^2)./IM_range;
-parte2 = exp(P(4)*ones(length(IM_range),1) + P(3)*log(IM_range) + P(2)*log(IM_range).^2 + P(1)*log(IM_range).^3);
+parte1 = (P(3) + 2*P(2)*log(IM_range) + 3*P(1)*log(IM_range).^2)./IM_range;
+parte2 = exp(P(4)*ones(length(IM_range),1) + P(3)*log(IM_range) + P(2)*log(IM_range).^2 + P(1)*log(IM_range).^3); % lambda_
 dlim_poly = abs(parte1.*parte2);
 
 figure
@@ -486,14 +501,16 @@ legend('Derivada ajuste polinomial tercer orden')
 title('Derivada de curva de amenaza sísimca')
 
 % Derivada en puntos de interés (IMs)
+
 dlim_IMs = zeros(length(IMs),1);
 for i = 1:length(IMs)
     [im_row, ~] = find(IM_range == IMs(i));
     dlim_IMs(i,1) = abs(dlim_poly(im_row,1));
 end
 
+
 %% P6 a
-close all
+fprintf('Parte 6 a) \n \n \n')
 % Calcular valores
 
 % Obtener EDP para todos los pisos
@@ -588,8 +605,6 @@ EDP = max(abs(EDP_pos),abs(EDP_neg));                                       % Fl
 frac_d1 = zeros(length(IMs),1);
 frac_d2 = zeros(length(IMs),1);
 for i = 1:length(IMs)
-    im = IMs(i); % g
-    
     % Fijar en una franja
     vect = i+1 + 0:cant_franjas:cant_registros*cant_franjas;                % Vector que
     EDP_franja = EDP(:,vect);
@@ -659,6 +674,7 @@ lambda_EDP_1 = trapz(IM_range,des_lambda_1);
 lambda_EDP_2 = trapz(IM_range,des_lambda_2);
 
 %% P6 b)
+fprintf('Parte 6 b) \n \n \n')
 % Calcular lambda_EDP para EDP = maxFloor_delta = 0.01 y 0.04 pero ahora
 % considerando la posibilidad de colapso
 % Ver reporte para saber porqué se hace esto.
@@ -710,8 +726,8 @@ tabla.diferencia_porcentual = [(lambda_EDP_1- lambda_EDP_1_C)/lambda_EDP_1*100 ;
 disp(tabla)
 clear tabla
 
-%% P6 d}
-close all
+%% P6 c}
+fprintf('Parte 6 d) \n \n \n')
 % Calcular lambda_EDP, EDP PFA_roof para 0.5g y 1g, i.e.:
 % lambda_EDP(PFA_roof> 0.5g) y lambda_EDP(PFA_roof>1g), suponer que
 % PFA_roof> 1 g si la estructura colapsa
@@ -740,7 +756,6 @@ ylabel('\mu_{ln} (%)')
 legend('Media para franjas','Media interpolada')
 grid on
 
-
 figure
 plot(IMs,EDP_stdln,'o','color','r')
 hold on
@@ -761,7 +776,7 @@ Pexc_EDP_nc_2 = ones(length(IM_range),1) - normcdf(ones(length(IM_range),1)*log(
 figure
 plot(IM_range,Pexc_EDP_nc_1,'color','b')
 xlabel('IM: Sa(T_1) [g]')
-ylabel('P(PFA_{roof} > 0.5 [g] | IM = im, NC')
+ylabel('P(PFA_r > 0.5 [g] | IM = im, NC')
 title('Probabilidad de Excedencia')
 legend('Prob. Excedencia PFA_{roof} = 0.5[g]')
 grid on
@@ -770,7 +785,7 @@ grid on
 figure
 plot(IM_range,Pexc_EDP_nc_2,'color','b')
 xlabel('IM: Sa(T_1) [g]')
-ylabel('P(PFA_{roof} > 1 [g] | IM = im, NC')
+ylabel('P(PFA_r > 1 [g] | IM = im, NC')
 title('Probabilidad de Excedencia')
 legend('Prob. Excedencia PFA_{roof} = 1 [g]')
 grid on
@@ -783,14 +798,14 @@ figure
 plot(IM_range,des_lambda_1,'color','b')
 xlabel('IM: Sa(T_1) [g]')
 ylabel('P(PFA_{roof} > 0.5 [g] | IM = im, NC)*|\lambda_{IM}/dIM|')
-title('Desagregación \lambda_{EDP}(PFA_{roof} > 0.5 [g]}')
+title('Desagregación \lambda_{EDP}(PFA_{roof} > 0.5 [g])')
 grid on
 
 figure
 plot(IM_range,des_lambda_2,'color','b')
 xlabel('IM: Sa(T_1) [g]')
 ylabel('P(PFA_{roof} > 1 [g] | IM = im, NC)*|\lambda_{IM}/dIM|')
-title('Desagregación \lambda_{EDP}(PFA_{roof} > 1 [g]}')
+title('Desagregación \lambda_{EDP}(PFA_{roof} > 1 [g])')
 grid on
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SI CALCULAMOS LAS "FRACCIONES"
@@ -814,8 +829,7 @@ EDP = EDP(cant_pisos,:);
 frac_d1 = zeros(length(IMs),1);
 frac_d2 = zeros(length(IMs),1);
 for i = 1:length(IMs)
-    im = IMs(i); % g
-    
+ 
     % Fijar en una franja
     vect = i+1 + 0:cant_franjas:cant_registros*cant_franjas;                % Vector que
     EDP_franja = EDP(:,vect);
@@ -934,32 +948,86 @@ disp(tabla)
 clear tabla
 
 
+%% P6 d
+% Encontrar P(C|IM_10%50años) y P(C|IM_2%50Años)
+fprintf('Parte 6 d) \n \n \n')
+% Para ello, primer se requiere encontrar la tasa anual media de IM_%
+% sabiendo que la probabilidad distribuye como poisson y posteriormente
+% evaluarlo para la curva de fragilidad
 
+% lambda_IM = -log(1-prob)/#años
+lambda_im_10_50 = -log(1-0.1)/50;
+lambda_im_2_50 = -log(1-0.02)/50;
 
+% Con ello encontramos qué valor de lambda cumple con el IM según la curva
+% de amenaza utilizando el polinomio de Miranda
+% log(lambda) = a0 + a1*log(IM) + a2*log(IM)^2 + a3*log(IM)^3
+syms im
+IM_1 = solve(   log(lambda_im_10_50) == P(4) + P(3)*log(im) + P(2)*log(im)^2 + P(1)*log(im)^3,im   );
+IM_2 = solve(   log(lambda_im_2_50) == P(4) + P(3)*log(im) + P(2)*log(im)^2 + P(1)*log(im)^3 ,im   );
 
+% Evaluar los IMs en la curva de fragilidad
+% con Máxima verosimilitud
+PC_IM_1_mv = normcdf((log(IM_1)-mu_mv)/sigma_mv);
+PC_IM_2_mv = normcdf((log(IM_2)-mu_mv)/sigma_mv);
+% con Mínimos cuadrados
+PC_IM_1_mc = normcdf((log(IM_1)-mu_mc)/sigma_mc);
+PC_IM_2_mc = normcdf((log(IM_2)-mu_mc)/sigma_mc);
 
+% figuras
+figure
+plot(IM_range,normcdf((log(IM_range)-mu_mv)/sigma_mv),'color','g')
+hold on
+plot(IM_1,PC_IM_1_mv,'O','color','r')
+plot(IM_2,PC_IM_2_mv,'^','color','r')
+plot(IM_range,normcdf((log(IM_range)-mu_mc)/sigma_mc),'color','b')
+plot(IM_1,PC_IM_1_mc,'O','color','#05295c')
+plot(IM_2,PC_IM_2_mc,'^','color','#05295c')
+xlabel('IM: Sa(T_1) [g]')
+ylabel('P(C|IM)')
+legend('CFC Máx.Verosimulitud','IM 10% 50 años MV','IM 2% 50 años MV','CFC Mínimos Cuadrados','IM 10% 50 años MC','IM 2% 50 años MC')
+title('Curva de Fragilidad')
+grid on
 
+tabla = table();
+tabla.Parametro = ["lambda_IM";"IM=im";"P(C|IM=im)_maxVer";"P(C|IM=im)_minCuad"];
+tabla.pPR_10porc_50anios = [double(lambda_im_10_50);double(IM_1);double(PC_IM_1_mv);double(PC_IM_1_mc)];
+tabla.pPR_2porc_50anios = [double(lambda_im_2_50);double(IM_2);double(PC_IM_2_mv);double(PC_IM_2_mc)];
+disp(tabla)
 
+%% P6 e)
+% Calcular desagregación lambda_c y lambda(c|t=50)
+fprintf('Parte 6 e) \n \n \n')
 
+% lambda_c(im) = P(C|IM=im)|dlambda/dIM|dim
 
+% PCollapse|IM
+PCim = normcdf((log(IM_range)-mu_mv)/sigma_mv);
 
+% Derivada
+% desde parte 5: dlim_poly
 
+% lambda_c(im)
+lambda_c_im = PCim.*dlim_poly;
 
+figure
+plot(IM_range,lambda_c_im)
+colororder('r')
+grid on
+xlabel('IM: Sa(T_1) [g]')
+ylabel('P(C|IM=im)|d\lambda_{IM}/dIM|')
+title('Desagregación de MAF colapso')
 
+% lambda_C
+lambda_c = trapz(IM_range,lambda_c_im);
 
+fprintf('lambda_c = %.10f\n',lambda_c)
 
+% probabilidad de que estructura colapse de acá en 50 años
+t = 50; % años
+Pcol_t = 1 - exp(-lambda_c*50);
 
-
-
-
-
-
-
-
-
-
-
-
+fprintf('Probabilidad de que la estructura colapse de acá en %.0f años es %.5f',t,Pcol_t)
 
 
 
