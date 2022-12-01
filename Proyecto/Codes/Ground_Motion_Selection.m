@@ -8,11 +8,15 @@ close all
 clc
 
 %% Inputs
+T = 2; % sec                                                                % Periodo del primer modo de la estructura
 
-T = 1; % sec                                                                % Periodo del primer modo de la estructura
-Sa_T1 = 0.3; % g                                                            % Aceleración espectral de la estructura  
 
 
 %% CMS
 
-%% S
+
+
+
+
+%% Ground Motion Selection through Sa_avg (Eads et al .....)
+% I
