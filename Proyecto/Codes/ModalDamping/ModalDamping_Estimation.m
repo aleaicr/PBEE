@@ -13,8 +13,8 @@ close all
 clc
 
 %% Inputs Parámetros Edificio                                               % Benchmark Ohtori et al 2004 (9 pisos)
-k = [1;2;3;4;5;6;7;8;9];                                                    % Rigidez de cada piso (abajo hacia arriba)
-m = [1.01*10^6;9.89*10^5;9.89*10^5;9.89*10^5;9.89*10^5;9.89*10^5;9.89*10^5;9.89*10^5;1.07*10^6]; %kg    % Masa de cada piso (abajo hacia arriba)
+k = [80;200;228;220;234;205;200;120;115];                                   % tonf/cm, Rigidez de cada piso (abajo hacia arriba)
+m = [535;494.5;494.5;494.5;494.5;494.5;494.5;494.5;494.5]*1016;             % tonf,  Masa de cada piso (abajo hacia arriba)
 xi_ = [2/100; 2/100];                                                       % Amortiguamiento modal de dos modos conocidos
 xi_modes = [1; 5];                                                          % Número del modo de los amortiguamientos modales (de arriba)
 nDOF = length(k);
@@ -24,7 +24,7 @@ xi_TMD = [0.05; 0.1; 0.2];                                                  % Fr
 k_TMD = [1;2;3];                                                            % Rigideces del TMD (para ajustarse al periodo del primer modo, aproximadamente) 
 m_TMD_per = 5/100;                                                          % Todos los TMDs tendrán una masa del 5% de la amsa del edificio
 
-%% Estimar xi_n con TMDs
+%% Estimar xi_n SIN TMD
 
 % ComputeK & M
 K = computeK(k);                                                            % Matriz de rigidez de la estructura
@@ -57,14 +57,16 @@ C = double(sol.alfa)*Mn + double(sol.beta)*Kn;                                % 
 Cn = Phi.'*C*Phi;
 
 figure
-plot(wn,xi,'-o','color','r')
+plot(wn,xi*100,'-o','color','r')
 xlabel('\omega_n [rad/s]')
-ylabel('\zeta_n')
+ylabel('\zeta_n (%)')
 grid on
 title('Modal Damping')
 
 
-%% Añadir TMD
+%% Estimar xi_n CON TMD
+% Se agrega un nuevo grado de libertad
+
 % Para la optimización, se realiza la 
 m_TMD = m_TMD_per*sum(m);                                                   % Masa del TMD
 
@@ -110,7 +112,6 @@ for i = 1:length(k_TMD)
         structure(length(xi_TMD)*(i-1)+j).Mn = Mn_new;
     end
 end
-
 %% Crear datos para analisis
 xi_modal = zeros(length(structure(1).xi_modal),length(structure));  % fila: amortiguamiento del modo, columna: j
 for i = 1:length(structure)
@@ -131,7 +132,10 @@ matObj.k_TMD_vect = k_TMD_vect;
 matObj.xi_TMD_vect = xi_TMD_vect;
 clear matObj
 
-
+fprintf('Revisar struct: "structure" para obtener las fracciones de amortiguamiento modales para ingresar a THAMDOF\n')
+disp(structure)
+fprintf('El de la estructura SIN TMD es:\n')
+disp(xi)
 
 
 

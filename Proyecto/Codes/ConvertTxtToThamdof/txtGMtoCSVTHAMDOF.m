@@ -23,14 +23,8 @@ T = 2; % sec                                                                % Pe
 beta_newmark = 1/4;                                                         % Beta del método de Newmark-beta (dejarlo como 1/4 para que sea incondicionalmente estable)
 xi = 0.05;                                                                  % Amortiguamiento para el espectro
 t_extra = 3000*ones(cant_registros,1); % [filas]                            % Tiempo extra para el análisis, (n*ones() es el mismo tiempo extra para todos, especificar si se quiere t_extra distinto para un registro)
-t_extra_collapse = zeros(cant_registros,1);
-
 GMTHAMDOFName = "GMs.csv";
-% GMTHAMDOFName_collapse = "GMS_collapse.csv";
 
 %% Generar archivos
 % Registros con SF para que den todos las franjas (todos los registros para todas las franjas)
 GMThamdofFormat(GMFolder,GMDataName,T,IM_SaT1,xi,beta_newmark,t_extra,GMTHAMDOFName);
-
-% Registros con SF = 1 (solo los que están en la carpeta, sin escalar para todas las franjas)
-% SingleGMThamdofFormat(GMFolder,GMDataName,T,xi,beta_newmark,t_extra_collapse,GMTHAMDOFName_collapse);

@@ -35,7 +35,7 @@ Ti_final = 5;                                                               % MÃ
 % Cantidad de puntos intermedios para interpolar 
 n_interpol = 100;
 
-%% Calculo Savg
+%% Calculo Sa_avg
 Tn_inicial = c1*T1;
 Tn_final = cN*T1;
 
