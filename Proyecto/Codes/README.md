@@ -1,14 +1,15 @@
-% No terminado
+Optimización de TMD para la mejora del desempeño sísmico de edificios por medio de Evaluación del Riesgo de Colapso
 
-Para realizar la optimización basada en la disminución del riesgo de colapso, seguir las siguientes instrucciones:
+- Lo que se planea realizar, es mejorar (disminuir) el lambda_c de una estructura utilizando un TMD, y encontrar el mejor TMD posible, es decir, encontrar aquel TMD que me disminuye lo máximo posible el lambda_c
 
-- Diseñar estructura, obtener los perfiles o utilizar un benchmark de una estructura existente
-- Obtener la curva de capacidad (carga cíclica según un patrón de carga, pero se puede obtener de forma simplificada (e imprecisa) desde pushover en SAP2000)
-- Dejar todos los datos de la estructura como están en el formato de THAMDOF (.csv)
-- Calcular el periodo del primer modo (periodo fundamental) de la estructura
-- Realizar selección de registro con script "Sa_avg_GMS.m" (Sa_avg Ground Motion Selection)
-- Con cada registro, dejarlo en formato .csv como se muestra en THAMDOF, de tener los registros en Reg.txt y el archivo GM Data.txt se puede correr el script "GMThamdofFormat.m"
-
-- Analisis Estructura SIN TMD
-- Con los registros, escalarlos en franjas de 0.1g (IM = Sa(T1))
-- 
+Procedimiento:
+1. Diseñar estructura
+2. Obtener propiedades (rigidez, masa, amortiguamiento) de cada piso (para ingresar a THAMDOF)
+3. Ajustar curvas de capacidad (monotónicas o cíclicas según un patrón de carga)
+4. Seleccionar registros según un IM (el propuesto es Sa_avg ya que correlaciona bien con colapso)
+5. Definir rango de IMs a utilizar (ej: 0.1:0.1:4 [g] para Sa_avg)
+6. Dejar todo en formato THAMDOF (.csv)
+    6.1 ConvertTxtToThamdof convierte los archivos desde formato .txt que otorga la carpeta GroundMotionSelection, a un archivo .csv con el formato que pide THAMDOF, con todos los IMs que uno quiera
+7. Correr todos los registros escalados (para la estructura sin TMD, ojalá un IDA para ver qué rango de IMs son útiles)
+8. Con respuestas de THAMDOF, realizar una evaluación del riesgo de colapso (obtener lambda_c)
+9. 
