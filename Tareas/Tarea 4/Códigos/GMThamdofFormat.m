@@ -2,7 +2,8 @@ function []= GMThamdofFormat(GMFolder,GMDataName,T,IM_SaT1,xi,beta_newmark,t_ext
 % Contreras - Sanguinetti
 % Ingeniería Sísmica Avanzada - USM 2022
 
-% Leer registros en txt y traspasarlos a formato THAMDOF (AT2? y en .csv)
+% Leer registros en txt y traspasarlos a formato THAMDOF (.csv)
+% https://github.com/pheresi/THAMDOF/blob/master/Sample%20Input%20Files/GMs.csv
 
 % Inputs
 % GMFolder: Carpeta donde se encuentran los registros (y GM Data.txt)
@@ -13,16 +14,16 @@ function []= GMThamdofFormat(GMFolder,GMDataName,T,IM_SaT1,xi,beta_newmark,t_ext
 % T: Periodo fundamental de la estructura [sec]
 % IM_SaT1: Vector columna de todas las franjas que se desean IM_SaT1 [g]
 % beta_newmark: factor del método de Newmark (ej: beta_newmark = 1/4)
-% t_extra: Tiempo extra de simulación (cantidad de filas extra en matriz matrix_csv_
+% t_extra: Tiempo extra de simulación (cantidad de filas extra en matriz matrix_csv)
 % GMTHAMDOFName: Nombre del archivo THAMDOF (requisito que sea con .csv si o si)
+% unit_GM: char que puede ser: 'g' o 'm/s2', para indicar la unidad con la que viene el registro (las tareas vienen en g)
 
 % Outputs
 % Ninguno, pero Genera un archivo csv con Todos los registros de la carpeta
 % en formato THAMDOF
 
 % Comentarios: 
-% - Hasta el momento, solo se consideran IM = Sa(T1) aceleración
-% espectral del primer modo (newmarkbeta)
+% - Esta función solo considera IM: Sa(T1)
 % - Los -3 y +3 que se ven son por la posición con la que se ven los
 % archivos al utilizar la función dir(), los registros parten del 3
 
