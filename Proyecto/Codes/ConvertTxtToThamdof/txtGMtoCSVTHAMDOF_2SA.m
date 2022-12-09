@@ -18,7 +18,7 @@ clc
 GMFolder = 'Registros';                                                     % Nombre de la carpeta donde se encuentran los registros (todos los registros deben estar en [g] -> las que da el profe están en [g])
 cant_registros = 31;
 GMDataName = 'GM Data.txt';                                                 % Nombre del archivo .txt con los dt de sampling de cada registro
-IM_Sa_avg = [0.5; 1.5]; % g                                                 % Franjas para realizar el análisis
+IM_Sa_avg = [2.5;2.8]; % g                                                 % Franjas para realizar el análisis
 T = 2.18; % sec                                                             % Periodo fundamental de la estructura
 beta_newmark = 1/4;                                                         % Beta del método de Newmark-beta (dejarlo como 1/4 para que sea incondicionalmente estable)
 xi = 0.05;                                                                  % Amortiguamiento para el espectro

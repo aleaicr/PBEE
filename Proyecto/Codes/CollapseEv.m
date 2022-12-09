@@ -19,16 +19,16 @@ close all
 clc
 
 %% Inputs
-ResultsDir = 'Results/Results_woTMD';                                       % Carpeta donde están los resultados
-cant_pisos = 9;                                                            % Cantidad de pisos del edificio
+ResultsDir = 'Results/Results_M1TMD1';                                      % Carpeta donde están los resultados
+cant_pisos = 10;                                                            % Cantidad de pisos del edificio
 cant_registros = 31;                                                        % Cantidad de registros por cada IM (se considera que todas las IMs tienen la misma cantidad de registros)
-IMs = [0.2; 0.5; 1; 1.2];
-% IMs = [2.5; 5]; % g                                                         % Valor IMs de las franjas del "IDA"
+% IMs = [0.2; 0.5; 1; 1.2; 2];
+IMs = [2.5; 2.8]; % g                                                       % Valor IMs de las franjas del "IDA"
 cant_franjas = length(IMs);                                                 % Cantidad de franjas
 % g = 9.81;
 IM_limit = 5;
 % Nombre de archivos a utilizar para determinar colapso
-nA_Disp = 'Displacement.xlsx';                                          % Nombre archivo obtenido desde THAMDOF de desplazamiento
+nA_Disp = 'Displacement.xlsx';                                              % Nombre archivo obtenido desde THAMDOF de desplazamiento
 % Inputs en Curva de Fragilidad
 % Inputs en Estimación lambda_c
 
