@@ -3,7 +3,7 @@
 % Ingeniería Sísmica Avanzada - Proyecto de Investigación - USM 2022
 
 % Eads, Miranda & Lignos (2015)
-% Selección de Registros por Sa_avg
+% Selección de Registros por Sa_avg %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Parámetros
 % T:            Periodo fundamental, c1*T,c2*T,....cN*T
@@ -20,7 +20,7 @@ clc
 Tast = 2.18; % sec                                                          % Periodo del primer modo de la estructura
 c1 = 0.2;                                                                   % Factor para determinar el T_min para calcular Sa_avg
 cN = 3.0;                                                                   % Factor para determinar el T_max para calcular Sa_avg
-n_reg = 20;                                                                 % Cantidad de registros a seleccionar
+n_reg = 50;                                                                 % Cantidad de registros a seleccionar
 
 % Periodos para espectros
 Ti_init = 0.05;
@@ -74,7 +74,8 @@ Sa_avg = zeros(2*length(Sa_1.'),1);
 % Espectros ordenados
 Sa = [Sa_1; Sa_2];
 cant_reg_select = 0;
-while cant_reg_select ~= 20
+n_reg_original = n_reg;
+while cant_reg_select ~= n_reg_original
     % Calcular Sa_avg para cada registro
     for i = 1:2*length(Sa_1.')
         % Interpolar valores de T para el espectro del registro i

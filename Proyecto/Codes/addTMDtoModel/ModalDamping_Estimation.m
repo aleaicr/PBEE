@@ -20,13 +20,13 @@ k = [80;200;228;220;234;205;200;120;115];                                   % to
 w = [535;494.5;494.5;494.5;494.5;494.5;494.5;494.5;494.5];                  % tonf, Peso de cada piso (abajo hacia arriba)
 xi_ = [2/100; 2/100];                                                       % Amortiguamiento modal de dos modos conocidos
 xi_modes = [1; 5];                                                          % Número del modo de los amortiguamientos modales (de arriba)
-% [T_heresi,G_heresi] = EigAnalysis(w,k,g);                                 Solo para verificar
+% [T_heresi,G_heresi] = EigAnalysis(w,k,g);                                   % Solo para verificar
 % fprintf('Periodo Heresi = %.2f[sec]\n\n',T_heresi(1))
 
 % Propiedades TMD
-xi_TMD = [0.1; 0.15; 0.2];                                                % Fracciones de amortiguamiento de cada TMD
-k_TMD = [1.2; 1.5; 1.7];                                                    % Rigideces del TMD (para ajustarse al periodo del primer modo, aproximadamente) 
-m_TMD_per = 5/100;                                                          % Porcentaje de peso que (masaTMD/masaEddificio)
+xi_TMD = [0.05; 0.1; 0.15];                                                  % Fracciones de amortiguamiento de cada TMD
+k_TMD = [0.65; 0.76 ; 0.8];                                                 % Rigideces del TMD (para ajustarse al periodo del primer modo, aproximadamente) 
+m_TMD_per = 2/100;                                                          % Porcentaje de peso que (masaTMD/masaEddificio)
 
 %% Estimar xi_n SIN TMD
 % Cantidad de grados de libertad
@@ -42,6 +42,7 @@ M = diag(m);                                                                % Ma
 wn = diag(sqrt(lambda));                                                    % Frecuencia circular de cada modo
 Kn = Phi'*K*Phi;
 Mn = Phi'*M*Phi;
+T1 = 2*pi/(wn(1));
 
 % Amortiguamiento proporcional
 % Método de Rayleigh: C = alfa*M + beta*K
@@ -63,6 +64,7 @@ C = double(sol.alfa)*Mn + double(sol.beta)*Kn;                                % 
 % Modal Damping
 Cn = Phi.'*C*Phi;
 
+% Rayleigh proportional damping plot
 figure
 plot(wn,xi*100,'-o','color','r')
 xlabel('\omega_n [rad/s]')
@@ -70,6 +72,7 @@ ylabel('\zeta_n (%)')
 grid on
 title('Modal Damping')
 
+% Save Data
 structure1(1) = struct();
 structure1(1).Kn = Kn;
 structure1(1).Mn = Mn;
@@ -77,13 +80,14 @@ structure1(1).Cn = Cn;
 structure1(1).wn = wn;
 structure1(1).xi = xi;
 structure1(1).T = 2*pi./wn;
-structure1(1).T1 = 2*pi/wn(1);
+structure1(1).T1 = T1;
 
 %% Estimar xi_n CON TMD
 % Se agrega un nuevo grado de libertad
 
 % Para la optimización, se realiza la 
 m_TMD = m_TMD_per*sum(m);                                                   % Masa del TMD
+K_TMD_aprox = (2*pi/T1)^2*m_TMD;                                              % Valor de K_TMD esperado
 
 % Nueva matriz de masa -> incluyendo TMD como nuevo piso
 m_new = [m; m_TMD];
@@ -136,6 +140,7 @@ for i = 1:length(k_TMD)                                                     % Pa
         structures(p).M = M_new;
     end
 end
+
 %% Crear datos para analisis
 xi_new = zeros(length(structures(1).xi_new),length(structures));  % fila: amortiguamiento del modo, columna: j
 for i = 1:length(structures)
@@ -167,7 +172,8 @@ disp(structures)
 fprintf('Revisar structures.xi_modal para ver las razones de amortiguamiento modal simplificadas por método explicado por P.Heresi\n\n\n')
 
 fprintf('El periodo fundamental de la estructura SIN TMD: T1 = %.2f [sec]\n\n',structure1(1).T1)
-
+fprintf('El valor aprox a poner de M_TMD = %.2f*M_total_estructura = %.2f [ton]\n',m_TMD_per,m_TMD)
+fprintf('El valor aprox a poner de K_TMD = %.2f [tonf/cm] para obtener periodo T1 de la estructura\n',K_TMD_aprox)
 fprintf('Los periodos de cada TMD son los siguientes: \n')
 tabla = table();
 tabla.combinacion = (1:1:length(k_TMD)*length(xi_TMD)).';
@@ -193,6 +199,4 @@ tabla.xi_modal9 = structures(9).xi_new;
 disp(tabla)
 clear tabla
 fprintf('Donde el número de xi_modal representa el número de la combinación\n')
-fprintf('Peso del TMD w_TMD = %.2f [tonf]\n\n', m_TMD*g)
-fprintf('Dejar P(columna P-Delta) como 0')
-fprintf('')
+fprintf('Peso del TMD w_TMD = %.2f w_estructura = %.2f [tonf]\n\n',m_TMD_per, m_TMD*g)
