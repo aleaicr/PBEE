@@ -179,34 +179,34 @@ lambda_Saavg = [0.086762584;0.066803522;0.050979124;0.038715512;0.029373076;0.02
 % more_IM = (0.1:0.01:3).';                                                   % Mismo rango que los datos para el ajuste polinomial
 % IM_range = sort([more_IM; IMs]);                                            % Vector para el cual se va a realizar la interpolación, notar que se agregaron los IMs de Interés
 
-% lambda_poly = exp(P(5)*ones(length(IM_range),1) + P(4)*log(IM_range) + P(3)*log(IM_range).^2 + P(2)*log(IM_range).^3 + P(1)*log(IM_range).^4); 
-% R_square = 1 - S.normr^2 / norm(log(lambda_Saavg)-mean(log(lambda_Saavg)))^2; % Valor de R^2
-% 
-% figure
-% loglog(original_IM_Saavg,original_lambda_Saavg,'o','color','#076F51','LineWidth',1.5)
-% hold on
-% loglog(IM_Saavg,lambda_Saavg,'o','color','r','LineWidth',1.5)
-% loglog(IM_range,lambda_poly,'.-','color','b','LineWidth',1.5)
-% hold off
-% xlabel('IM: Sa_{avg} [g]')
-% ylabel('\lambda_{IM} [1/yr]')
-% grid on
-% legend('Datos USGS','Datos USGS Utilizados para el ajuste','Ajuste polinomial tercer orden')
-% text(10^0,10^-2,"R2 = " + string(R_square))
-% title('Curva de amenaza sísimca')
-% 
-% % Derivada de la amenaza sísmica
-% parte1 = (P(4) + 2*P(3)*log(IM_range) + 3*P(2)*log(IM_range).^2 + 4*P(1)*log(IM_range).^3)./IM_range;
-% parte2 = exp(P(5)*ones(length(IM_range),1) + P(4)*log(IM_range) + P(3)*log(IM_range).^2 + P(2)*log(IM_range).^3 + P(1)*log(IM_range).^4); % lambda_
-% dlim_poly = abs(parte1.*parte2);
-% 
-% figure
-% loglog(IM_range,dlim_poly,'.-','color','b','LineWidth',1.5)
-% xlabel('IM: Sa_{avg} [g]')
-% ylabel('|d\lambda_{IM}(IM=im)/d(IM)|')
-% grid on
-% legend('Derivada ajuste polinomial tercer orden')
-% title('Derivada de curva de amenaza sísimca')
+lambda_poly = exp(P(5)*ones(length(IM_range),1) + P(4)*log(IM_range) + P(3)*log(IM_range).^2 + P(2)*log(IM_range).^3 + P(1)*log(IM_range).^4); 
+R_square = 1 - S.normr^2 / norm(log(lambda_Saavg)-mean(log(lambda_Saavg)))^2; % Valor de R^2
+
+figure
+loglog(original_IM_Saavg,original_lambda_Saavg,'o','color','#076F51','LineWidth',1.5)
+hold on
+loglog(IM_Saavg,lambda_Saavg,'o','color','r','LineWidth',1.5)
+loglog(IM_range,lambda_poly,'.-','color','b','LineWidth',1.5)
+hold off
+xlabel('IM: Sa_{avg} [g]')
+ylabel('\lambda_{IM} [1/yr]')
+grid on
+legend('Datos USGS','Datos USGS Utilizados para el ajuste','Ajuste polinomial cuarto orden')
+text(10^0,10^-2,"R2 = " + string(R_square))
+title('Curva de amenaza sísimca')
+
+% Derivada de la amenaza sísmica
+parte1 = (P(4) + 2*P(3)*log(IM_range) + 3*P(2)*log(IM_range).^2 + 4*P(1)*log(IM_range).^3)./IM_range;
+parte2 = exp(P(5)*ones(length(IM_range),1) + P(4)*log(IM_range) + P(3)*log(IM_range).^2 + P(2)*log(IM_range).^3 + P(1)*log(IM_range).^4); % lambda_
+dlim_poly = abs(parte1.*parte2);
+
+figure
+loglog(IM_range,dlim_poly,'.-','color','b','LineWidth',1.5)
+xlabel('IM: Sa_{avg} [g]')
+ylabel('|d\lambda_{IM}(IM=im)/d(IM)|')
+grid on
+legend('Derivada ajuste polinomial cuarto orden')
+title('Derivada de curva de amenaza sísimca')
 
 
 % Calculando para IM range original (el de toda la curva de fragilidad,
