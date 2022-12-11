@@ -17,6 +17,7 @@ T_TMD = [2.24; 2.24; 2.24; 2.18; 2.18; 2.18; 2.12; 2.12; 2.12; 2.35; 2.35; 2.35;
 % [TMD1; TDM2; ... ; TMD18]
 xi_TMD = [0.05; 0.10; 0.15; 0.05; 0.10; 0.15; 0.05; 0.10; 0.15; 0.05; 0.10; 0.15; 0.05; 0.10; 0.15; 0.05; 0.10; 0.15];
 
+%% Generar figuras
 figure
 stem3(T_TMD,xi_TMD*100, CMAF(2:end,1),'LineWidth',1.7)
 hold on
@@ -28,7 +29,6 @@ xlabel('T_{TMD} [sec]')
 ylabel('\xi_{TMD} [%]')
 zlabel('\lambda_c')
 legend('Con TMD','Original')
-
 
 figure
 stem3(T_TMD,xi_TMD*100, CMAF(2:end,1),'LineWidth',1.7)
