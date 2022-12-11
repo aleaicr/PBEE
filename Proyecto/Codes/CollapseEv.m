@@ -19,14 +19,14 @@ close all
 clc
 
 %% Inputs
-ResultsDir = 'Results/Results_M1TMD1';                                      % Carpeta donde están los resultados
+ResultsDir = 'Results/Results_TMD18';                                             % Carpeta donde están los resultados
 cant_pisos = 10;                                                            % Cantidad de pisos del edificio
 cant_registros = 31;                                                        % Cantidad de registros por cada IM (se considera que todas las IMs tienen la misma cantidad de registros)
 % IMs = [0.2; 0.5; 1; 1.2; 2];
-IMs = [2.5; 2.8]; % g                                                       % Valor IMs de las franjas del "IDA"
+IMs = [2.5; 2.9]; % g                                                       % Valor IMs de las franjas del "IDA"
 cant_franjas = length(IMs);                                                 % Cantidad de franjas
 % g = 9.81;
-IM_limit = 5;
+IM_limit = 7;
 % Nombre de archivos a utilizar para determinar colapso
 nA_Disp = 'Displacement.xlsx';                                              % Nombre archivo obtenido desde THAMDOF de desplazamiento
 % Inputs en Curva de Fragilidad
@@ -124,8 +124,8 @@ clear tabla
 % Generar figura para corrobarar método
 
 more_IM = (0.1:0.01:IM_limit).';                                               % Mismo rango que los datos para el ajuste polinomial
-IM_range = sort([more_IM; IMs]);                                            % Vector para el cual se va a realizar la interpolación, notar que se agregaron los IMs de Interés
-
+% IM_range = sort([more_IM; IMs]);                                            % Vector para el cual se va a realizar la interpolación, notar que se agregaron los IMs de Interés
+IM_range = more_IM;
 % Fracciones
 figure
 plot(IMs,fraccion,'o','Color','r','linewidth',1.5)
@@ -176,36 +176,37 @@ lambda_Saavg = [0.086762584;0.066803522;0.050979124;0.038715512;0.029373076;0.02
 % Ajustar curva de polinomio cuarto orden
 % El IM_range a utilizar para calcular los puntos serán los mismos que en
 % la parte anterior
-more_IM = (0.1:0.01:3).';                                                   % Mismo rango que los datos para el ajuste polinomial
-IM_range = sort([more_IM; IMs]);                                            % Vector para el cual se va a realizar la interpolación, notar que se agregaron los IMs de Interés
-lambda_poly = exp(P(5)*ones(length(IM_range),1) + P(4)*log(IM_range) + P(3)*log(IM_range).^2 + P(2)*log(IM_range).^3 + P(1)*log(IM_range).^4); 
-R_square = 1 - S.normr^2 / norm(log(lambda_Saavg)-mean(log(lambda_Saavg)))^2; % Valor de R^2
+% more_IM = (0.1:0.01:3).';                                                   % Mismo rango que los datos para el ajuste polinomial
+% IM_range = sort([more_IM; IMs]);                                            % Vector para el cual se va a realizar la interpolación, notar que se agregaron los IMs de Interés
 
-figure
-loglog(original_IM_Saavg,original_lambda_Saavg,'o','color','#076F51','LineWidth',1.5)
-hold on
-loglog(IM_Saavg,lambda_Saavg,'o','color','r','LineWidth',1.5)
-loglog(IM_range,lambda_poly,'.-','color','b','LineWidth',1.5)
-hold off
-xlabel('IM: Sa_{avg} [g]')
-ylabel('\lambda_{IM} [1/yr]')
-grid on
-legend('Datos USGS','Datos USGS Utilizados para el ajuste','Ajuste polinomial tercer orden')
-text(10^0,10^-2,"R2 = " + string(R_square))
-title('Curva de amenaza sísimca')
-
-% Derivada de la amenaza sísmica
-parte1 = (P(4) + 2*P(3)*log(IM_range) + 3*P(2)*log(IM_range).^2 + 4*P(1)*log(IM_range).^3)./IM_range;
-parte2 = exp(P(5)*ones(length(IM_range),1) + P(4)*log(IM_range) + P(3)*log(IM_range).^2 + P(2)*log(IM_range).^3 + P(1)*log(IM_range).^4); % lambda_
-dlim_poly = abs(parte1.*parte2);
-
-figure
-loglog(IM_range,dlim_poly,'.-','color','b','LineWidth',1.5)
-xlabel('IM: Sa_{avg} [g]')
-ylabel('|d\lambda_{IM}(IM=im)/d(IM)|')
-grid on
-legend('Derivada ajuste polinomial tercer orden')
-title('Derivada de curva de amenaza sísimca')
+% lambda_poly = exp(P(5)*ones(length(IM_range),1) + P(4)*log(IM_range) + P(3)*log(IM_range).^2 + P(2)*log(IM_range).^3 + P(1)*log(IM_range).^4); 
+% R_square = 1 - S.normr^2 / norm(log(lambda_Saavg)-mean(log(lambda_Saavg)))^2; % Valor de R^2
+% 
+% figure
+% loglog(original_IM_Saavg,original_lambda_Saavg,'o','color','#076F51','LineWidth',1.5)
+% hold on
+% loglog(IM_Saavg,lambda_Saavg,'o','color','r','LineWidth',1.5)
+% loglog(IM_range,lambda_poly,'.-','color','b','LineWidth',1.5)
+% hold off
+% xlabel('IM: Sa_{avg} [g]')
+% ylabel('\lambda_{IM} [1/yr]')
+% grid on
+% legend('Datos USGS','Datos USGS Utilizados para el ajuste','Ajuste polinomial tercer orden')
+% text(10^0,10^-2,"R2 = " + string(R_square))
+% title('Curva de amenaza sísimca')
+% 
+% % Derivada de la amenaza sísmica
+% parte1 = (P(4) + 2*P(3)*log(IM_range) + 3*P(2)*log(IM_range).^2 + 4*P(1)*log(IM_range).^3)./IM_range;
+% parte2 = exp(P(5)*ones(length(IM_range),1) + P(4)*log(IM_range) + P(3)*log(IM_range).^2 + P(2)*log(IM_range).^3 + P(1)*log(IM_range).^4); % lambda_
+% dlim_poly = abs(parte1.*parte2);
+% 
+% figure
+% loglog(IM_range,dlim_poly,'.-','color','b','LineWidth',1.5)
+% xlabel('IM: Sa_{avg} [g]')
+% ylabel('|d\lambda_{IM}(IM=im)/d(IM)|')
+% grid on
+% legend('Derivada ajuste polinomial tercer orden')
+% title('Derivada de curva de amenaza sísimca')
 
 
 % Calculando para IM range original (el de toda la curva de fragilidad,
@@ -220,12 +221,12 @@ dlim_poly = abs(parte1.*parte2);
 %% Desagregación lambda_c
 des_lambda_c = Pc_im.*dlim_poly;
 
-figure
-plot(IM_range,des_lambda_c)
-xlabel('IM: Sa_{avg}')
-ylabel('P(C|IM=im)|d\lambda_{IM}(IM=im)/d(IM)|')
-title('Desagregación de \lambda_c')
-grid on
+% figure
+% plot(IM_range,des_lambda_c)
+% xlabel('IM: Sa_{avg}')
+% ylabel('P(C|IM=im)|d\lambda_{IM}(IM=im)/d(IM)|')
+% title('Desagregación de \lambda_c')
+% grid on
 
 %% lambda_c
 lambda_c = trapz(IM_range,des_lambda_c);
@@ -234,7 +235,7 @@ disp(lambda_c)
 %% Figuras para mostrar en reporte
 
 figure
-subplot(3,1,1)
+subplot(3,1,1) 
 plot(IM_range,Pc_im,'color','b','LineWidth',1.5)
 hold on
 plot(IMs,fraccion,'o','color','r','LineWidth',1.5)
@@ -254,5 +255,6 @@ xlabel('IM: Sa_{avg}')
 ylabel('P(C|IM)|d\lambda_{IM}/d(IM)|')
 grid on
 xlim([0 IM_limit])
-sgtitle('Desagregación de curva de fragilidad de colapso')
 legend(convertStringsToChars("lambda_c = " + string(lambda_c)))
+
+% PC_old = Pc_im;
