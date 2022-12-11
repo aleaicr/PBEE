@@ -1,28 +1,35 @@
 function []= GMThamdofFormat(GMFolder,GMDataName,T,IM_SaT1,xi,beta_newmark,t_extra,GMTHAMDOFName,unit_GM)
-% Contreras - Sanguinetti
+% Alexis Contreras - Martina Sanguinetti
 % Ingeniería Sísmica Avanzada - USM 2022
 
-% Leer registros en txt y traspasarlos a formato THAMDOF (AT2? y en .csv)
+% Leer registros en  formato .txt y traspasarlos a formato THAMDOF (.csv)
+% https://github.com/pheresi/THAMDOF/blob/master/Sample%20Input%20Files/GMs.csv
+
+% Requiere función que implementa NewmarkBeta para obtener Sa, si no se tiene, descomentar función al final.
 
 % Inputs
-% GMFolder: Carpeta donde se encuentran los registros (y GM Data.txt)
+% GMFolder: char, Carpeta donde se encuentran los registros (y GM Data.txt)
 %           Los registros deben venir en [g], si vienen en m/s2, en linea
 %           54, dividir todo por g = 9.81
-% GMDataName: Nombre del archivo "GM Data.txt" donde se guardan los pasos
+% GMDataName: char, Nombre del archivo "GM Data.txt" donde se guardan los pasos
 %             temporales de cada registro (debe estar ordenado)
-% T: Periodo fundamental de la estructura [sec]
-% IM_SaT1: Vector columna de todas las franjas que se desean IM_SaT1 [g]
-% beta_newmark: factor del método de Newmark (ej: beta_newmark = 1/4)
-% t_extra: Tiempo extra de simulación (cantidad de filas extra en matriz matrix_csv_
-% GMTHAMDOFName: Nombre del archivo THAMDOF (requisito que sea con .csv si o si)
+% T: double, Periodo fundamental de la estructura [sec]
+% IM_SaT1: double, Vector columna de todas las franjas que se desean IM_SaT1 [g]
+% xi: double, Amortiguamiento para determinar la Sa(T1,xi)
+% beta_newmark: double, factor del método de Newmark (ej: beta_newmark = 1/4 para que sea incondicionalmente estable)
+% t_extra: double, Tiempo extra de simulación (cantidad de filas extra en matriz matrix_csv)
+% GMTHAMDOFName: char, Nombre del archivo THAMDOF (requisito que sea con .csv si o si)
+% unit_GM: char, que puede ser: 'g' o 'm/s2', para indicar la unidad con la que viene el registro (las tareas vienen en g)
 
 % Outputs
 % Ninguno, pero Genera un archivo csv con Todos los registros de la carpeta
 % en formato THAMDOF
 
 % Comentarios: 
-% - Hasta el momento, solo se consideran IM = Sa(T1) aceleración
-% espectral del primer modo (newmarkbeta)
+% - Dejar todos los registros en una carpeta, todos los registros en formato .txt
+% - En la misma carpeta donde están los registros, dejar la carpeta GM Data.txt 
+% que contiene los pasos temporales (Nombre de cada archivo.txt     dt) 
+% - Esta función solo considera IM: Sa(T1)
 % - Los -3 y +3 que se ven son por la posición con la que se ven los
 % archivos al utilizar la función dir(), los registros parten del 3
 
@@ -35,6 +42,7 @@ if isequal(unit_GM,'g')
 elseif isequal(unit_GM,'m/s2')
     g = 9.81;
 end
+
 %% Leer archivos de la carpeta
 files = dir(GMFolder);
 % los nombres de los archivos parten desde el 4 
@@ -63,7 +71,7 @@ while ischar(fLine)
             GMData(i-3).dt = string_data_line(2);                             % Guardar dt en GM Data.txt del registro
             a(i-3).dt = double(string_data_line(2));                        % Guardamos dt
             % Aprovechar de obtener la aceleración espectral
-            a(i-3).SaT1 = Newmark_Lineal_Sa(beta_newmark,xi,a(i-3).dt,0,0,a(i-3).GM,T)./g; % Guardar aceleración espectral del primer modo, GM está en m/s
+            a(i-3).SaT1 = NewmarkBetaSa(beta_newmark,xi,a(i-3).dt,0,0,a(i-3).GM,T)./g; % Guardar aceleración espectral del primer modo, GM está en m/s
         end
     end
     fLine = fgetl(fileID);                                                  % Siguiente línea del GM Data.txt
@@ -79,7 +87,7 @@ for i = 4:length(files)
     end    
 end
 
-%% Formato THAMDOF
+%% Matriz con GMs en formato THAMDOF
 % GM; length; dt; factor de escala; registro
 matrix_csv_ = zeros(max_length_GM+3+max(t_extra),(length(files)-3)*IM_length);
 for i = 4:length(files)                                                     % Cantidad de registros
@@ -121,10 +129,10 @@ end
 
 %% Método de Newmark-beta utilizado para determinar el espectro, descomentar ctrl+shift+R si no se tiene programado
 
-% function [Sa] = Newmark_Lineal_Sa(beta,xi,dt,ui,udi,uddg,Tn)
+% function [Sa] = NewmarkBetaSa(beta,xi,dt,ui,udi,uddg,Tn)
 % % Respuesta estructural por el método de Newmkar-beta
 % 
-% % Contreras - Adasme 
+% % Alexis Contreras - Cristóbal Adasme 
 % % Ingeniería Sísmica - USM 2022
 % 
 % % Inputs
