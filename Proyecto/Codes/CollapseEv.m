@@ -176,8 +176,8 @@ lambda_Saavg = [0.086762584;0.066803522;0.050979124;0.038715512;0.029373076;0.02
 % Ajustar curva de polinomio cuarto orden
 % El IM_range a utilizar para calcular los puntos serán los mismos que en
 % la parte anterior
-% more_IM = (0.1:0.01:3).';                                                   % Mismo rango que los datos para el ajuste polinomial
-% IM_range = sort([more_IM; IMs]);                                            % Vector para el cual se va a realizar la interpolación, notar que se agregaron los IMs de Interés
+more_IM = (min(IM_Saavg):0.01:max(IM_Saavg)).';                                                   % Mismo rango que los datos para el ajuste polinomial
+IM_range = sort([more_IM; IMs]);                                            % Vector para el cual se va a realizar la interpolación, notar que se agregaron los IMs de Interés
 
 lambda_poly = exp(P(5)*ones(length(IM_range),1) + P(4)*log(IM_range) + P(3)*log(IM_range).^2 + P(2)*log(IM_range).^3 + P(1)*log(IM_range).^4); 
 R_square = 1 - S.normr^2 / norm(log(lambda_Saavg)-mean(log(lambda_Saavg)))^2; % Valor de R^2
