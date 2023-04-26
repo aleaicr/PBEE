@@ -334,9 +334,6 @@ pisos = 1:1:cant_pisos;
 
 % a. La máxima razón de derivas de piso (delta)
 
-
-
-
 % b. El máximo valor residual de delta
 
 % c. PFA
@@ -348,7 +345,6 @@ close all
 
 % El colapso quedará definido cuando el desplazamiento, de cualquier piso,
 % exceda el desplazamiento de resistencia 0 (du - desplazamiento último)
-
 Disp_data = importdata(convertStringsToChars(string(ResultsDir) + "\" + string(files(Dispid).name)));
 F_EDP_pos = Disp_data.data.u(1:cant_pisos,(2:(cant_registros*cant_franjas+1)));                              % Floor EDP_positivos
 F_EDP_neg = Disp_data.data.u((cant_pisos+4):(2*cant_pisos+3),(2:(cant_registros*cant_franjas+1)));           % Floor EDP negativos
@@ -404,8 +400,8 @@ for m = 1:length(mus)
             pnc = (1-normcdf((log(IMs(i)) - mus(m))/sigmas(s)))^(cant_registros-n_collapse(i));
             L(i,1) = combinatoria*pc*pnc;
         end
-        if exp(sum(L)) > mv
-            mv = exp(sum(L));
+        if exp(sum(log(L))) > mv
+            mv = exp(sum(log(L)));  % máxima verosimilitud
             mu_mv = mus(m);
             sigma_mv = sigmas(s);
         end
@@ -419,12 +415,10 @@ disp(tabla)
 clear tabla
 
 % Generar figura para corrobarar método
-
 more_IM = (0.057:0.01:1.5).';                                               % Mismo rango que los datos para el ajuste polinomial
 IM_range = sort([more_IM; IMs]);                          % Vector para el cual se va a realizar la interpolación, notar que se agregaron los IMs de Interés
 
 % Figuras
-
 figure
 plot(IMs,fraccion,'o','Color','r','linewidth',1.5)
 xlabel('IM: Sa(T1) [g]')
@@ -873,7 +867,6 @@ end
 des_lambda_frac_1 = frac_d1.*dlim_IMs;
 des_lambda_frac_2 = frac_d2.*dlim_IMs;
 
-
 figure
 plot(IM_range,des_lambda_1,'color','b')
 hold on
@@ -946,7 +939,6 @@ tabla.diferencia = [lambda_EDP_1-lambda_EDP_1_C; lambda_EDP_2-lambda_EDP_2_C];
 tabla.diferencia_porcentual = [(lambda_EDP_1- lambda_EDP_1_C)/lambda_EDP_1*100 ; (lambda_EDP_2- lambda_EDP_2_C)/lambda_EDP_2*100];
 disp(tabla)
 clear tabla
-
 
 %% P6 d
 % Encontrar P(C|IM_10%50años) y P(C|IM_2%50Años)
